@@ -114,7 +114,7 @@
                         type="radio"
                         name="gender"
                         id="male" required
-                        value="1" />
+                        value="male" />
                         <label
                         class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
                         for="male"required
@@ -128,7 +128,7 @@
                         type="radio"
                         name="gender"
                         id="female" required
-                        value="0" />
+                        value="female" />
                         <label
                         class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
                         for="female" required

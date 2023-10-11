@@ -21,6 +21,8 @@
     <title>Management system</title>
     <link rel="shortcut icon" href="images/icon_title.png">
     
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
   </head>
   <body class="text-gray-800 antialiased">
     <main>
@@ -49,13 +51,13 @@
                 </p>
                 <a
                   type="button"
-                  class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 w-1/2 py-2 mt-8 text-white bg-emerald-600 rounded-lg"
+                  class="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-110 duration-300 w-1/2 py-2 mt-8 text-white bg-emerald-600 hover:bg-emerald-800 rounded-lg"
                   href="{{URL::to('login')}}"><i class="fas fa-sign-in-alt mr-2"></i>
                   L O G I N
                 </a>
                 <a
                   type="button"
-                  class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 w-1/2 px-18 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-400"
+                  class="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-110 duration-300 w-1/2 px-18 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-800"
                   href="{{URL::to('register')}}"><i class="fas fa-user-plus mr-2"></i>
                   R E G I S T E R 
                 </a>

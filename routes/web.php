@@ -70,6 +70,15 @@ Route::get('/course-admin', function () {
     return view('pages.ql_admin.course_admin');
 })->middleware(['auth', 'verified'])->name('course-admin');
 
+Route::get('/create-course', function () {
+    return view('pages.ql_admin.create_course');
+})->middleware(['auth', 'verified'])->name('create-course');
+
+// Course Registration routes
+Route::get('/course-registration', 'CourseRegistrationController@create');
+Route::post('/course-registration', 'CourseRegistrationController@store')->name('course-registration.store');
+//
+
 Route::get('/learning-need-admin', function () {
     return view('pages.ql_admin.learning_need_admin');
 })->middleware(['auth', 'verified'])->name('learning-need-admin');
