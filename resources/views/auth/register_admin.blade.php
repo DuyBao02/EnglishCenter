@@ -3,7 +3,7 @@
 </head>
 
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register-admin') }}">
         @csrf
         <div class="columns-2">
             <!-- Name -->

@@ -18,8 +18,8 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('schedule-admin')" :active="request()->routeIs('schedule-admin')">
-                        {{ __('School schedule') }}
+                    <x-nav-link :href="route('rl-custom-admin')" :active="request()->routeIs('rl-custom-admin')">
+                        {{ __('Rooms & Lessons Custom') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -94,8 +94,8 @@
             <x-responsive-nav-link :href="route('course-admin')" :active="request()->routeIs('course-admin')">
                 {{ __('Course Custom') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('schedule-admin')" :active="request()->routeIs('schedule-admin')">
-                {{ __('School schedule') }}
+            <x-responsive-nav-link :href="route('rl-custom-admin')" :active="request()->routeIs('rl-custom-admin')">
+                {{ __('Rooms & Lessons Custom') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('homework-admin')" :active="request()->routeIs('homework-admin')">
                 {{ __('Homework') }}

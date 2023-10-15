@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
 class course extends Model
 {
@@ -16,24 +16,30 @@ class course extends Model
      *
      * @var array<int, string>
      */
+     
     protected $casts = [
-        'days' => 'json',
-        'lesson' => 'json',
-        'rooms' => 'json',
-        'students_list' => 'json',
+        'days' => 'array',
+        'rooms' => 'array',
+        'lessons' => 'array',
+        'students_list' => 'array',
     ];
+
+    public $incrementing = false; //Xử lý việc khóa chính là chuỗi và không phải cột tự tăng
+    protected $primaryKey = 'id_course';
 
     protected $fillable = [
         'id_course',
         'name_course',
+        'time_start',
         'weeks',
         'days',
         'rooms',
-        'lesson',
+        'lessons',
         'maxStudents',
         'tuitionFee',
         'teacher',
         'students_list',
+        'user_id_create',
     ];
 
     public function lesson()

@@ -66,26 +66,44 @@ Route::get('/dashboard-admin', function () {
     return view('dashboard_admin');
 })->middleware(['auth', 'verified'])->name('dashboard-admin');
 
-Route::get('/course-admin', function () {
-    return view('pages.ql_admin.course_admin');
-})->middleware(['auth', 'verified'])->name('course-admin');
+Route::get('/create-course', 'App\Http\Controllers\CourseRegistrationController@getLessonsAndRoomsForCreateCourse')
+->middleware(['auth', 'verified'])->name('create-course');
 
-Route::get('/create-course', function () {
-    return view('pages.ql_admin.create_course');
-})->middleware(['auth', 'verified'])->name('create-course');
+Route::get('/course-admin', 'App\Http\Controllers\CourseRegistrationController@create')
+->middleware(['auth', 'verified'])->name('course-admin');
 
 // Course Registration routes
-Route::get('/course-registration', 'CourseRegistrationController@create');
-Route::post('/course-registration', 'CourseRegistrationController@store')->name('course-registration.store');
+Route::get('/course-edit/{id}', 'App\Http\Controllers\CourseRegistrationController@edit')
+->middleware(['auth', 'verified'])->name('course-edit');
+Route::get('/course-registration', 'App\Http\Controllers\CourseRegistrationController@create')->name('course-registration-create');
+Route::post('/course-registration', 'App\Http\Controllers\CourseRegistrationController@store')->name('course-registration-store');
+Route::delete('/course-custom/{id}', 'App\Http\Controllers\CourseRegistrationController@destroy')->name('course-custom-destroy');
+Route::get('/course-custom-edit/{id}', 'App\Http\Controllers\CourseRegistrationController@edit')->name('course-custom-edit');
+Route::post('/course-custom-update/{id}', 'App\Http\Controllers\CourseRegistrationController@update')->name('course-custom-update');
 //
 
-Route::get('/learning-need-admin', function () {
-    return view('pages.ql_admin.learning_need_admin');
-})->middleware(['auth', 'verified'])->name('learning-need-admin');
+//Room Custom routes
+Route::get('/room-edit/{id}', 'App\Http\Controllers\RoomCustomController@edit')
+->middleware(['auth', 'verified'])->name('room-edit');
+Route::get('/room-custom', 'App\Http\Controllers\RoomCustomController@create')->name('room-custom-create');
+Route::post('/room-custom', 'App\Http\Controllers\RoomCustomController@store')->name('room-custom-store');
+Route::delete('/room-custom/{id}', 'App\Http\Controllers\RoomCustomController@destroy')->name('room-custom-destroy');
+Route::get('/room-custom-edit/{id}', 'App\Http\Controllers\RoomCustomController@edit')->name('room-custom-edit');
+Route::post('/room-custom-update/{id}', 'App\Http\Controllers\RoomCustomController@update')->name('room-custom-update');
+//
 
-Route::get('/schedule-admin', function () {
-    return view('pages.ql_admin.schedule_admin');
-})->middleware(['auth', 'verified'])->name('schedule-admin');
+//Lesson Custom route
+Route::get('/lesson-edit/{id}', 'App\Http\Controllers\LessonCustomController@edit')
+->middleware(['auth', 'verified'])->name('lesson-edit');
+Route::get('/lesson-custom', 'App\Http\Controllers\LessonCustomController@create')->name('lesson-custom-create');
+Route::post('/lesson-custom', 'App\Http\Controllers\LessonCustomController@store')->name('lesson-custom-store');
+Route::delete('/lesson-custom/{id}', 'App\Http\Controllers\LessonCustomController@destroy')->name('lesson-custom-destroy');
+Route::get('/lesson-custom-edit/{id}', 'App\Http\Controllers\LessonCustomController@edit')->name('lesson-custom-edit');
+Route::post('/lesson-custom-update/{id}', 'App\Http\Controllers\LessonCustomController@update')->name('lesson-custom-update');
+//
+
+Route::get('/rl-custom-admin', 'App\Http\Controllers\RoomCustomController@createBoth')
+->middleware(['auth', 'verified'])->name('rl-custom-admin');
 
 Route::get('/homework-admin', function () {
     return view('pages.ql_admin.homework_admin');

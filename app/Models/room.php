@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
 class room extends Model
 {
@@ -17,6 +17,10 @@ class room extends Model
      *
      * @var array<int, string>
      */
+
+    public $incrementing = false; //Xử lý việc khóa chính là chuỗi và không phải cột tự tăng
+    protected $primaryKey = 'id_room';
+    
     protected $fillable = [
         'id_room',
         'name_room',

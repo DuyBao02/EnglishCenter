@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('courses', function (Blueprint $table) {
-            $table->string('id_course', 10)->primary();
+            $table->string('id_course', 10)->primary()->unique();
             $table->date('time_start');
             $table->string('name_course', 50);
             $table->unsignedSmallInteger('weeks');
@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('teacher', 50)->nullable();
             $table->json('students_list')->nullable();
         
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('user_id_create');
+            $table->foreign('user_id_create')->references('id')->on('users');
             $table->timestamps();
         });
     }
