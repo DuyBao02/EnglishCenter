@@ -20,6 +20,26 @@ class EmailVerificationPromptController extends Controller
         return $request->user()->hasVerifiedEmail()
                 ? redirect()->intended(RouteServiceProvider::HOME)
                 : view('auth.verify-email');
+
+        if ($request->user()->role == "Student") {
+
+            return $request->user()->hasVerifiedEmail()
+            ? redirect()->intended(RouteServiceProvider::HOME_s)
+            : view('auth.verify-email');
+        
+        } elseif ($request->user()->role == "Teacher") {
+        
+            return $request->user()->hasVerifiedEmail()
+            ? redirect()->intended(RouteServiceProvider::HOME_t)
+            : view('auth.verify-email');
+        
+        }else {
+        
+            return $request->user()->hasVerifiedEmail()
+            ? redirect()->intended(RouteServiceProvider::HOME_a)
+            : view('auth.verify-email');
+        
+        };       
         
     }
 }

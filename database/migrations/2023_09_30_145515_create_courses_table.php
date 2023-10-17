@@ -20,7 +20,7 @@ return new class extends Migration
             $table->json('lessons');
             $table->json('rooms');
             $table->unsignedSmallInteger('maxStudents');
-            $table->float('tuitionFee', 8, 2);
+            $table->float('tuitionFee', 9, 2);
             $table->string('teacher', 50)->nullable();
             $table->json('students_list')->nullable();
         

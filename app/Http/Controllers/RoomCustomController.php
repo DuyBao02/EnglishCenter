@@ -44,9 +44,13 @@ class RoomCustomController extends Controller
         ]);
     
         $existingLesson = Room::where('id_room', $request->id_room)->first();
-    
+        $exitsingName_room = Room::where('name_room', $request->name_room)->first();
+
         if ($existingLesson) {
             session()->flash('error', 'The Room already exists.');
+            return redirect()->back();
+        }elseif ($exitsingName_room) {
+            session()->flash('error', 'Name Room already exists.');
             return redirect()->back();
         }
     
@@ -54,7 +58,7 @@ class RoomCustomController extends Controller
             'id_room'  => $request->id_room,
             'name_room' => $request->name_room,
         ]);
-    
+
         event(new Registered($room));
     
         session()->flash('success', 'New Room created successful!');
@@ -108,11 +112,9 @@ class RoomCustomController extends Controller
         $room = Room::where('id_room', $id)->first();
         if ($room) {
             $room->delete();
-            session()->flash('success', 'Room deleted successfully!');
+            return response()->json(['success' => true]);
         } else {
-            session()->flash('error', 'Room not found!');
+            return response()->json(['success' => false]);
         }
-        return redirect()->route('rl-custom-admin');
     }
-    
 }

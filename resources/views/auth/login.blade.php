@@ -9,13 +9,25 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
+        <!-- <x-input-error :messages="$errors->get('email')" class="my-4 text-center" /> -->
+        @if ($errors->has('email'))
+            <script>
+                window.onload = function() {
+                    swal('Error', '{{ $errors->first('email') }}', 'error', {
+                        button: true,
+                        button: 'OK',
+                        timer: 5000,
+                    });
+                }
+            </script>
+        @endif
+        
+
         <!-- Email Address -->
-        <div>
+        <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
-
         <!-- Password -->
         <div class="mt-4" >
             <x-input-label for="password" :value="__('Password')" />
@@ -68,3 +80,4 @@
         </div>
     </form>
 </x-guest-layout>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

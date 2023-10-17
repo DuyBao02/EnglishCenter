@@ -117,11 +117,9 @@ class LessonCustomController extends Controller
         $lesson = Lesson::where('id_lesson', $id)->first();
         if ($lesson) {
             $lesson->delete();
-            session()->flash('success', 'Lesson deleted successfully!');
+            return response()->json(['success' => true]);
         } else {
-            session()->flash('error', 'Lesson not found!');
+            return response()->json(['success' => false]);
         }
-        return redirect()->route('rl-custom-admin');
     }
-    
 }

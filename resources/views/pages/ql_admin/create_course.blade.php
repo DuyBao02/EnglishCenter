@@ -4,7 +4,28 @@
             {{ __('Create Course') }}
         </h2>
     </x-slot>
-
+    @if (Session::has('success'))
+        <script>
+        window.onload = function() {
+            swal('Success', '{{ Session::get('success') }}', 'success',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
+    @if (Session::has('error'))
+        <script>
+        window.onload = function() {
+            swal('Error', '{{ Session::get('error') }}', 'error',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
@@ -28,14 +49,6 @@
                                 <label for="tuitionFee" class="block text-sm font-medium text-gray-700">Tuition Fee</label>
                                 <input required type="text" id="tuitionFee" name="tuitionFee" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div> 
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="maxStudents" class="block text-sm font-medium text-gray-700">Max Students</label>
-                                <input required type="text" value="15" id="maxStudents" name="maxStudents" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="weeks" class="block text-sm font-medium text-gray-700">Number of Weeks</label>
-                                <input required type="text" id="weeks" value="10" name="weeks" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div>
                         </div> 
                         <div class="grid grid-cols-3 gap-4 mt-4">
                             <div class="col-span-3 sm:col-span-1">
@@ -152,10 +165,17 @@
                                     </select>
                                 </div>
                             </div>
-                    
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="maxStudents" class="block text-sm font-medium text-gray-700">Max Students</label>
+                                <input required type="text" value="15" id="maxStudents" name="maxStudents" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="weeks" class="block text-sm font-medium text-gray-700">Number of Weeks</label>
+                                <input required type="text" id="weeks" value="10" name="weeks" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
                             <div class="col-span-2 sm:col-span-1"> 
                                 <label for="teacher" class="block text-sm font-medium text-gray-700">Teacher</label>
                                 <input type="text" name="teacher" id="teacher" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -181,3 +201,4 @@
         </div>
     </div>
 </x-app-layout>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

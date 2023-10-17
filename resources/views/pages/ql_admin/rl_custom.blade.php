@@ -5,22 +5,32 @@
         </h2>
     </x-slot>
 
+    @if (Session::has('success'))
+        <script>
+        window.onload = function() {
+            swal('Success', '{{ Session::get('success') }}', 'success',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
+    @if (Session::has('error'))
+        <script>
+        window.onload = function() {
+            swal('Error', '{{ Session::get('error') }}', 'error',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
-                @if (session('error'))
-                    <script>
-                        alert('{{ session('error') }}');
-                    </script>
-                @endif
-                
-                @if(session('success'))
-                    <div class="bg-amber-400 text-white text-center rounded-full mt-4 mx-auto max-w-sm">
-                        {{ session('success') }}
-                    </div>
-                @endif
                 <div class="p-6 text-gray-900 text-center text-3xl">
-                    
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Lesson form --> 
                         <div class="bg-red-200 max-h-72 overflow-hidden shadow-sm sm:rounded-lg col-span-2 sm:col-span-1">
@@ -75,10 +85,10 @@
                                                 
                                                 <td class="px-4 py-3 relative my-4">
                                                     <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('lesson-edit', $l->id_lesson) }}">Edit</a> 
-                                                    <form action="{{ route('lesson-custom-destroy', $l->id_lesson) }}" method="POST">
+                                                    <form action="{{ route('lesson-custom-destroy', $l->id_lesson) }}" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500">Delete</button>
+                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDelete(event, '{{ route('lesson-custom-destroy', $l->id_lesson) }}')">Delete</button>
                                                     </form>
                                                 </td>
                                                 </tr>
@@ -135,14 +145,13 @@
                                                 <tr class="text-base font-medium tracking-wide text-left text-gray-500 border-b bg-gray-50">
                                                 <td class="px-4 py-3">{{ $r->id_room }}</td>
                                                 <td class="px-4 py-3">{{ $r->name_room }}</td>
-                                                
                                                 <td class="px-4 py-3 relative my-4">
                                                     <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('room-edit', $r->id_room) }}">Edit</a> 
-                                                    <form action="{{ route('room-custom-destroy', $r->id_room) }}" method="POST">
+                                                    <form action="{{ route('room-custom-destroy', $r->id_room) }}" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500">Delete</button>
-                                                    </form>
+                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDelete(event, '{{ route('room-custom-destroy', $r->id_room) }}')">Delete</button>
+                                                    </form>    
                                                 </td>
                                                 </tr>
                                             @endforeach
@@ -157,3 +166,64 @@
         </div>
     </div>
 </x-app-layout>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    //Delete Lesson or Room
+    function confirmDelete(event, route) {
+        event.preventDefault();
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this lesson!",
+            icon: "warning",
+            buttons: true,
+            timer: 5000,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                deleteCourse(route);
+            }
+        });
+    }
+    
+    function deleteCourse(route) {
+        fetch(route, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                swal("Poof! Lesson has been deleted!", {
+                    icon: "success",
+                    timer: 5000,
+                    buttons: {
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            closeModal: true
+                        }
+                    }
+                })
+                .then((value) => {
+                    // Reload the page when user clicks on OK or after 5 seconds
+                    if (value) {
+                        location.reload();
+                    } else {
+                        setTimeout(function() {
+                            location.reload();
+                        }, 5000);
+                    }
+                });
+            } else {
+                swal("Oops! Something went wrong, please refresh your website!", {
+                    icon: "error",
+                    timer: 5000,
+                });
+            }
+        });
+    }
+</script>

@@ -117,7 +117,7 @@
           <div class="w-full lg:w-6/12 px-4">
             <div class="flex flex-wrap items-top mb-6">
               <div class="w-full lg:w-6/12 px-4 ml-auto">
-                <a href="https://github.com/ngduybao2002/nl_laravel.git"
+                <a href="https://github.com/ngduybao2002/nlcsn_laravel.git"
                   class="bg-white text-gray-900 shadow-lg font-normal h-13 w-13 items-center justify-center align-center rounded-full outline-none focus:outline-none p-6"
                   type="button">
                   <i class="flex fab fa-github justify-center"></i>Github

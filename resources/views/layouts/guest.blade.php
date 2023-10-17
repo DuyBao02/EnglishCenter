@@ -13,16 +13,15 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        
+        @vite(['resources/css/app.css', 'resources/js/app.js'])        
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-blue-200">
             <div class="flex justify-center">
-                <img src="images/dbec.png" alt="" class="h-1/2 rounded-full">
+                <a href="{{ route('welcome') }}" class="h-1/2"><img src="images/dbec.png" class="rounded-full" alt=""></a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full sm:max-w-md mt-4 px-6 py-2 bg-white shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>
         </div>

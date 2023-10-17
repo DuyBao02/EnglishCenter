@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/admin', function () {
     return view('welcome_admin');
@@ -74,32 +74,72 @@ Route::get('/course-admin', 'App\Http\Controllers\CourseRegistrationController@c
 
 // Course Registration routes
 Route::get('/course-edit/{id}', 'App\Http\Controllers\CourseRegistrationController@edit')
-->middleware(['auth', 'verified'])->name('course-edit');
-Route::get('/course-registration', 'App\Http\Controllers\CourseRegistrationController@create')->name('course-registration-create');
-Route::post('/course-registration', 'App\Http\Controllers\CourseRegistrationController@store')->name('course-registration-store');
-Route::delete('/course-custom/{id}', 'App\Http\Controllers\CourseRegistrationController@destroy')->name('course-custom-destroy');
-Route::get('/course-custom-edit/{id}', 'App\Http\Controllers\CourseRegistrationController@edit')->name('course-custom-edit');
-Route::post('/course-custom-update/{id}', 'App\Http\Controllers\CourseRegistrationController@update')->name('course-custom-update');
+    ->middleware(['auth', 'verified'])
+    ->name('course-edit');
+
+Route::get('/course-registration', 'App\Http\Controllers\CourseRegistrationController@create')
+    ->middleware(['auth', 'verified'])
+    ->name('course-registration-create');
+
+Route::post('/course-registration', 'App\Http\Controllers\CourseRegistrationController@store')
+    ->middleware(['auth', 'verified'])
+    ->name('course-registration-store');
+
+Route::delete('/course-custom/{id}', 'App\Http\Controllers\CourseRegistrationController@destroy')
+    ->middleware(['auth', 'verified'])
+    ->name('course-custom-destroy');
+
+Route::get('/course-custom-edit/{id}', 'App\Http\Controllers\CourseRegistrationController@edit')
+    ->middleware(['auth', 'verified'])
+    ->name('course-custom-edit');
+
+Route::post('/course-custom-update/{id}', 'App\Http\Controllers\CourseRegistrationController@update')
+    ->middleware(['auth', 'verified'])
+    ->name('course-custom-update');
+
+// Route::get('/public-to-teacher/{id}', 'CourseController@publicToTeacher')
+//     ->middleware(['auth', 'verified'])
+//     ->name('public-to-teacher');
 //
 
 //Room Custom routes
 Route::get('/room-edit/{id}', 'App\Http\Controllers\RoomCustomController@edit')
 ->middleware(['auth', 'verified'])->name('room-edit');
-Route::get('/room-custom', 'App\Http\Controllers\RoomCustomController@create')->name('room-custom-create');
-Route::post('/room-custom', 'App\Http\Controllers\RoomCustomController@store')->name('room-custom-store');
-Route::delete('/room-custom/{id}', 'App\Http\Controllers\RoomCustomController@destroy')->name('room-custom-destroy');
-Route::get('/room-custom-edit/{id}', 'App\Http\Controllers\RoomCustomController@edit')->name('room-custom-edit');
-Route::post('/room-custom-update/{id}', 'App\Http\Controllers\RoomCustomController@update')->name('room-custom-update');
+
+Route::get('/room-custom', 'App\Http\Controllers\RoomCustomController@create')
+->middleware(['auth', 'verified'])->name('room-custom-create');
+
+Route::post('/room-custom', 'App\Http\Controllers\RoomCustomController@store')
+->middleware(['auth', 'verified'])->name('room-custom-store');
+
+Route::delete('/room-custom/{id}', 'App\Http\Controllers\RoomCustomController@destroy')
+->middleware(['auth', 'verified'])->name('room-custom-destroy');
+
+Route::get('/room-custom-edit/{id}', 'App\Http\Controllers\RoomCustomController@edit')
+->middleware(['auth', 'verified'])->name('room-custom-edit');
+
+Route::post('/room-custom-update/{id}', 'App\Http\Controllers\RoomCustomController@update')
+->middleware(['auth', 'verified'])->name('room-custom-update');
 //
 
 //Lesson Custom route
 Route::get('/lesson-edit/{id}', 'App\Http\Controllers\LessonCustomController@edit')
 ->middleware(['auth', 'verified'])->name('lesson-edit');
-Route::get('/lesson-custom', 'App\Http\Controllers\LessonCustomController@create')->name('lesson-custom-create');
-Route::post('/lesson-custom', 'App\Http\Controllers\LessonCustomController@store')->name('lesson-custom-store');
-Route::delete('/lesson-custom/{id}', 'App\Http\Controllers\LessonCustomController@destroy')->name('lesson-custom-destroy');
-Route::get('/lesson-custom-edit/{id}', 'App\Http\Controllers\LessonCustomController@edit')->name('lesson-custom-edit');
-Route::post('/lesson-custom-update/{id}', 'App\Http\Controllers\LessonCustomController@update')->name('lesson-custom-update');
+
+Route::get('/lesson-custom', 'App\Http\Controllers\LessonCustomController@create')
+->middleware(['auth', 'verified'])->name('lesson-custom-create');
+
+Route::post('/lesson-custom', 'App\Http\Controllers\LessonCustomController@store')
+->middleware(['auth', 'verified'])->name('lesson-custom-store');
+
+Route::delete('/lesson-custom/{id}', 'App\Http\Controllers\LessonCustomController@destroy')
+->middleware(['auth', 'verified'])->name('lesson-custom-destroy');
+
+Route::get('/lesson-custom-edit/{id}', 'App\Http\Controllers\LessonCustomController@edit')
+->middleware(['auth', 'verified'])->name('lesson-custom-edit');
+
+Route::post('/lesson-custom-update/{id}', 'App\Http\Controllers\LessonCustomController@update')
+->middleware(['auth', 'verified'])->name('lesson-custom-update');
 //
 
 Route::get('/rl-custom-admin', 'App\Http\Controllers\RoomCustomController@createBoth')
