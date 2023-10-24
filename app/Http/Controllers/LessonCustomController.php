@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Carbon\Carbon;
 
 class LessonCustomController extends Controller
 {
@@ -48,15 +49,17 @@ class LessonCustomController extends Controller
         $existingLesson = Lesson::where('id_lesson', $request->id_lesson)->first();
     
         if ($existingLesson) {
-            session()->flash('error', 'The Lesson already exists.');
+            session()->flash('error', 'The ' . $request->id_lesson . ' lesson already exists!');
             return redirect()->back();
         }
-    
-        if ($request->start_time >= $request->end_time) {
-            session()->flash('error', 'Start time must be less than end time.');
+
+        $conflictingLesson = Lesson::where('end_time', '>', $request->start_time)->first();; 
+
+        if ($conflictingLesson) {
+            session()->flash('error', 'The start time must be greater than the end time in ' . $conflictingLesson->id_lesson . '!');
             return redirect()->back();
         }
-    
+
         $lesson = Lesson::create([
             'id_lesson'  => $request->id_lesson,
             'start_time' => $request->start_time,
@@ -65,11 +68,12 @@ class LessonCustomController extends Controller
     
         event(new Registered($lesson));
     
-        session()->flash('success', 'New Lesson created successful!');
+        session()->flash('success', 'The ' . $lesson->id_lesson . ' lesson created successful!');
     
         $lessons = Lesson::all();
         return redirect()->route('rl-custom-admin');
     }
+    
 
     public function getLessonsForCourseCreation()
     {
@@ -101,9 +105,21 @@ class LessonCustomController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'start_time' => ['required'],
+            'end_time' => ['required'],
+        ]);
+    
+        $conflictingLesson = Lesson::where('end_time', '>', $request->start_time)->first();; 
+
+        if ($conflictingLesson) {
+            session()->flash('error', 'The start time must be greater than the end time in ' . $conflictingLesson->id_lesson . '!');
+            return redirect()->back();
+        }
+        
         $lesson = Lesson::find($id);
         $lesson->update($request->all());
-        return redirect()->route('rl-custom-admin')->with('success', 'Lesson update successful');
+        return redirect()->route('rl-custom-admin')->with('success', 'The ' . $lesson->id_lesson . ' lesson update successful!');
     }
 
     /**
@@ -122,4 +138,5 @@ class LessonCustomController extends Controller
             return response()->json(['success' => false]);
         }
     }
+    
 }

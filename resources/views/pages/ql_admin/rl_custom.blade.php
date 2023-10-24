@@ -88,7 +88,7 @@
                                                     <form action="{{ route('lesson-custom-destroy', $l->id_lesson) }}" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDelete(event, '{{ route('lesson-custom-destroy', $l->id_lesson) }}')">Delete</button>
+                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDeleteLesson(event, '{{ route('lesson-custom-destroy', $l->id_lesson) }}')">Delete</button>
                                                     </form>
                                                 </td>
                                                 </tr>
@@ -150,7 +150,7 @@
                                                     <form action="{{ route('room-custom-destroy', $r->id_room) }}" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDelete(event, '{{ route('room-custom-destroy', $r->id_room) }}')">Delete</button>
+                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDeleteRoom(event, '{{ route('room-custom-destroy', $r->id_room) }}')">Delete</button>
                                                     </form>    
                                                 </td>
                                                 </tr>
@@ -168,8 +168,41 @@
 </x-app-layout>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    //Delete Lesson or Room
-    function confirmDelete(event, route) {
+    //Autofill start_time or end_time
+    document.getElementById('start_time').addEventListener('input', function (e) {
+        var startTime = new Date('1970-01-01T' + e.target.value + 'Z');
+        var endTime = new Date(startTime.getTime() + 120*60000);
+        var endTimeStr = endTime.toISOString().substr(11, 5);
+        document.getElementById('end_time').value = endTimeStr;
+    });
+
+    document.getElementById('end_time').addEventListener('input', function (e) {
+        var endTime = new Date('1970-01-01T' + e.target.value + 'Z');
+        var startTime = new Date(endTime.getTime() - 120*60000);
+        var startTimeStr = startTime.toISOString().substr(11, 5);
+        document.getElementById('start_time').value = startTimeStr;
+    });
+    
+    //ConfirmDeleteRoom
+    function confirmDeleteRoom(event, route) {
+        event.preventDefault();
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this room!",
+            icon: "warning",
+            buttons: true,
+            timer: 5000,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                deleteRoom(route);
+            }
+        });
+    }
+
+    //ConfirmDeleteLesson
+    function confirmDeleteLesson(event, route) {
         event.preventDefault();
         swal({
             title: "Are you sure?",
@@ -181,12 +214,12 @@
         })
         .then((willDelete) => {
             if (willDelete) {
-                deleteCourse(route);
+                deleteLesson(route);
             }
         });
     }
-    
-    function deleteCourse(route) {
+
+    function deleteLesson(route) {
         fetch(route, {
             method: 'DELETE',
             headers: {
@@ -197,6 +230,47 @@
         .then(data => {
             if (data.success) {
                 swal("Poof! Lesson has been deleted!", {
+                    icon: "success",
+                    timer: 5000,
+                    buttons: {
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            closeModal: true
+                        }
+                    }
+                })
+                .then((value) => {
+                    // Reload the page when user clicks on OK or after 5 seconds
+                    if (value) {
+                        location.reload();
+                    } else {
+                        setTimeout(function() {
+                            location.reload();
+                        }, 5000);
+                    }
+                });
+            } else {
+                swal("Oops! Something went wrong, please refresh your website!", {
+                    icon: "error",
+                    timer: 5000,
+                });
+            }
+        });
+    }
+
+    function deleteRoom(route) {
+        fetch(route, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                swal("Poof! Room has been deleted!", {
                     icon: "success",
                     timer: 5000,
                     buttons: {

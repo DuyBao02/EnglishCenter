@@ -3,26 +3,23 @@
 </head>
 
 <x-guest-layout>
+    @if ($errors->has('email'))
+        <script>
+            window.onload = function() {
+                swal('Error', '{{ $errors->first('email') }}', 'error', {
+                    button: true,
+                    button: 'OK',
+                    timer: 5000,
+                });
+            }
+        </script>
+    @endif
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
-
-        <!-- <x-input-error :messages="$errors->get('email')" class="my-4 text-center" /> -->
-        @if ($errors->has('email'))
-            <script>
-                window.onload = function() {
-                    swal('Error', '{{ $errors->first('email') }}', 'error', {
-                        button: true,
-                        button: 'OK',
-                        timer: 5000,
-                    });
-                }
-            </script>
-        @endif
-        
-
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />

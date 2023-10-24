@@ -171,7 +171,7 @@
             </div>
             <div class="w-full md:w-4/12 px-4 mr-auto ml-auto">
               <div
-                class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg bg-pink-600"
+                class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg"
               >
                 <img
                   alt="..."
@@ -186,15 +186,11 @@
                     class="absolute left-0 w-full block"
                     style="height: 95px; top: -94px;"
                   >
-                    <polygon
-                      points="-30,95 583,95 583,65"
-                      class="text-pink-600 fill-current"
-                    ></polygon>
                   </svg>
-                  <h4 class="text-xl font-bold text-white">
+                  <h4 class="text-xl font-bold text-black">
                     Top Notch Services
                   </h4>
-                  <p class="text-md font-light mt-2 text-white">
+                  <p class="text-md font-light mt-2 text-black">
                     The Arctic Ocean freezes every winter and much of the
                     sea-ice then thaws every summer, and that process will
                     continue whatever happens.
@@ -312,7 +308,7 @@
               <div class="px-6">
                 <img
                   alt="..."
-                  src=""
+                  src="images/team-1-800x800.jpg"
                   class="shadow-lg rounded-full max-w-full mx-auto"
                   style="max-width: 120px;"
                 />
@@ -346,7 +342,7 @@
               <div class="px-6">
                 <img
                   alt="..."
-                  src=""
+                  src="images/team-2-800x800.jpg"
                   class="shadow-lg rounded-full max-w-full mx-auto"
                   style="max-width: 120px;"
                 />
@@ -375,7 +371,7 @@
               <div class="px-6">
                 <img
                   alt="..."
-                  src=""
+                  src="images/team-3-800x800.jpg"
                   class="shadow-lg rounded-full max-w-full mx-auto"
                   style="max-width: 120px;"
                 />
@@ -409,7 +405,7 @@
               <div class="px-6">
                 <img
                   alt="..."
-                  src=""
+                  src="images/team-4-470x470.png"
                   class="shadow-lg rounded-full max-w-full mx-auto"
                   style="max-width: 120px;"
                 />

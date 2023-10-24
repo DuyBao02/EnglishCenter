@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Course') }}
+            {{ __('Edit Course') }}
         </h2>
     </x-slot>
     @if (Session::has('success'))
@@ -35,7 +35,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="id_course" class="block text-sm font-medium text-gray-700">ID Course</label>
-                                <input required type="text" id="id_course" name="id_course" value="{{ $course->id_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input readonly required type="text" id="id_course" name="id_course" value="{{ $course->id_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="time_start" class="block text-sm font-medium text-gray-700">Time start</label>
@@ -43,20 +43,12 @@
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="name_course" class="block text-sm font-medium text-gray-700">Name Course</label>
-                                <input required type="text" id="name_course" name="name_course" value="{{ $course->name_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input required oninput="formatCurrency(this)" type="text" id="name_course" name="name_course" value="{{ $course->name_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="tuitionFee" class="block text-sm font-medium text-gray-700">Tuition Fee</label>
                                 <input required type="text" id="tuitionFee" name="tuitionFee" value="{{ $course->tuitionFee ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div> 
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="maxStudents" class="block text-sm font-medium text-gray-700">Max Students</label>
-                                <input required type="text" value="15" id="maxStudents" name="maxStudents" value="{{ $course->maxStudents ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="weeks" class="block text-sm font-medium text-gray-700">Number of Weeks</label>
-                                <input required type="text" id="weeks" value="10" name="weeks" value="{{ $course->weeks ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div>
                         </div> 
                         <div class="grid grid-cols-3 gap-4 mt-4">
                             <div class="col-span-3 sm:col-span-1">
@@ -164,8 +156,18 @@
                             </div>
                     
                         </div>
-                        
+
                         <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="maxStudents" class="block text-sm font-medium text-gray-700">Max Students</label>
+                                <input readonly required type="text" id="maxStudents" name="maxStudents" value="{{ $course->maxStudents ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="weeks" class="block text-sm font-medium text-gray-700">Number of Weeks</label>
+                                <input readonly required type="text" id="weeks" name="weeks" value="{{ $course->weeks ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
                             <div class="col-span-2 sm:col-span-1"> 
                                 <label for="teacher" class="block text-sm font-medium text-gray-700">Teacher:</label>
                                 <input type="text" id="teacher" name="teacher" value="{{ $course->teacher ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">

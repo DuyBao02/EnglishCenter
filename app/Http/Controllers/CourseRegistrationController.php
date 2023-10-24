@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Course;
 use App\Models\Room;
 use App\Models\Lesson;
+use App\Models\Secondcourse;
+use App\Models\Thirdcourse;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\View\View;
@@ -18,14 +21,6 @@ use Illuminate\Validation\Rules;
 class CourseRegistrationController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
-    {
-        //
-    }
-
-    /**
      * Display the registration view for regular users.
      */
     public function create(): View
@@ -33,7 +28,7 @@ class CourseRegistrationController extends Controller
         $courses = Course::all();
         return view('pages.ql_admin.course_admin', ['courses' => $courses]);
     }
-
+    
     /**
      * Handle an incoming registration request for regular users.
      *
@@ -41,9 +36,6 @@ class CourseRegistrationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        //dd($request->all());
-
-        // Validate form data
         $request->validate([
             'id_course'  => ['required'],
             'name_course' => ['required'],
@@ -55,31 +47,28 @@ class CourseRegistrationController extends Controller
             'tuitionFee' => ['required'],
             'teacher' => ['nullable'],
             'students_list.*' => ['nullable'],
-            'user_id' => ['nullable'],
         ]);
-        
-        $course = Course::where('id_course', $request->id_course)->first();
-        $name_course = Course::where('name_course', $request->name_course)->first();
-        if($course){
-            return redirect()->back()->with('error', 'The course already exists'); 
-        }elseif($name_course){
-            return redirect()->back()->with('error', 'The course name already exists'); 
+    
+        if (Course::where('id_course', $request->id_course)->exists() ) {
+            return redirect()->back()->with('error', $request->id_course . ' already exists!'); 
         }
 
-        // Check if there are any duplicate values in the days and rooms arrays
-        $days = $request->input('days');
-        if (count($days)!== count(array_unique($days))) {
-            return redirect()->back()->with('error', 'Days has been duplicate'); 
+        if (Course::where('name_course', $request->name_course)->exists()) {
+            return redirect()->back()->with('error', $request->name_course . ' already exists!'); 
+        }
+    
+        if (strlen(floor($request->tuitionFee)) > 8) {
+            return redirect()->back()->with('error', 'Tuition fees do not exceed 8 figures');
         }
 
-        //Sort days[] in order from Monday to Saturday (Bubble sort)
         $a = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        $lessons = $request->input('lessons');
+        $days = $request->input('days');
         $rooms = $request->input('rooms');
+        $lessons = $request->input('lessons');
 
         for ($i = 0; $i < count($days); $i++) {
             for ($j = 0; $j < count($days) - $i - 1; $j++) {
-                if (array_search($days[$j], $a) > array_search($days[$j + 1], $a)) {
+                if (array_search($days[$j], $a) > array_search($days[$j + 1], $a) || (array_search($days[$j], $a) == array_search($days[$j + 1], $a) && $lessons[$j] > $lessons[$j + 1])) {
                     // Swap days
                     $temp = $days[$j];
                     $days[$j] = $days[$j + 1];
@@ -97,63 +86,48 @@ class CourseRegistrationController extends Controller
                 }
             }
         }
+        
+        $data = collect($request->input('days'))->map(function ($day, $index) use ($request, $a) {
+            return ['day' => $day, 'lesson' => $request->input('lessons')[$index], 'room' => $request->input('rooms')[$index], 'index' => array_search($day, $a)];
+        })->sortBy(['index', 'lesson']);
 
-        //Xử lý xung đột giữa khóa học đầu vào và các khóa học hiện có 
+        if ($data->duplicates(function ($value) {
+            return $value['day'] . $value['lesson'];
+        })->isNotEmpty()) {
+            return redirect()->back()->with('error', 'The lessons overlap within the day!');
+        }
+
         $existingCourses = Course::all();
-        
         foreach ($existingCourses as $existingCourse) {
-            $existingDays = $existingCourse->days;
-            $existingLessons = $existingCourse->lessons;
-            $existingRooms = $existingCourse->rooms;
-        
-            for ($i = 0; $i < count($days); $i++) {
-                $dayComparison = $days[$i] == $existingDays[$i] ? 'giống' : 'không giống';
-                $lessonComparison = $lessons[$i] == $existingLessons[$i] ? 'giống' : 'không giống';
-                $roomComparison = $rooms[$i] == $existingRooms[$i] ? 'giống' : 'không giống';
-        
-                $cases = [
-                    'giốnggiốnggiống' => 'error',
-                    'giốnggiốngkhông giống' => 'ok',
-                    'giốngkhông giốnggiống' => 'ok',
-                    'giốngkhông giốngkhông giống' => 'ok',
-                    'không giống' => 'ok',
-                ];
-        
-                $key = $dayComparison . $lessonComparison . $roomComparison;
-        
-                if (array_key_exists($key, $cases) && $cases[$key] == 'error') {
-                    return redirect()->back()->with('error', 'The course schedule conflicts with an existing course');
+            for ($i = 0; $i < count($data); $i++) {
+                for ($j = 0; $j < count($existingCourse->days); $j++) {
+                    if ($data[$i]['day'] == $existingCourse->days[$j] && $data[$i]['lesson'] == $existingCourse->lessons[$j] && $data[$i]['room'] == $existingCourse->rooms[$j]) {
+                        return redirect()->back()->with('error', 'Dates, lessons and rooms already exist in another course!');
+                    }
                 }
             }
         }
-
-        $user = Auth::user();
-
+    
         $course = Course::create([
             'id_course'  => $request->id_course,
             'name_course' => $request->name_course,
             'time_start' => $request->time_start,
             'weeks' => $request->weeks,
-            'days' => $days, // Use sorted array
-            'rooms' => $rooms, // Use sorted array
-            'lessons' => $lessons, // Use sorted array
+            'days' => $data->pluck('day')->all(),
+            'rooms' => $data->pluck('room')->all(),
+            'lessons' => $data->pluck('lesson')->all(),
             'maxStudents' => $request->maxStudents,
             'tuitionFee' => $request->tuitionFee,
             'teacher' => $request->teacher,
-            'students_list' => json_encode($request->input('students_list')),
-            'user_id_create' => $user->id,
+            'students_list' => array_filter($request->input('students_list', [])),
         ]);
-
-        event(new Registered($course));
-
-        $courses = Course::all()->map(function ($course) {
-            $course->students_list = json_decode($course->students_list, true);
-            return $course;
-        });
         
-        return redirect()->route('course-registration-create', ['courses' => $courses])
-        ->with('success', 'Course registration successful!');
+        event(new Registered($course));
+        
+        return redirect()->route('course-registration-create', ['courses' => Course::all()])
+        ->with('success', $course->name_course . ' registration successful!');
     }
+    
 
     public function getLessonsAndRoomsForCreateCourse()
     {
@@ -163,27 +137,22 @@ class CourseRegistrationController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
     {
         $course = Course::where('id_course', $id)->first();
-        $lessons = Lesson::all(); // Lấy danh sách các bài học từ cơ sở dữ liệu
+        $secondCourse = $course->secondCourse;
+        $thirdCourse = $course->thirdCourse;
+        $lessons = Lesson::all();
         $rooms = Room::all();
         if ($course) {
-            return view('pages.ql_admin.course_edit', compact('course', 'lessons', 'rooms')); // Truyền biến $lessons vào view
+            // Truyền biến $lessons vào view
+            return view('pages.ql_admin.course_edit', compact('course', 'lessons', 'rooms', 'secondCourse', 'thirdCourse'));
         } else {
-            return redirect()->route('course-admin')->with('error', 'Course not found');
+            return redirect()->route('course-admin')->with('error', $course->name_course . ' not found!');
         }
-    }
+}
 
     /**
      * Update the specified resource in storage.
@@ -191,8 +160,71 @@ class CourseRegistrationController extends Controller
     public function update(Request $request, string $id)
     {
         $course = Course::where('id_course', $id)->first();
+        
+        if (Course::where('name_course', $request->name_course)->exists()) {
+            return redirect()->back()->with('error', $request->name_course . ' already exists!'); 
+        }
+    
+        $a = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        $days = $request->input('days');
+        $rooms = $request->input('rooms');
+        $lessons = $request->input('lessons');
+
+        for ($i = 0; $i < count($days); $i++) {
+            for ($j = 0; $j < count($days) - $i - 1; $j++) {
+                if (array_search($days[$j], $a) > array_search($days[$j + 1], $a) || (array_search($days[$j], $a) == array_search($days[$j + 1], $a) && $lessons[$j] > $lessons[$j + 1])) {
+                    // Swap days
+                    $temp = $days[$j];
+                    $days[$j] = $days[$j + 1];
+                    $days[$j + 1] = $temp;
+
+                    // Swap lessons
+                    $temp = $lessons[$j];
+                    $lessons[$j] = $lessons[$j + 1];
+                    $lessons[$j + 1] = $temp;
+
+                    // Swap rooms
+                    $temp = $rooms[$j];
+                    $rooms[$j] = $rooms[$j + 1];
+                    $rooms[$j + 1] = $temp;
+                }
+            }
+        }
+        
+        $data = collect($request->input('days'))->map(function ($day, $index) use ($request, $a) {
+            return ['day' => $day, 'lesson' => $request->input('lessons')[$index], 'room' => $request->input('rooms')[$index], 'index' => array_search($day, $a)];
+        })->sortBy(['index', 'lesson']);
+
+        if ($data->duplicates(function ($value) {
+            return $value['day'] . $value['lesson'];
+        })->isNotEmpty()) {
+            return redirect()->back()->with('error', 'The lessons overlap within the day!');
+        }
+
+        $existingCourses2 = Course::where('id_course', '!=', $id)->get();
+        foreach ($existingCourses2 as $existingCourse2) {
+            for ($i = 0; $i < count($data); $i++) {
+                for ($j = 0; $j < count($existingCourse2->days); $j++) {
+                    if ($data[$i]['day'] == $existingCourse2->days[$j] && $data[$i]['lesson'] == $existingCourse2->lessons[$j] && $data[$i]['room'] == $existingCourse2->rooms[$j]) {
+                        return redirect()->back()->with('error', 'Dates, lessons and rooms already exist in another course!');
+                    }
+                }
+            }
+        }
+
         $course->update($request->all());
-        return redirect()->route('course-admin')->with('success', 'Course update successful');
+
+        $secondCourse = $course->secondCourse;
+        if ($secondCourse) {
+            $secondCourse->update($request->all());
+        }
+
+        $thirdCourse = $course->thirdCourse;
+        if ($thirdCourse) {
+            $thirdCourse->update($request->all());
+        }
+
+        return redirect()->route('course-admin')->with('success', $course->name_course . ' update successful!');
     }
 
     /**
@@ -205,10 +237,46 @@ class CourseRegistrationController extends Controller
     {
         $course = Course::where('id_course', $id)->first();
         if ($course) {
+            $secondCourse = $course->secondCourse;
+            if ($secondCourse) {
+                $secondCourse->delete();
+            }
+
+            $thirdCourse = $course->thirdCourse;
+            if ($thirdCourse) {
+                $thirdCourse->delete();
+            }
+
             $course->delete();
             return response()->json(['success' => true]);
         } else {
             return response()->json(['success' => false]);
         }
     }
+
+    public function StudentListAdmin($courseID)
+    {
+        $course = Course::find($courseID);
+        if ($course) {
+            if ($course->teacherUser) {
+                $students_list = User::whereIn('id', $course->students_list)->get();
+                session(['students_list' => $students_list]); // Lưu dữ liệu vào session
+                if ($students_list->isEmpty()){
+                    return redirect()->back()->with('error', 'Cannot watch because there is no student yet!');
+                }
+                return redirect()->route('student-list-admin');
+            } else {
+                return redirect()->back()->with('error', 'Cann not watch because there is no teacher yet!');
+            }
+        }
+        return redirect()->back()->with('error', 'Unauthorized access');
+    }
+    
+
+    public function hienthiStudentListA()
+    {
+        $students_list = session('students_list'); // Lấy dữ liệu từ session
+        return view('pages.ql_admin.student_list_admin', compact('students_list'));
+    }
+    
 }

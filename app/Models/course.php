@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 
-class course extends Model
+class Course extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
     /**
@@ -64,6 +64,22 @@ class course extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'course_room', 'course_id', 'user_id');
     }
+
+    public function teacherUser()
+    {
+        return $this->belongsTo(User::class, 'teacher');
+    }
+    
+    public function secondCourse()
+    {
+        return $this->hasOne(Secondcourse::class, 'id_2course', 'id_course');
+    }
+
+    public function thirdCourse()
+    {
+        return $this->hasOne(Thirdcourse::class, 'id_3course', 'id_course');
+    }
+    
 }

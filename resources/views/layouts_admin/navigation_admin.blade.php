@@ -23,17 +23,12 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('homework-admin')" :active="request()->routeIs('homework-admin')">
-                        {{ __('Homework') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('teacher-list-admin')" :active="request()->routeIs('teacher-list-admin')">
+                    <x-nav-link :href="route('teacher-management')" :active="request()->routeIs('teacher-management')">
                         {{ __('Teacher List') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('student-list-admin')" :active="request()->routeIs('student-list-admin')">
+                    <x-nav-link :href="route('student-management')" :active="request()->routeIs('student-management')">
                         {{ __('Student List') }}
                     </x-nav-link>
                 </div>
@@ -97,14 +92,11 @@
             <x-responsive-nav-link :href="route('rl-custom-admin')" :active="request()->routeIs('rl-custom-admin')">
                 {{ __('Rooms & Lessons Custom') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('homework-admin')" :active="request()->routeIs('homework-admin')">
-                {{ __('Homework') }}
+            <x-responsive-nav-link :href="route('teacher-management')" :active="request()->routeIs('teacher-management')">
+                {{ __('Teacher Management') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('teacher-list-admin')" :active="request()->routeIs('teacher-list-admin')">
-                {{ __('Teacher List') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('student-list-admin')" :active="request()->routeIs('student-list-admin')">
-                {{ __('Student List') }}
+            <x-responsive-nav-link :href="route('student-management')" :active="request()->routeIs('student-management')">
+                {{ __('Student Management') }}
             </x-responsive-nav-link>
         </div>
 

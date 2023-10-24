@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
-            $table->string('id_course', 10)->primary()->unique();
+        Schema::create('thirdcourses', function (Blueprint $table) {
+            $table->string('id_3course', 10)->primary();
             $table->date('time_start');
             $table->string('name_course', 50);
             $table->unsignedSmallInteger('weeks');
@@ -23,7 +23,6 @@ return new class extends Migration
             $table->double('tuitionFee', 10, 2);
             $table->string('teacher', 50)->nullable();
             $table->json('students_list')->nullable();
-            
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('thirdcourses');
     }
 };

@@ -32,17 +32,24 @@ class AuthenticatedSessionController extends Controller
 
         if ($request->user()->role == "Student") {
 
+            $request->session()->flash('success', 'Student login successful!');
+
             return redirect()->intended(RouteServiceProvider::HOME_s);
 
         } elseif ($request->user()->role == "Teacher") {
-
+            
+            $request->session()->flash('success', 'Teacher login successful!');
+            
             return redirect()->intended(RouteServiceProvider::HOME_t);
-
-        }else {
-
+            
+        } else {
+            
+            $request->session()->flash('success', 'Admin login successful!');
+            
             return redirect()->intended(RouteServiceProvider::HOME_a);
-
+            
         }
+        
     }
 
     /**

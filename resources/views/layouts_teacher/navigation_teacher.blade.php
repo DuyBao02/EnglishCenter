@@ -14,15 +14,15 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('schedule-teacher')" :active="request()->routeIs('schedule-teacher')">
+                    <x-nav-link :href="route('course-list-teacher')" :active="request()->routeIs('course-list-teacher')">
+                        {{ __('Course List') }}
+                    </x-nav-link>
+                </div>
+                <!-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('course-list-teacher')" :active="request()->routeIs('course-list-teacher')">
                         {{ __('Schedule') }}
                     </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('student-list-teacher')" :active="request()->routeIs('student-list-teacher')">
-                        {{ __('Student List') }}
-                    </x-nav-link>
-                </div>
+                </div> -->
             </div>
 
             <!-- Settings Dropdown -->
@@ -77,12 +77,12 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard-teacher')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('course-list-teacher')" :active="request()->routeIs('course-list-teacher')">
+                {{ __('Course List') }}
+            </x-responsive-nav-link>
+            <!-- <x-responsive-nav-link :href="route('course-list-teacher')" :active="request()->routeIs('course-list-teacher')">
                 {{ __('Schedule') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard-student')" :active="request()->routeIs('dashboard')">
-                {{ __('Student List') }}
-            </x-responsive-nav-link>
+            </x-responsive-nav-link> -->
         </div>
 
         <!-- Responsive Settings Options -->

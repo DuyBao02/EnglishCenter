@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Model;
+use App\Models\Course;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -55,6 +56,26 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function course()
     {
-        return $this->hasMany(Course::class);
+        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id');
     }
+
+    public function hasRole($role)
+    {
+        return $this->role == $role;
+    }
+
+    public function registeredCourse()
+    {
+        return $this->hasOne(Course::class, 'teacher', 'id');
+    }
+    
+    public function registeredCourseStudent()
+    {
+        $courses = Course::whereJsonContains('students_list', $this->id)->get();
+        if ($courses->isNotEmpty()) {
+            return $courses->first()->name_course;
+        }
+        return null;
+    }
+    
 }

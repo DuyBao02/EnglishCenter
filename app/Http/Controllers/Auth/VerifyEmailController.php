@@ -15,44 +15,30 @@ class VerifyEmailController extends Controller
      */
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
-
-        if($request->role == "Student"){
-
-            if ($request->user()->hasVerifiedEmail()) {
-                return redirect()->intended(RouteServiceProvider::HOME_s.'?verified=1');
-            }
-
-            if ($request->user()->markEmailAsVerified()) {
-                event(new Verified($request->user()));
-            }
-
-            return redirect()->intended(RouteServiceProvider::HOME_s.'?verified=1');
-
-        }elseif($request->role == "Teacher"){
-
-            if ($request->user()->hasVerifiedEmail()) {
-                return redirect()->intended(RouteServiceProvider::HOME_t.'?verified=1');
-            }
-
-            if ($request->user()->markEmailAsVerified()) {
-                event(new Verified($request->user()));
-            }
-
-            return redirect()->intended(RouteServiceProvider::HOME_t.'?verified=1');
-
-        }else{
-
-            if ($request->user()->hasVerifiedEmail()) {
-                return redirect()->intended(RouteServiceProvider::HOME_a.'?verified=1');
-            }
-
-            if ($request->user()->markEmailAsVerified()) {
-                event(new Verified($request->user()));
-            }
-
-            return redirect()->intended(RouteServiceProvider::HOME_a.'?verified=1');
-
+        if ($request->user()->hasVerifiedEmail()) {
+            $request->session()->flash('success', 'Sign Up Success!');
+            return $this->getRedirect($request);
         }
-        
+
+        if ($request->user()->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+            $request->session()->flash('success', 'Sign Up Success!');
+            return $this->getRedirect($request);
+        } else {
+            $request->session()->flash('error', 'Failed to verify email!');
+            return redirect()->back();
+        }
+    }
+
+    private function getRedirect($request)
+    {
+        switch ($request->role) {
+            case "Student":
+                return redirect()->intended(RouteServiceProvider::HOME_s.'?verified=1');
+            case "Teacher":
+                return redirect()->intended(RouteServiceProvider::HOME_t.'?verified=1');
+            default:
+                return redirect()->intended(RouteServiceProvider::HOME_a.'?verified=1');
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Course;
 use App\Models\Room;
 use App\Models\Lesson;
 use App\Http\Controllers\Controller;
@@ -47,10 +48,10 @@ class RoomCustomController extends Controller
         $exitsingName_room = Room::where('name_room', $request->name_room)->first();
 
         if ($existingLesson) {
-            session()->flash('error', 'The Room already exists.');
+            session()->flash('error', 'Room ' . $request->id_room . ' already exists!');
             return redirect()->back();
         }elseif ($exitsingName_room) {
-            session()->flash('error', 'Name Room already exists.');
+            session()->flash('error', $request->id_room . ' already exists!');
             return redirect()->back();
         }
     
@@ -61,7 +62,7 @@ class RoomCustomController extends Controller
 
         event(new Registered($room));
     
-        session()->flash('success', 'New Room created successful!');
+        session()->flash('success', 'Room ' . $room->id_room . ' created successful!');
     
         $rooms = Room::all();
         return redirect()->route('rl-custom-admin');
@@ -96,10 +97,23 @@ class RoomCustomController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'name_room' => ['required'],
+        ]);
+    
+        $existingNameRoom = Room::where('name_room', $request->name_room)->where('id_room', '!=', $id)->first();
+    
+        if ($existingNameRoom) {
+        
+            session()->flash('error', 'Room name ' . $request->name_room . ' already exists!');
+            return redirect()->back();
+        }
+    
         $room = Room::find($id);
         $room->update($request->all());
-        return redirect()->route('rl-custom-admin')->with('success', 'Room update successful');
+        return redirect()->route('rl-custom-admin')->with('success', 'Room ' . $room->id_room . ' update successful!');
     }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -117,4 +131,5 @@ class RoomCustomController extends Controller
             return response()->json(['success' => false]);
         }
     }
+    
 }

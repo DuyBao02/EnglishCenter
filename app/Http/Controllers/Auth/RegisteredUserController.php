@@ -32,6 +32,14 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
+        if (User::where('name', $request->name)->exists()) {
+            return redirect()->back()->with('error', 'Name already exists!'); 
+        }
+        if (User::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'Email already exists!'); 
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
@@ -83,6 +91,14 @@ class RegisteredUserController extends Controller
      */
     public function storeAdmin(Request $request): RedirectResponse
     {
+        
+        if (User::where('name', $request->name)->exists()) {
+            return redirect()->back()->with('error', 'Name already exists!'); 
+        }
+        if (User::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'Email already exists!'); 
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],

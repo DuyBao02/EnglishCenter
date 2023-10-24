@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('course_lesson', function (Blueprint $table) {
             $table->string('course_id',10);
-            $table->string('lesson_id',1);
-
+            $table->unsignedBigInteger('lesson_id');
+        
             $table->foreign('course_id')->references('id_course')->on('courses')->onDelete('cascade');
             $table->foreign('lesson_id')->references('id_lesson')->on('lessons')->onDelete('cascade');
-
+        
+            $table->primary(['course_id', 'lesson_id']);
+        
             $table->timestamps();
         });
     }

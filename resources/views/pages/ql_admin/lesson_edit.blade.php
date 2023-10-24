@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Rooms & Lessons Custom') }}
+            {{ __('Edit Lesson') }}
         </h2>
     </x-slot>
     @if (Session::has('success'))
@@ -67,3 +67,19 @@
     </div>
 </x-app-layout>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    //Autofill start_time or end_time
+    document.getElementById('start_time').addEventListener('input', function (e) {
+        var startTime = new Date('1970-01-01T' + e.target.value + 'Z');
+        var endTime = new Date(startTime.getTime() + 120*60000);
+        var endTimeStr = endTime.toISOString().substr(11, 5);
+        document.getElementById('end_time').value = endTimeStr;
+    });
+
+    document.getElementById('end_time').addEventListener('input', function (e) {
+        var endTime = new Date('1970-01-01T' + e.target.value + 'Z');
+        var startTime = new Date(endTime.getTime() - 120*60000);
+        var startTimeStr = startTime.toISOString().substr(11, 5);
+        document.getElementById('start_time').value = startTimeStr;
+    });
+</script>

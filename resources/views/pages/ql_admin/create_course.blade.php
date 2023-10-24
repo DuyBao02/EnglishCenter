@@ -170,20 +170,20 @@
                         <div class="grid grid-cols-2 gap-4 mt-4">
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="maxStudents" class="block text-sm font-medium text-gray-700">Max Students</label>
-                                <input required type="text" value="15" id="maxStudents" name="maxStudents" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input required type="text" value="3" id="maxStudents" name="maxStudents" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="weeks" class="block text-sm font-medium text-gray-700">Number of Weeks</label>
-                                <input required type="text" id="weeks" value="10" name="weeks" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input required type="text" id="weeks" value="3" name="weeks" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1"> 
                                 <label for="teacher" class="block text-sm font-medium text-gray-700">Teacher</label>
-                                <input type="text" name="teacher" id="teacher" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input readonly type="text" name="teacher" id="teacher" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
 
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="students_list" class="block text-sm font-medium text-gray-700">Students List</label>
-                                <textarea name="students_list[]" id="students_list" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                                <textarea readonly name="students_list[]" id="students_list" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
                             </div>
                         </div>
 

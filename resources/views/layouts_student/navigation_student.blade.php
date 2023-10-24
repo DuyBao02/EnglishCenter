@@ -14,18 +14,13 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('exercise-student')" :active="request()->routeIs('exercise-student')">
-                        {{ __('Exercises') }}
+                    <x-nav-link :href="route('course-list-student')" :active="request()->routeIs('course-list-student')">
+                        {{ __('Register Course') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('schedule-student')" :active="request()->routeIs('schedule-student')">
                         {{ __('Schedule') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('register-course-student')" :active="request()->routeIs('register-course-student')">
-                        {{ __('Register Course') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -88,12 +83,9 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard-student')" :active="request()->routeIs('dashboard')">
-                {{ __('Exercises') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard-student')" :active="request()->routeIs('dashboard')">
                 {{ __('Schedule') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard-student')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('course-list-student')" :active="request()->routeIs('course-list-student')">
                 {{ __('Register the course') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('dashboard-student')" :active="request()->routeIs('dashboard')">

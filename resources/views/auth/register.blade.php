@@ -3,6 +3,28 @@
 </head>
 
 <x-guest-layout>
+    @if (Session::has('success'))
+        <script>
+        window.onload = function() {
+            swal('Success', '{{ Session::get('success') }}', 'success',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
+    @if (Session::has('error'))
+        <script>
+        window.onload = function() {
+            swal('Error', '{{ Session::get('error') }}', 'error',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
     <form method="POST" action="{{ route('register') }}">
         @csrf
         <div class="columns-2">
@@ -10,14 +32,12 @@
             <div>
                 <x-input-label for="name" :value="__('Name')" />
                 <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-                <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
 
             <!-- Email Address -->
             <div class="mt-4">
                 <x-input-label for="email" :value="__('Email')" />
                 <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
             <!-- Password -->
@@ -50,7 +70,6 @@
                     </div>
                 </div>
 
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 
             <!-- Confirm Password -->
@@ -82,7 +101,6 @@
                     </div>
                 </div>
 
-                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
 
             <!-- Birthday -->
@@ -160,5 +178,22 @@
                 {{ __('Register') }}
             </x-primary-button>
         </div>
+        <!-- Spinner -->
+        <div id="spinner" class="fixed z-50 inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="flex items-center justify-center h-screen">
+                <div class="relative">
+                    <div class="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
+                    <div class="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin">
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </x-guest-layout>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    //Loading spinner
+    document.querySelector('form').addEventListener('submit', function() {
+        document.getElementById('spinner').style.display = 'flex';
+    });
+</script>

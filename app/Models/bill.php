@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 
-class bill extends Model
+class Bill extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
