@@ -26,7 +26,9 @@ class CourseRegistrationController extends Controller
     public function create(): View
     {   
         $courses = Course::all();
-        return view('pages.ql_admin.course_admin', ['courses' => $courses]);
+        $secondCourses = Secondcourse::all()->pluck('id_2course')->toArray();
+        $thirdCourses = Thirdcourse::all()->pluck('id_3course')->toArray();
+        return view('pages.ql_admin.course_admin', ['courses' => $courses, 'secondCourses' => $secondCourses, 'thirdCourses' => $thirdCourses]);
     }
     
     /**
@@ -233,9 +235,15 @@ class CourseRegistrationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $user = Auth::user();
         $course = Course::where('id_course', $id)->first();
+
+        if (!Hash::check($request->password, $user->password)) {
+            return redirect()->back()->with('error', 'Incorrect password!');
+        }
+
         if ($course) {
             $secondCourse = $course->secondCourse;
             if ($secondCourse) {
@@ -248,9 +256,9 @@ class CourseRegistrationController extends Controller
             }
 
             $course->delete();
-            return response()->json(['success' => true]);
+            return redirect()->back()->with('success', $course->name_course . ' has been deleted!');
         } else {
-            return response()->json(['success' => false]);
+            return redirect()->back()->with('error', $course->name_course . ' not found!');
         }
     }
 

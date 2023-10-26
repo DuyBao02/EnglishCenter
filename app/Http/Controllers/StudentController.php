@@ -99,43 +99,20 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    public function showCalenderStudent(): View
+    {   
+        // Lấy người dùng hiện tại
+        $user = Auth::user(); 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        // Lấy danh sách các khóa học mà người dùng hiện tại đã đăng ký
+        $courses = Course::whereJsonContains('students_list', $user->id)->get();
+        return view('pages.ql_student.schedule_student', ['courses' => $courses]);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    
+    public function getRegisteredCourses()
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $user = Auth::user(); 
+        $courses = Course::whereJsonContains('students_list', $user->id)->get();
+        return $courses;
     }
 }

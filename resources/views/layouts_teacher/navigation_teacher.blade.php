@@ -18,11 +18,11 @@
                         {{ __('Course List') }}
                     </x-nav-link>
                 </div>
-                <!-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('course-list-teacher')" :active="request()->routeIs('course-list-teacher')">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('schedule-teacher')" :active="request()->routeIs('schedule-teacher')">
                         {{ __('Schedule') }}
                     </x-nav-link>
-                </div> -->
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -80,9 +80,9 @@
             <x-responsive-nav-link :href="route('course-list-teacher')" :active="request()->routeIs('course-list-teacher')">
                 {{ __('Course List') }}
             </x-responsive-nav-link>
-            <!-- <x-responsive-nav-link :href="route('course-list-teacher')" :active="request()->routeIs('course-list-teacher')">
+            <x-responsive-nav-link :href="route('schedule-teacher')" :active="request()->routeIs('schedule-teacher')">
                 {{ __('Schedule') }}
-            </x-responsive-nav-link> -->
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

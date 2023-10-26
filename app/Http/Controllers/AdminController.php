@@ -85,16 +85,20 @@ class AdminController extends Controller
         }
     }
 
-    public function deleteTeacherUser($userId)
+    public function confirmDelete(Request $request)
     {
-        $user = User::find($userId);
-    
+        $user = Auth::user();
+        
         if (!$user) {
-            return response()->json(['error' => $user->name . ' not found!'], 404);
+            return redirect()->back()->with('error', $user->name . ' not found!'); 
         }
-
+    
+        if (!Hash::check($request->password, $user->password)) {
+            return redirect()->back()->with('error', 'Incorrect password!');
+        }
+    
         $user->delete();
-        return response()->json(['success' => 'Teacher removed from successfully!'], 200);
+        return redirect()->back()->with('success', 'Student removed from successfully!');
     }
 
     public function studentManagement()
@@ -168,74 +172,16 @@ class AdminController extends Controller
     
         return response()->json(['success' => 'Student removed from ' . $courseName . ' successfully!'], 200);
     }
+
+    public function showTeacherorNot()
+    {
+        //
+    }
+
+    public function showStudentorNot()
+    {
+        //
+    }
+
     
-    
-    public function deleteStudentUser($userId)
-    {
-        $user = User::find($userId);
-    
-        if (!$user) {
-            return response()->json(['error' => $user->name . ' not found!'], 404);
-        }
-
-        $user->delete();
-        return response()->json(['success' => 'Student removed from successfully!'], 200);
-    }
-    
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

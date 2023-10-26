@@ -24,15 +24,21 @@ Route::get('/admin', function () {
     return view('welcome_admin');
 });
 
+
+//Fullcalender
+    Route::get('fullcalendar','App\Http\Controllers\FullCalendarController@index');
+    Route::post('fullcalendar/create','App\Http\Controllers\FullCalendarController@create');
+    Route::post('fullcalendar/update','App\Http\Controllers\FullCalendarController@update');
+    Route::post('fullcalendar/delete','App\Http\Controllers\FullCalendarController@destroy');
+
 // Student's routes
 
     Route::get('/dashboard-student', function () {
         return view('dashboard_student');
         })->middleware(['auth', 'verified'])->name('dashboard-student');
 
-    Route::get('/schedule-student', function () {
-        return view('pages.ql_student.schedule_student');
-        })->middleware(['auth', 'verified'])->name('schedule-student');
+    Route::get('/schedule-student', 'App\Http\Controllers\StudentController@showCalenderStudent')
+        ->middleware(['auth', 'verified'])->name('schedule-student');
 
     Route::get('/course-list-student', 'App\Http\Controllers\StudentController@CourseListStudent')
         ->middleware(['auth', 'verified'])->name('course-list-student');
@@ -50,6 +56,10 @@ Route::get('/admin', function () {
     Route::get('/dashboard-teacher', function () {
         return view('dashboard_teacher');
         })->middleware(['auth', 'verified'])->name('dashboard-teacher');
+
+    Route::get('/schedule-teacher', function () {
+        return view('pages.ql_teacher.schedule_teacher');
+        })->middleware(['auth', 'verified'])->name('schedule-teacher');
 
     Route::get('/course-list-teacher', 'App\Http\Controllers\TeacherController@CourseListTeacher')
         ->middleware(['auth', 'verified', 'role:Teacher'])
@@ -71,6 +81,19 @@ Route::get('/admin', function () {
     Route::get('/dashboard-admin', function () {
         return view('dashboard_admin');
         })->middleware(['auth', 'verified'])->name('dashboard-admin');
+    
+    //Notification Edit to Admin
+        Route::get('/edit-request', 'App\Http\Controllers\EditRequestController@showRequestToAdmin')
+            ->middleware(['auth', 'verified'])->name('edit-request');
+
+        Route::post('/receive-edit-request', 'App\Http\Controllers\EditRequestController@sendRequestToSecondEdit')
+            ->middleware(['auth', 'verified'])->name('receive-edit-request');
+        
+        Route::post('/edit-accept/{id_user}/{id_edit}', 'App\Http\Controllers\EditRequestController@editAcceptFromAdmin')
+            ->middleware(['auth', 'verified'])->name('edit-accept');
+        
+        Route::post('/edit-refuse/{id_edit}', 'App\Http\Controllers\EditRequestController@editRefuseFromAdmin')
+            ->middleware(['auth', 'verified'])->name('edit-refuse');
 
     Route::get('/create-course', 'App\Http\Controllers\CourseRegistrationController@getLessonsAndRoomsForCreateCourse')
         ->middleware(['auth', 'verified'])->name('create-course');
@@ -168,11 +191,6 @@ Route::get('/admin', function () {
             ->middleware(['auth', 'verified'])
             ->name('teacher-deleteCourse');
 
-        //Xoa user teacher
-        Route::delete('/teacher-deleteUser/{userId}', 'App\Http\Controllers\AdminController@deleteTeacherUser')
-            ->middleware(['auth', 'verified'])
-            ->name('teacher-deleteUser');
-
     //Student management from Admin
         Route::get('/student-management', 'App\Http\Controllers\AdminController@studentManagement')
             ->middleware(['auth', 'verified'])
@@ -183,10 +201,10 @@ Route::get('/admin', function () {
             ->middleware(['auth', 'verified'])
             ->name('student-deleteCourse');
 
-        //Xoa user student
-        Route::delete('/student-deleteUser/{userId}', 'App\Http\Controllers\AdminController@deleteStudentUser')
-            ->middleware(['auth', 'verified'])
-            ->name('student-deleteUser');
+    //Xoa User
+    Route::delete('/confirm-delete', 'App\Http\Controllers\AdminController@confirmDelete')
+        ->middleware(['auth', 'verified'])
+        ->name('confirm-delete');
 
     Route::get('/student-list-a/{courseID}', 'App\Http\Controllers\CourseRegistrationController@StudentListAdmin')
         ->middleware(['auth', 'verified', 'role:Admin'])
@@ -195,13 +213,14 @@ Route::get('/admin', function () {
     Route::get('/student-list-admin', 'App\Http\Controllers\CourseRegistrationController@hienthiStudentListA')
         ->middleware(['auth', 'verified'])->name('student-list-admin');
 
-//Profile's routes
+//Profile's Admin routes
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 //Verify email's route
 

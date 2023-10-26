@@ -41,7 +41,7 @@
                                         <th class="px-4 py-3">Name</th>
                                         <th class="px-4 py-3">Time Start</th>
                                         <th class="px-4 py-3">Weeks</th>
-                                        <th class="px-4 py-3">M-STUDENT</th>
+                                        <th class="px-4 py-3">Max Student</th>
                                         <th class="px-4 py-3">Tuition Fee</th>
                                         <th class="px-4 py-3">Days</th>
                                         <th class="px-4 py-3">Lesson</th>
@@ -84,7 +84,8 @@
                                                     @if ($c->is_registered)
                                                         @if ($c->teacherUser2 && $c->teacherUser2->id == Auth::user()->id)
                                                             <div class="flex items-center">
-                                                                <a class="" href="{{ route('student-list-teacher', ['id' => $c->id_2course]) }}"><img class="h-7 w-7 transform transition-transform duration-500 hover:scale-150" src="images/checkbox.png" alt=""></a>
+                                                                <a class="" href="{{ route('student-list-teacher', ['id' => $c->id_2course]) }}">
+                                                                <img class="h-7 w-7 transform transition-transform duration-400 hover:scale-150" src="images/checkbox.png" alt=""></a>
                                                             </div>
                                                         @elseif ($c->teacherUser2)
                                                             <span>{{ $c->teacherUser2->name }}</span>
@@ -92,7 +93,10 @@
                                                             <span>Unknown</span>
                                                         @endif
                                                     @else
-                                                        <a class="hover:text-red-500" href="#" onclick="confirmRegister(event, '{{ route('register-course-teacher', ['userId' => Auth::user()->id, 'courseId' => $c->id_2course]) }}')">Register</a>
+                                                        <div class="flex items-center">
+                                                            <a class="hover:text-red-500" href="#" onclick="confirmRegister(event, '{{ route('register-course-teacher', ['userId' => Auth::user()->id, 'courseId' => $c->id_2course]) }}')">
+                                                            <img class="h-9 w-9 transform transition-transform duration-400 hover:scale-150" src="images/document.png" alt=""><span>Register</span></a>
+                                                        </div>
                                                     @endif
                                                 </td>
                                             </tr>

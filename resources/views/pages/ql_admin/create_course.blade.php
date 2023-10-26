@@ -71,7 +71,7 @@
                                     <select required id="lesson1" name="lessons[]" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required autofocus autocomplete="lesson1">
                                         <option hidden>Lesson 1</option>
                                         @foreach($lessons as $lesson)
-                                            <option value="{{ $lesson->id_lesson }}">{{ $lesson->id_lesson }}</option>
+                                            <option value="{{ $lesson->id_lesson }}">{{ $lesson->id_lesson }}: {{ $lesson->start_time }} - {{ $lesson->start_time }} </option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -32,6 +32,17 @@
                         {{ __('Student List') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    @php
+                        $secondEdits = \App\Models\Secondedit::all();
+                        $buttonColor = $secondEdits->count() > 0 ? 'border-t-4 border-green-500' : 'text-gray-500';
+                    @endphp
+                    
+                    <x-nav-link :href="route('edit-request')" :active="request()->routeIs('edit-request')" class="{{ $buttonColor }}">
+                        {{ __('Edit Request') }}
+                    </x-nav-link>
+                    
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -97,6 +108,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('student-management')" :active="request()->routeIs('student-management')">
                 {{ __('Student Management') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('student-management')" :active="request()->routeIs('student-management')">
+                {{ __('Edit Request') }}
             </x-responsive-nav-link>
         </div>
 

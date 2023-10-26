@@ -84,11 +84,15 @@
                                                 <td class="px-4 py-3">{{ $l->end_time }}</td>
                                                 
                                                 <td class="px-4 py-3 relative my-4">
-                                                    <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('lesson-edit', $l->id_lesson) }}">Edit</a> 
+                                                    <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('lesson-edit', $l->id_lesson) }}">
+                                                        <img class="h-6 w-6 inline-block" src="images/edit.png" alt="">
+                                                    </a> 
                                                     <form action="{{ route('lesson-custom-destroy', $l->id_lesson) }}" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDeleteLesson(event, '{{ route('lesson-custom-destroy', $l->id_lesson) }}')">Delete</button>
+                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDeleteLesson(event, '{{ route('lesson-custom-destroy', $l->id_lesson) }}')">
+                                                            <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
+                                                        </button>
                                                     </form>
                                                 </td>
                                                 </tr>
@@ -146,11 +150,15 @@
                                                 <td class="px-4 py-3">{{ $r->id_room }}</td>
                                                 <td class="px-4 py-3">{{ $r->name_room }}</td>
                                                 <td class="px-4 py-3 relative my-4">
-                                                    <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('room-edit', $r->id_room) }}">Edit</a> 
+                                                    <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('room-edit', $r->id_room) }}">
+                                                        <img class="h-6 w-6 inline-block" src="images/edit.png" alt="">
+                                                    </a> 
                                                     <form action="{{ route('room-custom-destroy', $r->id_room) }}" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDeleteRoom(event, '{{ route('room-custom-destroy', $r->id_room) }}')">Delete</button>
+                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDeleteRoom(event, '{{ route('room-custom-destroy', $r->id_room) }}')">
+                                                            <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
+                                                        </button>
                                                     </form>    
                                                 </td>
                                                 </tr>

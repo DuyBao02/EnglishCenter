@@ -113,18 +113,30 @@
                                                 </td>
                                                 <td class="px-4 py-3">
                                                     @if($c->teacherUser3)
-                                                    <a class="hover:text-red-500" href="javascript:void(0)" onclick="showTeacherInfo({{ json_encode($c->teacherUser3) }})"><span>{{ $c->teacherUser3->name }}</span></a>
+                                                        <div class="flex items-center">
+                                                            <a class="hover:text-red-500" href="javascript:void(0)" onclick="showTeacherInfo({{ json_encode($c->teacherUser3) }})">
+                                                            <img class="h-9 w-9 transform transition-transform duration-400 hover:scale-150" src="images/teacher.png" alt=""><span>{{ $c->teacherUser3->name }}</span></a>
+                                                        </div>
+                                                    @else
+                                                        <div class="flex items-center">
+                                                            <img src="images/sand-clock.png" class="h-9 w-9" alt="">
+                                                        </div>
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-3 relative my-4">
                                                     @if (count($c->students_list) <= $c->maxStudents && !empty(array_filter($c->students_list, function ($student)  { 
                                                         return $student == Auth::user()->id; 
                                                     })))
-                                                        <img src="images/checkbox.png" class="h-7 w-7" alt="">
+                                                        <div class="flex items-center">
+                                                            <img src="images/checkbox.png" class="h-7 w-7" alt="">
+                                                        </div>
                                                     @elseif (count($c->students_list) < $c->maxStudents && empty(array_filter($c->students_list, function ($student)  { 
                                                         return $student == Auth::user()->id; 
                                                     })))
-                                                        <a class="hover:text-red-500" href="#" onclick="confirmRegister(event, '{{ route('register-course-student', ['userId' => Auth::user()->id, 'courseId' => $c->id_3course]) }}')">Register</a>
+                                                        <div class="flex items-center">
+                                                            <a class="hover:text-red-500" href="#" onclick="confirmRegister(event, '{{ route('register-course-student', ['userId' => Auth::user()->id, 'courseId' => $c->id_3course]) }}')">
+                                                            <img class="h-9 w-9 transform transition-transform duration-400 hover:scale-150" src="images/document.png" alt=""><span>Register</span></a>
+                                                        </div>
                                                     @elseif (count($c->students_list) == $c->maxStudents)
                                                         <span class="text-red-500">Course is full</span>
                                                     @endif

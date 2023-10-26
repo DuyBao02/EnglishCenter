@@ -77,5 +77,11 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return null;
     }
+
+    public function pendingEdit()
+    {
+        return $this->hasOne(Edit::class)->where('status', 'pending');
+    }
+    
     
 }

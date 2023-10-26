@@ -91,13 +91,15 @@
                                                 </td>
                                                 <td class="px-4 py-3">
                                                     @if ($c->teacherUser)
-                                                        {{ $c->teacherUser->name }}
+                                                        <span>{{ $c->teacherUser->name }}</span>
                                                     @else
-                                                        Chưa có
+                                                        <div class="flex items-center">
+                                                            <img src="images/sand-clock.png" class="h-9 w-9" alt="">
+                                                        </div>
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-3">
-                                                    <a class="hover:text-red-500" href="{{ route('student-list-a', ['courseID' => $c->id_course]) }}">View Students</a>
+                                                    <a class="hover:text-red-500" href="{{ route('student-list-a', ['courseID' => $c->id_course]) }}"><img class="h-12 w-12 transform transition-transform duration-400 hover:scale-150" src="images/customer.png" alt=""></a>
                                                 </td>
                                                 <td class="px-1 py-3 relative my-4">
                                                     <button class="dropdownButton text-blue-500 hover:text-blue-700 mr-2">
@@ -105,21 +107,76 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <tr class="dropdownMenu rounded-full origin-top-right absolute right-44 w-1/2 h-7 mx-auto shadow-lg bg-blue-300 ring-1 ring-black ring-opacity-5 hidden z-50">
+                                            <tr class="dropdownMenu rounded-full origin-top-right absolute right-44 w-1/2 h-7 mx-auto shadow-lg bg-yellow-200 ring-1 ring-black ring-opacity-5 hidden z-50">
                                                 <td colspan="12" class="flex justify-around">
-                                                    <a class="hover:text-red-500" href="#" onclick="confirmPublicTeacher
-                                                        (event, '{{ route('public-to-teacher', $c->id_course) }}')">Public to Teacher</a>
+                                                    @if (in_array($c->id_course, $secondCourses))
+                                                        <div class="inline-flex items-center mb-4">
+                                                            <img class="h-6 w-6" src="images/checkbox.png" alt="">
+                                                            <a class="hover:text-red-500 ml-1" href="#" onclick="confirmPublicTeacher(event, '{{ route('public-to-teacher', $c->id_course) }}')">Public to Teacher</a>
+                                                        </div>
+                                                    @else
+                                                    <a class="hover:text-red-500 ml-1" href="#" onclick="confirmPublicTeacher(event, '{{ route('public-to-teacher', $c->id_course) }}')">Public to Teacher</a>
+                                                    @endif
 
-                                                    <a class="hover:text-red-500" href="#" onclick="confirmPublicStudent
-                                                        (event, '{{ route('public-to-student', $c->id_course) }}')">Public to Students</a>
+                                                    @if (in_array($c->id_course, $thirdCourses))
+                                                        <div class="inline-flex items-center mb-4">
+                                                            <img class="h-6 w-6" src="images/checkbox.png" alt="">
+                                                            <a class="hover:text-red-500 ml-1" href="#" onclick="confirmPublicStudent(event, '{{ route('public-to-student', $c->id_course) }}')">Public to Students</a>
+                                                        </div>
+                                                    @else
+                                                        <a class="hover:text-red-500 ml-1" href="#" onclick="confirmPublicStudent(event, '{{ route('public-to-student', $c->id_course) }}')">Public to Students</a>
+                                                    @endif
+                                                
+                                                    <a type="buttom" class="hover:text-red-500 mr-4 inline-flex items-center mb-4 transform transition-transform duration-400 hover:scale-150" href="{{ route('course-edit', $c->id_course) }}">
+                                                        <img class="h-6 w-6 inline-block" src="images/edit.png" alt="">
+                                                        <span >Edit</span>
+                                                    </a> 
 
-                                                    <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('course-edit', $c->id_course) }}">Edit</a> 
+                                                    <a type="buttom" class="mb-4 hover:text-red-500 inline-flex items-center transform transition-transform duration-400 hover:scale-150"
+                                                        x-data=""
+                                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')">
+                                                        <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
+                                                        <span>Delete</span>
+                                                    </a>
+                                                    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+                                                        <form method="post" action="{{ route('course-custom-destroy', $c->id_course) }}" class="p-6">
+                                                            @csrf
+                                                            @method('delete')
 
-                                                    <form action="{{ route('course-custom-destroy', $c->id_course) }}" method="POST" onsubmit="confirmDelete()">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDelete(event, '{{ route('course-custom-destroy', $c->id_course) }}')">Delete</button>
-                                                    </form>
+                                                            <h2 class="text-lg font-medium text-gray-900">
+                                                                {{ __('Are you sure you want to delete ') }}{{ $c->name_course }} ?
+                                                            </h2>
+
+                                                            <p class="mt-1 text-sm text-gray-600">
+                                                                {{ __('Once this course is deleted, all of its resources and data will be permanently deleted.') }}</br>
+                                                                {{ __('Please enter your password to confirm you would like to permanently delete your account.') }}
+                                                            </p>
+
+                                                            <div class="mt-6">
+                                                                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+
+                                                                <x-text-input
+                                                                    id="password"
+                                                                    name="password"
+                                                                    type="password"
+                                                                    class="mt-1 block w-3/4"
+                                                                    placeholder="{{ __('Password') }}"
+                                                                />
+
+                                                                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                                                            </div>
+
+                                                            <div class="mt-6 flex justify-end">
+                                                                <x-secondary-button x-on:click="$dispatch('close')">
+                                                                    {{ __('Cancel') }}
+                                                                </x-secondary-button>
+
+                                                                <x-danger-button class="ml-3">
+                                                                    {{ __('Delete Account') }}
+                                                                </x-danger-button>
+                                                            </div>
+                                                        </form>
+                                                    </x-modal>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -225,44 +282,5 @@
         });
     }
     
-    function deleteCourse(route) {
-        fetch(route, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                swal("Poof! Course has been deleted!", {
-                    icon: "success",
-                    timer: 5000,
-                    buttons: {
-                        confirm: {
-                            text: "OK",
-                            value: true,
-                            visible: true,
-                            closeModal: true
-                        }
-                    }
-                })
-                .then((value) => {
-                    // Reload the page when user clicks on OK or after 5 seconds
-                    if (value) {
-                        location.reload();
-                    } else {
-                        setTimeout(function() {
-                            location.reload();
-                        }, 5000);
-                    }
-                });
-            } else {
-                swal("Oops! Something went wrong, please refresh your website!", {
-                    icon: "error",
-                    timer: 5000,
-                });
-            }
-        });
-    }
+    
 </script>

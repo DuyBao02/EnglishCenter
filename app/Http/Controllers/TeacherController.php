@@ -50,7 +50,7 @@ class TeacherController extends Controller
 
     public function CourseListTeacher()
     {
-        $course2 = secondcourse::all();
+        $course2 = Secondcourse::all();
         return view('pages.ql_teacher.courseList_teacher', ['course2' => $course2]);
     }
 
