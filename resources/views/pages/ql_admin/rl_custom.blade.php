@@ -39,23 +39,20 @@
                                 @csrf
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="id_lesson" class="block text-sm font-medium text-gray-700 mr-2">ID Lesson</label>
-                                    <input required type="text" id="id_lesson" name="id_lesson" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input value="{{ old('id_lesson') }}" required type="text" id="id_lesson" name="id_lesson" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
                         
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="start_time" class="block text-sm font-medium text-gray-700 mr-2">Time Start</label>
-                                    <input required type="time" id="start_time" name="start_time" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input value="{{ old('start_time') }}" required type="time" id="start_time" name="start_time" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
                         
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="end_time" class="block text-sm font-medium text-gray-700 mr-2">Time End</label>
-                                    <input required type="time" id="end_time" name="end_time" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input value="{{ old('end_time') }}" required type="time" id="end_time" name="end_time" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
                         
                                 <div class="my-4 flex items-center justify-center w-full">
-                                    <x-primary-button type="reset" class="mr-4">
-                                        {{ __('Refresh') }}
-                                    </x-primary-button>
                                     <x-primary-button type="submit">
                                         {{ __('Save') }}
                                     </x-primary-button>
@@ -72,6 +69,7 @@
                                         <th class="px-4 py-3">Time Start</th>
                                         <th class="px-4 py-3">Time End</th>
                                         <td class="px-4 py-3"></td>
+                                        <td class="px-4 py-3"></td>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y">
@@ -79,22 +77,25 @@
                                             @foreach ($lessons as $l)
                                             <!-- Table data  -->
                                                 <tr class="text-base font-medium tracking-wide text-left text-gray-500 border-b bg-gray-50">
-                                                <td class="px-4 py-3">{{ $l->id_lesson }}</td>
-                                                <td class="px-4 py-3">{{ $l->start_time }}</td>
-                                                <td class="px-4 py-3">{{ $l->end_time }}</td>
-                                                
-                                                <td class="px-4 py-3 relative my-4">
-                                                    <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('lesson-edit', $l->id_lesson) }}">
-                                                        <img class="h-6 w-6 inline-block" src="images/edit.png" alt="">
-                                                    </a> 
-                                                    <form action="{{ route('lesson-custom-destroy', $l->id_lesson) }}" method="POST" onsubmit="confirmDelete()">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDeleteLesson(event, '{{ route('lesson-custom-destroy', $l->id_lesson) }}')">
-                                                            <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
-                                                        </button>
-                                                    </form>
-                                                </td>
+                                                    <td class="px-4 py-3">{{ $l->id_lesson }}</td>
+                                                    <td class="px-4 py-3">{{ $l->start_time }}</td>
+                                                    <td class="px-4 py-3">{{ $l->end_time }}</td>
+                                                    
+                                                    <td class="py-3">
+                                                        <a type="buttom" href="{{ route('lesson-edit', $l->id_lesson) }}">
+                                                            <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/edit.png" alt="">
+                                                        </a> 
+                                                    </td>
+
+                                                    <td class="py-3">
+                                                        <form action="{{ route('lesson-custom-destroy', $l->id_lesson) }}" method="POST" onsubmit="confirmDelete()">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" onclick="confirmDeleteLesson(event, '{{ route('lesson-custom-destroy', $l->id_lesson) }}')">
+                                                                <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/trash.png" alt="">
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -112,18 +113,15 @@
                                 @csrf
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="id_room" class="block text-sm font-medium text-gray-700 mr-2">ID Room</label>
-                                    <input required type="text" id="id_room" name="id_room" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input value="{{ old('id_room') }}" required type="text" id="id_room" name="id_room" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
                         
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="name_room" class="block text-sm font-medium text-gray-700 mr-2">Name</label>
-                                    <input required type="text" id="name_room" name="name_room" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input value="{{ old('name_room') }}" required type="text" id="name_room" name="name_room" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
                         
                                 <div class="my-4 flex items-center justify-center w-full">
-                                    <x-primary-button type="reset" class="mr-4">
-                                        {{ __('Refresh') }}
-                                    </x-primary-button>
                                     <x-primary-button type="submit">
                                         {{ __('Save') }}
                                     </x-primary-button>
@@ -140,6 +138,7 @@
                                         <th class="px-4 py-3">ID</th>
                                         <th class="px-4 py-3">Name Room</th>
                                         <td class="px-4 py-3"></td>
+                                        <td class="px-4 py-3"></td>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y">
@@ -149,17 +148,19 @@
                                                 <tr class="text-base font-medium tracking-wide text-left text-gray-500 border-b bg-gray-50">
                                                 <td class="px-4 py-3">{{ $r->id_room }}</td>
                                                 <td class="px-4 py-3">{{ $r->name_room }}</td>
-                                                <td class="px-4 py-3 relative my-4">
-                                                    <a type="buttom" class="hover:text-red-500 mr-4" href="{{ route('room-edit', $r->id_room) }}">
-                                                        <img class="h-6 w-6 inline-block" src="images/edit.png" alt="">
-                                                    </a> 
+                                                <td class="py-3">
+                                                    <a type="buttom" href="{{ route('room-edit', $r->id_room) }}">
+                                                        <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/edit.png" alt="">
+                                                    </a>
+                                                </td>
+                                                <td class="py-3">
                                                     <form action="{{ route('room-custom-destroy', $r->id_room) }}" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500" onclick="confirmDeleteRoom(event, '{{ route('room-custom-destroy', $r->id_room) }}')">
-                                                            <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
+                                                        <button type="submit" onclick="confirmDeleteRoom(event, '{{ route('room-custom-destroy', $r->id_room) }}')">
+                                                            <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/trash.png" alt="">
                                                         </button>
-                                                    </form>    
+                                                    </form>  
                                                 </td>
                                                 </tr>
                                             @endforeach
@@ -173,6 +174,9 @@
             </div>
         </div>
     </div>
+    <button id="back-to-top" class="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded-full hidden">
+      <i class="fas fa-arrow-up"></i>
+    </button>
 </x-app-layout>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>

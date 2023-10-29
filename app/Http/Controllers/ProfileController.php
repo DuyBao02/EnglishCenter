@@ -27,17 +27,37 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-    
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($request->hasFile('avatar')) {
+            $avatarName = $user->name . '_' . explode('@', $user->email)[0] . '.' . $request->file('avatar')->getClientOriginalExtension();
+            $oldAvatarPath = public_path('images/avatars/' . $user->avatar);
+                
+            // Kiểm tra xem file avatar cũ có tồn tại không
+            if ($user->avatar != 'avatar_default.png' && file_exists($oldAvatarPath)) {
+                // Xóa file avatar cũ
+                unlink($oldAvatarPath);
+            }
+
+            $request->file('avatar')->move(public_path('images/avatars'), $avatarName);
+            $user->avatar = $avatarName;
+        }
+        
+        else if ($request->defaultAvatar == '1') {
+            // Nếu avatar là avatar mặc định
+            $user->avatar = 'avatar_default.png';
         }
 
-        $request->user()->save();
-
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+    
+        $user->save();
+    
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
+    
 
     /**
      * Delete the account.

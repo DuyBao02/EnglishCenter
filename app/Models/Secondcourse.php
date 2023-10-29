@@ -47,4 +47,9 @@ class Secondcourse extends Model
         return $this->belongsTo(User::class, 'teacher');
     }
     
+    public function Course()
+    {
+        return $this->hasOne(Course::class, 'id_course', 'id_2course');
+    }
+
 }

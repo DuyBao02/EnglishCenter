@@ -38,17 +38,17 @@
                                 <input readonly required type="text" id="id_course" name="id_course" value="{{ $course->id_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
-                                <label for="time_start" class="block text-sm font-medium text-gray-700">Time start</label>
-                                <input required type="date" id="time_start" name="time_start" value="{{ $course->time_start ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                            <div class="col-span-2 sm:col-span-1">
                                 <label for="name_course" class="block text-sm font-medium text-gray-700">Name Course</label>
                                 <input required oninput="formatCurrency(this)" type="text" id="name_course" name="name_course" value="{{ $course->name_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
+                                <label for="time_start" class="block text-sm font-medium text-gray-700">Time start</label>
+                                <input required type="date" id="time_start" name="time_start" value="{{ $course->time_start ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                            <div class="col-span-2sm:col-span-1">
                                 <label for="tuitionFee" class="block text-sm font-medium text-gray-700">Tuition Fee</label>
                                 <input required type="text" id="tuitionFee" name="tuitionFee" value="{{ $course->tuitionFee ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div> 
+                            </div>
                         </div> 
                         <div class="grid grid-cols-3 gap-4 mt-4">
                             <div class="col-span-3 sm:col-span-1">
@@ -154,31 +154,7 @@
                                     </select>
                                 </div>
                             </div>
-                    
                         </div>
-
-                        <div class="grid grid-cols-2 gap-4 mt-4">
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="maxStudents" class="block text-sm font-medium text-gray-700">Max Students</label>
-                                <input readonly required type="text" id="maxStudents" name="maxStudents" value="{{ $course->maxStudents ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div>
-
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="weeks" class="block text-sm font-medium text-gray-700">Number of Weeks</label>
-                                <input readonly required type="text" id="weeks" name="weeks" value="{{ $course->weeks ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div>
-
-                            <div class="col-span-2 sm:col-span-1"> 
-                                <label for="teacher" class="block text-sm font-medium text-gray-700">Teacher:</label>
-                                <input type="text" id="teacher" name="teacher" value="{{ $course->teacher ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                            
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="students_list" class="block text-sm font-medium text-gray-700">Students List:</label>
-                                <textarea name="students_list[]" id="students_list" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
-                            </div>
-                        </div>
-
                         <div class="mt-4 flex items-center justify-center">
                             <x-primary-button type="submit">
                                 {{ __('Save') }}

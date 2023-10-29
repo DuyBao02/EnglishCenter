@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use App\Http\Controllers\PaypalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,11 @@ Route::get('/admin', function () {
     return view('welcome_admin');
 });
 
+Route::post('logout-homepage', 'App\Http\Controllers\Auth\AuthenticatedSessionController@destroyHomePage')
+    ->name('logout-homepage');
+
+Route::get('/management-system', 'App\Http\Controllers\ManagementSystemController@index')
+    ->name('management-system');
 
 //Fullcalender
     Route::get('fullcalendar','App\Http\Controllers\FullCalendarController@index');
@@ -47,9 +53,13 @@ Route::get('/admin', function () {
         ->middleware(['auth', 'verified', 'role:Student'])
         ->name('register-course-student');
 
-    Route::get('/tuition-student', function () {
-        return view('pages.ql_student.tuition_student');
-        })->middleware(['auth', 'verified'])->name('tuition-student');
+    Route::get('/tuition-student', 'App\Http\Controllers\StudentController@showCourseBillStudent')
+        ->middleware(['auth', 'verified'])->name('tuition-student');
+    
+    // PayPal
+        Route::post('paypal/{id}', 'App\Http\Controllers\PaypalController@paymen')->name('paypal');
+        Route::get('paypal/success', 'App\Http\Controllers\PaypalController@success')->name('paypal-success');
+        Route::get('paypal/cancel', 'App\Http\Controllers\PaypalController@cancel')->name('paypal-cancel');
 
 // Teacher's routes
 
@@ -88,12 +98,12 @@ Route::get('/admin', function () {
 
         Route::post('/receive-edit-request', 'App\Http\Controllers\EditRequestController@sendRequestToSecondEdit')
             ->middleware(['auth', 'verified'])->name('receive-edit-request');
-        
+
         Route::post('/edit-accept/{id_user}/{id_edit}', 'App\Http\Controllers\EditRequestController@editAcceptFromAdmin')
-            ->middleware(['auth', 'verified'])->name('edit-accept');
+            ->name('edit-accept');
         
         Route::post('/edit-refuse/{id_edit}', 'App\Http\Controllers\EditRequestController@editRefuseFromAdmin')
-            ->middleware(['auth', 'verified'])->name('edit-refuse');
+            ->name('edit-refuse');
 
     Route::get('/create-course', 'App\Http\Controllers\CourseRegistrationController@getLessonsAndRoomsForCreateCourse')
         ->middleware(['auth', 'verified'])->name('create-course');
@@ -102,7 +112,7 @@ Route::get('/admin', function () {
         ->middleware(['auth', 'verified'])->name('course-admin');
 
     // Course Registration routes
-    Route::get('/course-edit/{id}', 'App\Http\Controllers\CourseRegistrationController@edit')
+    Route::get('/course-edit/{id}', 'App\Http\Controllers\CourseRegistrationController@editForm')
         ->middleware(['auth', 'verified'])
         ->name('course-edit');
 
@@ -202,7 +212,7 @@ Route::get('/admin', function () {
             ->name('student-deleteCourse');
 
     //Xoa User
-    Route::delete('/confirm-delete', 'App\Http\Controllers\AdminController@confirmDelete')
+    Route::delete('/confirm-delete/{id}', 'App\Http\Controllers\AdminController@confirmDelete')
         ->middleware(['auth', 'verified'])
         ->name('confirm-delete');
 

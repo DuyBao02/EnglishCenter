@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use App\Models\HasApiTokens;
 use App\Models\Course;
+use App\Models\Bill;
 use App\Models\Secondcourse;
 use App\Models\Thirdcourse;
 use App\Models\User;
@@ -73,25 +74,39 @@ class StudentController extends Controller
         $secondcourse = Secondcourse::where('id_2course', $courseId)->first();
         $thirdcourse = Thirdcourse::where('id_3course', $courseId)->first();
         if($user && $course){
-            // Check if the user has already registered for a course
-            $registeredCourse = $user->registeredCourseStudent();
-            if ($registeredCourse) { 
-                return redirect()->back()->with('error', 'You have already registered for course ' . $user->registeredCourseStudent() . '!');
-            }
-
+            
             if ($course->teacher == null && $secondcourse->teacher == null &&  $thirdcourse->teacher == null){
                 return redirect()->back()->with('error', 'The ' . $course->name_course . ' does not have a teacher!');
             }
-            
+
             $students_list = $course->students_list;
             array_push($students_list, $user->id);
             $course->students_list = $students_list;
             $course->save();
+            
+            if ($thirdcourse) {
+                $students_list = $thirdcourse->students_list;
+                array_push($students_list, $user->id);
+                $thirdcourse->students_list = $students_list;
+                $thirdcourse->save();
+            }
 
-            $students_list = $thirdcourse->students_list;
-            array_push($students_list, $user->id);
-            $thirdcourse->students_list = $students_list;
-            $thirdcourse->save();
+            //codehere
+            $bill = Bill::where('user_id', $userId)->first();
+            if ($bill) {
+                // Update existing bill
+                $name_bill = json_decode($bill->name_bill, true);
+                array_push($name_bill, $courseId);
+                $bill->name_bill = json_encode($name_bill);
+                $bill->tuitionFee += $course->tuitionFee;
+            } else {
+                // Create new bill
+                $bill = new Bill;
+                $bill->user_id = $userId;
+                $bill->name_bill = json_encode([$courseId]);
+                $bill->tuitionFee = $course->tuitionFee;
+            }
+            $bill->save();
     
             return redirect()->back()->with('success', 'Register successfully!');
         } else {
@@ -107,6 +122,18 @@ class StudentController extends Controller
         // Lấy danh sách các khóa học mà người dùng hiện tại đã đăng ký
         $courses = Course::whereJsonContains('students_list', $user->id)->get();
         return view('pages.ql_student.schedule_student', ['courses' => $courses]);
+    }
+
+    public function showCourseBillStudent(): View
+    {   
+        // Lấy người dùng hiện tại
+        $user = Auth::user(); 
+    
+        // Lấy tất cả hóa đơn của người dùng hiện tại
+        $bills = Bill::where('user_id', $user->id)->get();
+    
+        // Truyền dữ liệu qua view
+        return view('pages.ql_student.tuition_student', ['bills' => $bills]);
     }
     
     public function getRegisteredCourses()

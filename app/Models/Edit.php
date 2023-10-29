@@ -17,10 +17,10 @@ class Edit extends Model
         'data' => 'json',
     ];
 
+
     protected $fillable = [
         'user_id',
         'data',
-        'daytime',
     ];
 
     public function user()

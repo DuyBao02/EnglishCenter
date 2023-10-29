@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Lesson;
 use App\Models\Course;
 use App\Models\Room;
@@ -50,14 +51,14 @@ class LessonCustomController extends Controller
     
         if ($existingLesson) {
             session()->flash('error', 'The ' . $request->id_lesson . ' lesson already exists!');
-            return redirect()->back();
+            return redirect()->back()->withInput($request->input());
         }
 
         $conflictingLesson = Lesson::where('end_time', '>', $request->start_time)->first();; 
 
         if ($conflictingLesson) {
             session()->flash('error', 'The start time must be greater than the end time in ' . $conflictingLesson->id_lesson . '!');
-            return redirect()->back();
+            return redirect()->back()->withInput($request->input());
         }
 
         $lesson = Lesson::create([
@@ -71,7 +72,7 @@ class LessonCustomController extends Controller
         session()->flash('success', 'The ' . $lesson->id_lesson . ' lesson created successful!');
     
         $lessons = Lesson::all();
-        return redirect()->route('rl-custom-admin');
+        return redirect()->route('rl-custom-admin')->withInput($request->input());
     }
     
 

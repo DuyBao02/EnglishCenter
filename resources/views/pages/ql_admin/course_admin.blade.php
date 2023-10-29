@@ -107,7 +107,8 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <tr class="dropdownMenu rounded-full origin-top-right absolute right-44 w-1/2 h-7 mx-auto shadow-lg bg-yellow-200 ring-1 ring-black ring-opacity-5 hidden z-50">
+                                            
+                                            <tr class="dropdownMenu rounded-full origin-top-right absolute right-44 w-1/2 h-7 mx-auto shadow-lg bg-yellow-200 ring-1 ring-black ring-opacity-5 hidden z-50 transition-all duration-300 ease-in-out transform scale-95 hover:scale-100">
                                                 <td colspan="12" class="flex justify-around">
                                                     @if (in_array($c->id_course, $secondCourses))
                                                         <div class="inline-flex items-center mb-4">
@@ -134,11 +135,11 @@
 
                                                     <a type="buttom" class="mb-4 hover:text-red-500 inline-flex items-center transform transition-transform duration-400 hover:scale-150"
                                                         x-data=""
-                                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')">
+                                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion-{{ $c->id_course }}')">
                                                         <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
                                                         <span>Delete</span>
                                                     </a>
-                                                    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+                                                    <x-modal name="confirm-user-deletion-{{ $c->id_course }}" :show="$errors->userDeletion->isNotEmpty()" focusable>
                                                         <form method="post" action="{{ route('course-custom-destroy', $c->id_course) }}" class="p-6">
                                                             @csrf
                                                             @method('delete')

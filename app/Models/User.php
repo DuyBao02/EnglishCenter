@@ -28,6 +28,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'address',
         'phone',
         'role',
+        'experience',
+        'level',
+        'avatar',
     ];
 
     /**
@@ -49,10 +52,26 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function bill()
+    public function bills()
     {
-        return $this->hasMany(Bill::class);
+        return $this->hasMany(Bill::class, 'user_id');
     }
+
+    public function isPaid($courseId)
+    {
+        $bill = $this->bills()->where('name_bill', 'like', '%' . $courseId . '%')->first();
+        return $bill ? $bill->is_paid : false;
+    }
+    
+    public function isCoursePaid($courseName)
+    {
+        $course = Course::where('name_course', $courseName)->first();
+        if ($course) {
+            return $this->isPaid($course->id_course);
+        }
+        return false;
+    }
+    
 
     public function course()
     {
@@ -73,7 +92,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $courses = Course::whereJsonContains('students_list', $this->id)->get();
         if ($courses->isNotEmpty()) {
-            return $courses->first()->name_course;
+            return $courses->pluck('name_course')->toArray();
+        }
+        return null;
+    }
+
+    public function registeredCourseTeacher()
+    {
+        $courses = Course::whereJsonContains('teacher', $this->id)->get();
+        if ($courses->isNotEmpty()) {
+            return $courses->pluck('name_course')->toArray();
         }
         return null;
     }
@@ -83,5 +111,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Edit::class)->where('status', 'pending');
     }
     
-    
+    public function pendingSecondEdit()
+    {
+        return $this->hasOne(Secondedit::class)->where('status', 'pending');
+    }
 }

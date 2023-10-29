@@ -25,31 +25,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        
         $request->authenticate();
 
         $request->session()->regenerate();
-
-        if ($request->user()->role == "Student") {
-
-            $request->session()->flash('success', 'Student login successful!');
-
-            return redirect()->intended(RouteServiceProvider::HOME_s);
-
-        } elseif ($request->user()->role == "Teacher") {
-            
-            $request->session()->flash('success', 'Teacher login successful!');
-            
-            return redirect()->intended(RouteServiceProvider::HOME_t);
-            
-        } else {
-            
-            $request->session()->flash('success', 'Admin login successful!');
-            
-            return redirect()->intended(RouteServiceProvider::HOME_a);
-            
-        }
         
+        return redirect()->route('welcome')->with('success', 'Login successfully!');
     }
 
     /**
@@ -63,6 +43,18 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('welcome')->with('success', 'Logout successfully!');
     }
+
+    public function destroyHomePage(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+    
+        $request->session()->invalidate();
+    
+        $request->session()->regenerateToken();
+    
+        return redirect()->route('welcome')->with('success', 'Logout successfully!');
+    }
+    
 }

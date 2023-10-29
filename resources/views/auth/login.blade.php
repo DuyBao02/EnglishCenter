@@ -3,6 +3,18 @@
 </head>
 
 <x-guest-layout>
+    @if (Session::has('success'))
+        <script>
+        window.onload = function() {
+            swal('Success', '{{ Session::get('success') }}', 'success',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
+
     @if ($errors->has('email'))
         <script>
             window.onload = function() {

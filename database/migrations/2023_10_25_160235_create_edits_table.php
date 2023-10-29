@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('edits', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->json('data');
-            $table->datetime('daytime');
+            $table->string('status')->default('pending');
+            $table->json('data')->nullable();
             $table->timestamps();
         });
     }

@@ -25,7 +25,8 @@
         }
         </script>
     @endif
-    <form method="POST" action="{{ route('register') }}">
+
+    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
         <div class="columns-2">
             <!-- Name -->
@@ -134,39 +135,67 @@
             </div>
 
         </div>
+        <!-- Display teacher register -->
+        <div id="teacherFields" class="transition-all duration-500 ease-in-out opacity-0 h-0 overflow-hidden grid grid-cols-2 gap-4">
+            <!-- Teaching Experience -->
+            <div class="col-span-2 sm:col-span-1" >
+                <x-input-label for="experience" :value="__('Teaching Experience')"/>
+                <x-text-input id="experience" class="block mt-1 w-full" type="text" min="1" max="50" name="experience" :value="old('experience')" placeholder="From 1 to 50"/>
+            </div>
+        
+            <!-- Level -->
+            <div class="col-span-2 sm:col-span-1">
+                <x-input-label for="level" :value="__('Level')" />
+                <select id="level" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" name="level" :value="old('level')">
+                    <option hidden>Level</option>
+                    <option value="Professor" {{ old('level') == 'Professor' ? 'selected' : '' }}>Professor</option>
+                    <option value="AssociateProfessor" {{ old('level') == 'AssociateProfessor' ? 'selected' : '' }}>Associate Professor</option>
+                    <option value="PhD" {{ old('level') == 'PhD' ? 'selected' : '' }}>PhD</option>
+                    <option value="Master" {{ old('level') == 'Master' ? 'selected' : '' }}>Master</option>
+                    <option value="Engineer" {{ old('level') == 'Engineer' ? 'selected' : '' }}>Engineer</option>
+                </select>
+            </div>
+        </div>
 
-        <!-- Gender -->
-        <div class="">
-            <x-input-label for="gender" :value="__('Gender')" />
-            <div class="flex justify-around mt-2">
-                <!--First radio-->
-                    <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
-                    <input
-                    class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 rounded-full"
-                    type="radio"
-                    name="gender"
-                    id="male" required
-                    value="male" />
-                    <label
-                    class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-                    for="male"required
-                    >Male</label>
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Gender -->
+                <div class="col-span-2 sm:col-span-1">
+                    <x-input-label for="gender" :value="__('Gender')" />
+                    <div class="flex justify-around mt-2">
+                        <!--First radio-->
+                            <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+                            <input
+                            class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 rounded-full"
+                            type="radio"
+                            name="gender"
+                            id="male" required
+                            value="male" />
+                            <label
+                            class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="male"required
+                            >Male</label>
+                            </div>
+
+                        <!--Second radio-->
+                        <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+                            <input
+                            class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 rounded-full"
+                            type="radio"
+                            name="gender"
+                            id="female" required
+                            value="female" />
+                            <label
+                            class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="female" required
+                            >Female</label>
+                        </div>
                     </div>
-
-                <!--Second radio-->
-                <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
-                    <input
-                    class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 rounded-full"
-                    type="radio"
-                    name="gender"
-                    id="female" required
-                    value="female" />
-                    <label
-                    class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-                    for="female" required
-                    >Female</label>
                 </div>
-            </div>            
+                <!-- Avatar -->
+                <div class="col-span-2 sm:col-span-1">
+                    <x-input-label for="avatar" :value="__('Avatar')" />
+                    <input id="avatar" class="block mt-1 w-full" type="file" name="avatar" value="{{ old('avatar') }}" autofocus autocomplete="avatar" />
+                </div>
         </div>
 
         <div class="mt-4 flex items-center justify-center">
@@ -196,4 +225,17 @@
     document.querySelector('form').addEventListener('submit', function() {
         document.getElementById('spinner').style.display = 'flex';
     });
+
+    //Dropdown teacher
+    document.getElementById('role').addEventListener('change', function() {
+        var teacherFields = document.getElementById('teacherFields');
+        if (this.value === 'Teacher') {
+            teacherFields.style.height = '80px'; // Set a fixed height when visible
+            teacherFields.classList.remove('opacity-0', 'h-0');
+        } else {
+            teacherFields.style.height = '0'; // Set height to 0 immediately
+            teacherFields.classList.add('opacity-0');
+        }
+    });
+    
 </script>

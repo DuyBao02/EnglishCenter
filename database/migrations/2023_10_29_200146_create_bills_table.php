@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bills', function (Blueprint $table) {
-            $table->string('id_bill', '5')->primary();
-            $table->string('name_bill', '50');
-            $table->timestamp('create_bill_at', $precision = 0);
-
-            $table->string('course_id');
-            $table->foreign('course_id')->references('id_course')->on('courses');
+            $table->bigIncrements('id_bill');
+            $table->json('name_bill');
+            $table->boolean('is_paid')->default(false);
+            $table->double('tuitionFee')->default(0.00);
+            $table->timestamp('payment_time')->nullable();
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+
             $table->timestamps();
         });
     }

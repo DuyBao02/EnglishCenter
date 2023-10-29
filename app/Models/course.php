@@ -18,10 +18,10 @@ class Course extends Model
      */
      
     protected $casts = [
-        'days' => 'array',
-        'rooms' => 'array',
-        'lessons' => 'array',
-        'students_list' => 'array',
+        'days' => 'json',
+        'rooms' => 'json',
+        'lessons' => 'json',
+        'students_list' => 'json',
     ];
 
     public $incrementing = false; //Xử lý việc khóa chính là chuỗi và không phải cột tự tăng
@@ -52,11 +52,15 @@ class Course extends Model
         return $this->belongsToMany(Room::class, 'course_room', 'course_id', 'room_id');
     }
 
-    public function bill()
+    public static function getTuitionFeeInUSD($id_course, $exchangeRate = 23000)
     {
-        return $this->hasMany(Bill::class);
+        $course = self::find($id_course);
+        if ($course) {
+            return $course->tuitionFee / $exchangeRate;
+        }
+        return 0;
     }
-
+    
     public function homework()
     {
         return $this->hasMany(Homework::class);

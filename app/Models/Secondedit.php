@@ -17,10 +17,10 @@ class Secondedit extends Model
         'data' => 'json',
     ];
 
+
     protected $fillable = [
         'user_id',
         'data',
-        'daytime',
     ];
 
 }

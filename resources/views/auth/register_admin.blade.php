@@ -25,7 +25,7 @@
         }
         </script>
     @endif
-    <form method="POST" action="{{ route('register-admin') }}">
+    <form method="POST" action="{{ route('register-admin') }}" enctype="multipart/form-data">
         @csrf
         <div class="columns-2">
             <!-- Name -->

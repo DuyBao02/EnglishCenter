@@ -18,22 +18,25 @@ class Bill extends Model
      * @var array<int, string>
      */
 
-    public $incrementing = false; //Xử lý việc khóa chính là chuỗi và không phải cột tự tăng
     protected $primaryKey = 'id_bill';
 
+    protected $casts = [
+        'name_bill' => 'json',
+    ];
+
     protected $fillable = [
-        'id_bill',
         'name_bill',
-        'create_bill_at',
+        'is_paid',
+        'user_id',
     ];
 
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class, 'course_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

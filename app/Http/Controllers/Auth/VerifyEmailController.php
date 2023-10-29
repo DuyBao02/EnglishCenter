@@ -32,13 +32,7 @@ class VerifyEmailController extends Controller
 
     private function getRedirect($request)
     {
-        switch ($request->role) {
-            case "Student":
-                return redirect()->intended(RouteServiceProvider::HOME_s.'?verified=1');
-            case "Teacher":
-                return redirect()->intended(RouteServiceProvider::HOME_t.'?verified=1');
-            default:
-                return redirect()->intended(RouteServiceProvider::HOME_a.'?verified=1');
-        }
+        return redirect()->route('welcome');
     }
+    
 }

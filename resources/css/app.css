@@ -17,3 +17,8 @@
         -webkit-animation: spin 1.5s linear infinite;
         animation: spin 1.5s linear infinite;
     }
+    
+/* scroll-back-to-top-button */
+#back-to-top {
+    transition: opacity 0.5s ease;
+}

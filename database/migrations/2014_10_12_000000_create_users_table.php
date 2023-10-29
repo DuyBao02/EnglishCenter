@@ -23,9 +23,12 @@ return new class extends Migration
             $table->string('gender', 6);
             $table->date('birthday');
             $table->string('address');
-            $table->bigInteger('phone');
+            $table->string('phone', 10);
             $table->timestamps();
             $table->string('role', 10);
+            $table->integer('experience')->nullable();
+            $table->string('level', 20)->nullable();
+            $table->string('avatar')->nullable();
         });
     }
 

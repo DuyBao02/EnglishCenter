@@ -49,10 +49,10 @@ class RoomCustomController extends Controller
 
         if ($existingLesson) {
             session()->flash('error', 'Room ' . $request->id_room . ' already exists!');
-            return redirect()->back();
+            return redirect()->back()->withInput($request->input());
         }elseif ($exitsingName_room) {
             session()->flash('error', $request->id_room . ' already exists!');
-            return redirect()->back();
+            return redirect()->back()->withInput($request->input());
         }
     
         $room = Room::create([
@@ -65,7 +65,7 @@ class RoomCustomController extends Controller
         session()->flash('success', 'Room ' . $room->id_room . ' created successful!');
     
         $rooms = Room::all();
-        return redirect()->route('rl-custom-admin');
+        return redirect()->route('rl-custom-admin')->withInput($request->input());
     }
 
     public function createBoth()

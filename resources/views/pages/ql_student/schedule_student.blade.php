@@ -78,6 +78,9 @@
             </div>
         </div>
     </div>
+    <button id="back-to-top" class="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded-full hidden">
+      <i class="fas fa-arrow-up"></i>
+    </button>
 </x-app-layout>
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />

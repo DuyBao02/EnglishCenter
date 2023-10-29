@@ -85,21 +85,27 @@ class AdminController extends Controller
         }
     }
 
-    public function confirmDelete(Request $request)
+    public function confirmDelete(Request $request, $id)
     {
-        $user = Auth::user();
-        
-        if (!$user) {
-            return redirect()->back()->with('error', $user->name . ' not found!'); 
+        $userToDelete = User::find($id);
+    
+        // Get the current authenticated user
+        $currentUser = Auth::user();
+    
+        if (!$userToDelete) {
+            return redirect()->back()->with('error', 'User not found!'); 
         }
     
-        if (!Hash::check($request->password, $user->password)) {
+        // Check if the current user's password matches the input password
+        if (!Hash::check($request->password, $currentUser->password)) {
             return redirect()->back()->with('error', 'Incorrect password!');
         }
     
-        $user->delete();
-        return redirect()->back()->with('success', 'Student removed from successfully!');
+        $userToDelete->delete();
+    
+        return redirect()->back()->with('success', 'User removed successfully!');
     }
+    
 
     public function studentManagement()
     {
@@ -126,12 +132,18 @@ class AdminController extends Controller
         $registeredStudents = $students->whereIn('id', $registeredStudentIds);
         $notRegisteredStudents = $students->whereNotIn('id', $registeredStudentIds);
     
+        // Get the courses for each registered student
+        foreach ($registeredStudents as $student) {
+            $student->courses = $student->course()->get();
+        }
+    
         return view('pages.ql_admin.student_management', [
             'totalStudents' => $students->count(),
             'registeredStudents' => $registeredStudents,
             'notRegisteredStudents' => $notRegisteredStudents,
         ]);
     }
+    
     
     public function deleteStudentfromCourse($userId, $courseName)
     {

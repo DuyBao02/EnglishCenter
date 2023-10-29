@@ -61,35 +61,39 @@ class TeacherController extends Controller
         if($user && $course){
             // Check if the user has already registered for a course
             $registeredCourse = $user->registeredCourse;
+
             if ($registeredCourse) { 
                 return redirect()->back()->with('error', 'You have already registered for course ' . $registeredCourse->id_course . '!');
             }
-            
+                
             $course->teacher = $user->id;
-
-            $course->save();
     
+            $course->save();
+        
             // Update the is_registered field of the corresponding secondcourse
             $secondcourse = Secondcourse::where('id_2course', $courseId)->first();
             if ($secondcourse) {
                 $secondcourse->is_registered = true;
                 $secondcourse->teacher = $user->id;
-
                 $secondcourse->save();
             }
-
+    
             $thirdcourse = Thirdcourse::where('id_3course', $courseId)->first();
             if ($thirdcourse) {
                 $thirdcourse->teacher = $user->id;
-
                 $thirdcourse->save();
             }
-    
-            return redirect()->back()->with('success', 'Register successfully!');
+        
+                return redirect()->back()->with('success', 'Register successfully!');
+
         } else {
+
             return redirect()->back()->with('error', 'User or Course not found!');
+            
         }
     }
+    
+    
 
     public function StudentListTeacher($id)
     {
