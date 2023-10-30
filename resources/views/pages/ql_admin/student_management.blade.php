@@ -130,11 +130,11 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @foreach($student->registeredCourseStudent() as $courseName)
+                                                @foreach($student->registeredCourseStudentIdCourse() as $idCourse)
                                                     <form action="" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="hover:text-red-500 my-1" onclick="confirmDeleteStudent(event, '{{ route('student-deleteCourse', ['userId' => $student->id, 'courseName' => $courseName]) }}')">
+                                                        <button type="submit" class="hover:text-red-500 my-1" onclick="confirmDeleteStudent(event, '{{ route('student-deleteCourse', ['userId' => $student->id, 'idCourse' => $idCourse]) }}')">
                                                             <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
                                                         </button>
                                                     </form> 
@@ -274,7 +274,12 @@
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw response;
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 swal("Poof! Student has been removed from the course!", {
@@ -305,6 +310,23 @@
                     timer: 5000,
                 });
             }
+        })
+        .catch(error => {
+            if (error.status === 409) {
+                error.json().then(data => {
+                    swal(data.error, {
+                        title: "Error!",
+                        icon: "error",
+                        timer: 5000,
+                    });
+                });
+            } else {
+                swal("Oops! Something went wrong, please refresh your website!", {
+                    icon: "error",
+                    timer: 5000,
+                });
+            }
         });
     }
+    
 </script>

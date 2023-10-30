@@ -57,7 +57,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
         ->middleware(['auth', 'verified'])->name('tuition-student');
     
     // PayPal
-        Route::post('paypal/{id}', 'App\Http\Controllers\PaypalController@paymen')->name('paypal');
+        Route::post('paypal/{id}/{date}', 'App\Http\Controllers\PaypalController@paymen')->name('paypal');
         Route::get('paypal/success', 'App\Http\Controllers\PaypalController@success')->name('paypal-success');
         Route::get('paypal/cancel', 'App\Http\Controllers\PaypalController@cancel')->name('paypal-cancel');
 
@@ -207,7 +207,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
             ->name('student-management');
 
         //Xoa student khoi khoa hoc
-        Route::delete('/student-deleteCourse/{userId}/{courseName}', 'App\Http\Controllers\AdminController@deleteStudentfromCourse')
+        Route::delete('/student-deleteCourse/{userId}/{idCourse}', 'App\Http\Controllers\AdminController@deleteStudentfromCourse')
             ->middleware(['auth', 'verified'])
             ->name('student-deleteCourse');
 

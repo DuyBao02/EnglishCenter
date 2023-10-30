@@ -10,7 +10,7 @@
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
 
                 <!-- Course -->
-                <div class="my-8 mx-8 sm:rounded-lg">
+                <!-- <div class="my-8 mx-8 sm:rounded-lg">
                     <div class="w-full overflow-hidden rounded-lg shadow-xs">
                         <div class="w-full overflow-x-auto">
                             <table class="w-full whitespace-nowrap">
@@ -20,7 +20,6 @@
                                         <th class="px-4 py-3">Name</th>
                                         <th class="px-4 py-3">Time Start</th>
                                         <th class="px-4 py-3">Weeks</th>
-                                        <th class="px-4 py-3">Student</th>
                                         <th class="px-4 py-3">Tuition Fee</th>
                                         <th class="px-4 py-3">Days</th>
                                         <th class="px-4 py-3">Lesson</th>
@@ -35,7 +34,6 @@
                                                 <td class="px-4 py-3">{{ $c->name_course }}</td>
                                                 <td class="px-4 py-3">{{ \Carbon\Carbon::parse($c->time_start)->format('d-m-Y') }}<br></td>
                                                 <td class="px-4 py-3">{{ $c->weeks }}</td>
-                                                <td class="px-4 py-3">{{ count($c->students_list) }} / {{ $c->maxStudents }}</td>
                                                 <td class="px-4 py-3">{{ number_format($c->tuitionFee) }}</td>
                                                 <td class="px-4 py-3">
                                                     @if(is_array($c->days))
@@ -65,7 +63,7 @@
                             </table>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
                 <!-- Calendar -->
                 <div class="bg-indigo-200 rounded-sm my-4 mx-4">

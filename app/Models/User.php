@@ -71,7 +71,6 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return false;
     }
-    
 
     public function course()
     {
@@ -93,6 +92,15 @@ class User extends Authenticatable implements MustVerifyEmail
         $courses = Course::whereJsonContains('students_list', $this->id)->get();
         if ($courses->isNotEmpty()) {
             return $courses->pluck('name_course')->toArray();
+        }
+        return null;
+    }
+
+    public function registeredCourseStudentIdCourse()
+    {
+        $courses = Course::whereJsonContains('students_list', $this->id)->get();
+        if ($courses->isNotEmpty()) {
+            return $courses->pluck('id_course')->toArray();
         }
         return null;
     }

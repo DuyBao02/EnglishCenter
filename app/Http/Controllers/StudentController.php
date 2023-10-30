@@ -91,22 +91,28 @@ class StudentController extends Controller
                 $thirdcourse->save();
             }
 
-            //codehere
-            $bill = Bill::where('user_id', $userId)->first();
-            if ($bill) {
+            $bills = Bill::where('user_id', $userId)->get();
+            
+            $unpaidBill = $bills->first(function ($bill) {
+                return !$bill->is_paid;
+            });
+            
+            if ($unpaidBill) {
                 // Update existing bill
-                $name_bill = json_decode($bill->name_bill, true);
+                $name_bill = json_decode($unpaidBill->name_bill, true);
                 array_push($name_bill, $courseId);
-                $bill->name_bill = json_encode($name_bill);
-                $bill->tuitionFee += $course->tuitionFee;
+                sort($name_bill);
+                $unpaidBill->name_bill = json_encode($name_bill);
+                $unpaidBill->tuitionFee += $course->tuitionFee;
+                $unpaidBill->save();
             } else {
                 // Create new bill
                 $bill = new Bill;
                 $bill->user_id = $userId;
                 $bill->name_bill = json_encode([$courseId]);
                 $bill->tuitionFee = $course->tuitionFee;
+                $bill->save();
             }
-            $bill->save();
     
             return redirect()->back()->with('success', 'Register successfully!');
         } else {
@@ -132,8 +138,10 @@ class StudentController extends Controller
         // Lấy tất cả hóa đơn của người dùng hiện tại
         $bills = Bill::where('user_id', $user->id)->get();
     
-        // Truyền dữ liệu qua view
-        return view('pages.ql_student.tuition_student', ['bills' => $bills]);
+        if(!$bills->isEmpty())
+            return view('pages.ql_student.tuition_student', ['bills' => $bills]);
+        else
+            return view('pages.ql_student.tuition_student');
     }
     
     public function getRegisteredCourses()

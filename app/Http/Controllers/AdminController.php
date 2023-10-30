@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Bill;
 use App\Models\Secondcourse;
 use App\Models\Thirdcourse;
 use App\Models\Room;
@@ -145,19 +146,20 @@ class AdminController extends Controller
     }
     
     
-    public function deleteStudentfromCourse($userId, $courseName)
+    public function deleteStudentfromCourse($userId, $idCourse)
     {
+        
         // Kiểm tra courseName có tồn tại trong bảng Course không
-        $course = Course::where('name_course', $courseName)->first();
-        $thirdCourse = ThirdCourse::where('name_course', $courseName)->first();
+        $course = Course::where('id_course', $idCourse)->first();
+        $thirdCourse = ThirdCourse::where('id_3course', $idCourse)->first();
         $user = User::find($userId);
     
         if (!$course && !$thirdCourse) {
-            return response()->json(['error' => $courseName .' not found!'], 404);
+            return response()->json(['error' => 'Course not found!'], 404);
         }
     
         if (!$user) {
-            return response()->json(['error' => $user->name . ' not found!'], 404);
+            return response()->json(['error' => 'User not found!'], 404);
         }
     
         // Kiểm tra userId có tồn tại trong mảng students_list không
@@ -165,13 +167,55 @@ class AdminController extends Controller
         $studentsListThirdCourse = $thirdCourse ? $thirdCourse->students_list : [];
     
         if (!in_array($userId, $studentsListCourse) && !in_array($userId, $studentsListThirdCourse)) {
-            return response()->json(['error' => $user->name . ' not found in ' . $courseName . '!'], 404);
+            return response()->json(['error' => 'This user not found in Course!'], 404);
         }
-    
+        
+        // User thanh toán rồi thì không được xóa khỏi Course
+        $bills = Bill::where('user_id', $userId)->get();
+        foreach ($bills as $bill) {
+            if ($bill->is_paid){
+                $nameBill = json_decode($bill->name_bill, true);
+                if (in_array($idCourse, $nameBill)) {
+                    return response()->json(['error' => 'You cannot remove because they have already paid their tuition!'], 409);
+                }
+            }
+            elseif (!$bill->is_paid) {
+                $nameBill = json_decode($bill->name_bill, true);
+                if (in_array($idCourse, $nameBill)) {
+                    $nameBill = array_diff($nameBill, [$idCourse]); // remove the value from array
+                    $nameBill = array_values($nameBill); // re-index the array
+                    $bill->name_bill = json_encode($nameBill);
+                    if(empty($nameBill)) {
+                        $bill->delete();
+                    } else {
+                        $bill->tuitionFee -= $course->tuitionFee;
+                        $bill->save();
+                    }
+                }
+            }
+        }
+
+        // User thanh toán tiền rôì vẫn xóa khỏi Course được
+        // $bill = Bill::where('user_id', $userId)->first();
+        // if($bill){
+        //     $nameBill = json_decode($bill->name_bill, true);
+        //     if (in_array($idCourse, $nameBill)) {
+        //         $nameBill = array_diff($nameBill, [$idCourse]); // remove the value from array
+        //         $nameBill = array_values($nameBill); // re-index the array
+        //         $bill->name_bill = json_encode($nameBill);
+        //         if(empty($nameBill)) {
+        //             $bill->delete();
+        //         } else {
+        //             $bill->tuitionFee -= $course->tuitionFee;
+        //             $bill->save();
+        //         }
+        //     }
+        // }
+        
         // Xóa userId khỏi mảng students_list
         $studentsListCourse = array_diff($studentsListCourse, [$userId]);
         $studentsListThirdCourse = array_diff($studentsListThirdCourse, [$userId]);
-    
+            
         // Cập nhật lại students_list trong bảng Course và ThirdCourse
         if ($course) {
             $course->students_list = array_values($studentsListCourse);
@@ -181,8 +225,9 @@ class AdminController extends Controller
             $thirdCourse->students_list = array_values($studentsListThirdCourse);
             $thirdCourse->save();
         }
-    
-        return response()->json(['success' => 'Student removed from ' . $courseName . ' successfully!'], 200);
+            
+        return response()->json(['success' => 'Student removed from ' . $idCourse . ' successfully!'], 200);
+            
     }
 
     public function showTeacherorNot()

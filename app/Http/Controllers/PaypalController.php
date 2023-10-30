@@ -18,13 +18,13 @@ use App\Models\Secondcourse;
 use App\Models\Thirdcourse;
 use App\Models\User;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
-
+use Carbon\Carbon;
 
 class PaypalController extends Controller
 {
-    public function paymen(Request $request, $id)
+    public function paymen(Request $request, $id, $date)
     {
-        // dd($request->price);
+        // dd($request->price, $id, $date);
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
         $paypalToken = $provider->getAccessToken();
@@ -50,7 +50,7 @@ class PaypalController extends Controller
         if(isset($response['id']) && $response['id'] != null){
             foreach($response['links'] as $link){
                 if($link['rel'] === 'approve'){
-                    session(['bill_id' => $id]);
+                    session(['bill_id' => $id, 'paytime' => $date]);
                     return redirect()->away($link['href']);
                 }
             }
@@ -70,12 +70,16 @@ class PaypalController extends Controller
         if( isset($response['status']) && $response['status'] == "COMPLETED" ){
             // Get the bill from the session
             $billId = session('bill_id');
+            $paytime = session('paytime');
+
+            $paytime_timestamp = Carbon::createFromFormat('d-m-Y', $paytime)->format('Y-m-d H:i:s');
+            // dd($paytime, $paytime_timestamp);
+
             // Find the bill in the database
             $bill = Bill::find($billId);
-            // Check if the bill exists
             if ($bill) {
-                // Update the is_paid column to 1
                 $bill->is_paid = 1;
+                $bill->payment_time = $paytime_timestamp;
                 $bill->save();
             }
             return redirect()->route('tuition-student')->with('success', 'Thanh toan hoc phi thanh cong!');

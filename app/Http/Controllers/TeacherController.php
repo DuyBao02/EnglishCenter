@@ -59,12 +59,6 @@ class TeacherController extends Controller
         $user = User::find($userId);
         $course = Course::find($courseId);
         if($user && $course){
-            // Check if the user has already registered for a course
-            $registeredCourse = $user->registeredCourse;
-
-            if ($registeredCourse) { 
-                return redirect()->back()->with('error', 'You have already registered for course ' . $registeredCourse->id_course . '!');
-            }
                 
             $course->teacher = $user->id;
     
