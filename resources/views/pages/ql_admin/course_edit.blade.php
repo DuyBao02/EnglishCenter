@@ -34,7 +34,7 @@
                         @csrf
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2 sm:col-span-1">
-                                <label for="id_course" class="block text-sm font-medium text-gray-700">ID Course</label>
+                                <label for="id_course" class="block text-sm font-medium text-gray-700">ID Course (Cannot change)</label>
                                 <input readonly required type="text" id="id_course" name="id_course" value="{{ $course->id_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1">

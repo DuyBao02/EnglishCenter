@@ -120,16 +120,6 @@ class StudentController extends Controller
         }
     }
 
-    public function showCalenderStudent(): View
-    {   
-        // Lấy người dùng hiện tại
-        $user = Auth::user(); 
-
-        // Lấy danh sách các khóa học mà người dùng hiện tại đã đăng ký
-        $courses = Course::whereJsonContains('students_list', $user->id)->get();
-        return view('pages.ql_student.schedule_student', ['courses' => $courses]);
-    }
-
     public function showCourseBillStudent(): View
     {   
         // Lấy người dùng hiện tại
@@ -142,6 +132,11 @@ class StudentController extends Controller
             return view('pages.ql_student.tuition_student', ['bills' => $bills]);
         else
             return view('pages.ql_student.tuition_student');
+    }
+
+    public function showCalenderStudent(): View
+    {   
+        return view('pages.ql_student.schedule_student');
     }
     
     public function getRegisteredCourses()

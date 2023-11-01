@@ -62,14 +62,14 @@
                                                 <!-- Table data  -->
                                                 <td class="px-4 py-3">{{ $loop->iteration }}</td>
                                                 <td class="px-4 py-3">
-                                                    <img class="w-10 h-10 object-cover object-center rounded-full" src="{{ asset('images/avatars/'.$student->avatar) }}" alt="{{ $student->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$student->avatar) }}', '{{ $student->name }}')">
+                                                    <img class="w-10 h-10 object-cover object-center rounded-full transform transition-transform duration-400 hover:scale-150" src="{{ asset('images/avatars/'.$student->avatar) }}" alt="{{ $student->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$student->avatar) }}', '{{ $student->name }}')">
                                                 </td>
                                                 <td class="px-4 py-3">{{ $student->name }}</td>
                                                 <td class="px-4 py-3">{{ $student->email }}</td>
                                                 <td class="px-4 py-3">{{ $student->gender }}</td>
                                                 <td class="px-4 py-3">{{ \Carbon\Carbon::parse($student->birthday)->format('d-m-Y') }}</td>
                                                 <td class="px-4 py-3">{{ $student->address }}</td>
-                                                <td class="px-4 py-3">0{{ $student->phone }}</td>
+                                                <td class="px-4 py-3">{{ $student->phone }}</td>
                                                 <td class="px-4 py-3">
                                                     {{ $student->isPaid($get_id_course) ? 'OK' : 'NOT' }}
                                                 </td>

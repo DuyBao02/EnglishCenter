@@ -171,46 +171,46 @@ class AdminController extends Controller
         }
         
         // User thanh toán rồi thì không được xóa khỏi Course
-        $bills = Bill::where('user_id', $userId)->get();
-        foreach ($bills as $bill) {
-            if ($bill->is_paid){
-                $nameBill = json_decode($bill->name_bill, true);
-                if (in_array($idCourse, $nameBill)) {
-                    return response()->json(['error' => 'You cannot remove because they have already paid their tuition!'], 409);
-                }
-            }
-            elseif (!$bill->is_paid) {
-                $nameBill = json_decode($bill->name_bill, true);
-                if (in_array($idCourse, $nameBill)) {
-                    $nameBill = array_diff($nameBill, [$idCourse]); // remove the value from array
-                    $nameBill = array_values($nameBill); // re-index the array
-                    $bill->name_bill = json_encode($nameBill);
-                    if(empty($nameBill)) {
-                        $bill->delete();
-                    } else {
-                        $bill->tuitionFee -= $course->tuitionFee;
-                        $bill->save();
-                    }
-                }
-            }
-        }
-
-        // User thanh toán tiền rôì vẫn xóa khỏi Course được
-        // $bill = Bill::where('user_id', $userId)->first();
-        // if($bill){
-        //     $nameBill = json_decode($bill->name_bill, true);
-        //     if (in_array($idCourse, $nameBill)) {
-        //         $nameBill = array_diff($nameBill, [$idCourse]); // remove the value from array
-        //         $nameBill = array_values($nameBill); // re-index the array
-        //         $bill->name_bill = json_encode($nameBill);
-        //         if(empty($nameBill)) {
-        //             $bill->delete();
-        //         } else {
-        //             $bill->tuitionFee -= $course->tuitionFee;
-        //             $bill->save();
+        // $bills = Bill::where('user_id', $userId)->get();
+        // foreach ($bills as $bill) {
+        //     if ($bill->is_paid){
+        //         $nameBill = json_decode($bill->name_bill, true);
+        //         if (in_array($idCourse, $nameBill)) {
+        //             return response()->json(['error' => 'You cannot remove because they have already paid their tuition!'], 409);
+        //         }
+        //     }
+        //     elseif (!$bill->is_paid) {
+        //         $nameBill = json_decode($bill->name_bill, true);
+        //         if (in_array($idCourse, $nameBill)) {
+        //             $nameBill = array_diff($nameBill, [$idCourse]); // remove the value from array
+        //             $nameBill = array_values($nameBill); // re-index the array
+        //             $bill->name_bill = json_encode($nameBill);
+        //             if(empty($nameBill)) {
+        //                 $bill->delete();
+        //             } else {
+        //                 $bill->tuitionFee -= $course->tuitionFee;
+        //                 $bill->save();
+        //             }
         //         }
         //     }
         // }
+
+        // User thanh toán tiền rôì vẫn xóa khỏi Course được và xóa luôn bill đã thanh toán 
+        $bill = Bill::where('user_id', $userId)->first();
+        if($bill){
+            $nameBill = json_decode($bill->name_bill, true);
+            if (in_array($idCourse, $nameBill)) {
+                $nameBill = array_diff($nameBill, [$idCourse]); // remove the value from array
+                $nameBill = array_values($nameBill); // re-index the array
+                $bill->name_bill = json_encode($nameBill);
+                if(empty($nameBill)) {
+                    $bill->delete();
+                } else {
+                    $bill->tuitionFee -= $course->tuitionFee;
+                    $bill->save();
+                }
+            }
+        }
         
         // Xóa userId khỏi mảng students_list
         $studentsListCourse = array_diff($studentsListCourse, [$userId]);
@@ -230,15 +230,15 @@ class AdminController extends Controller
             
     }
 
-    public function showTeacherorNot()
-    {
-        //
+    public function showCalenderAdmin(): View
+    {   
+        return view('pages.ql_admin.schedule_admin');
     }
-
-    public function showStudentorNot()
+    
+    public function getRegisteredCoursesAdmin()
     {
-        //
+        $courses = Course::all();
+        return $courses;
     }
-
     
 }

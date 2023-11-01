@@ -101,7 +101,7 @@
                                             <!-- Table data  -->
                                             <td class="px-4 py-3">{{ $loop->iteration }}</td>
                                             <td class="px-4 py-3">
-                                                <img class="w-10 h-10 object-cover object-center rounded-full" src="{{ asset('images/avatars/'.$student->avatar) }}" alt="{{ $student->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$student->avatar) }}', '{{ $student->name }}')">
+                                                <img class="w-10 h-10 object-cover object-center rounded-full transform transition-transform duration-400 hover:scale-150" src="{{ asset('images/avatars/'.$student->avatar) }}" alt="{{ $student->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$student->avatar) }}', '{{ $student->name }}')">
                                             </td>
                                             <td class="px-4 py-3">{{ $student->name }}</td>
                                             <td class="px-4 py-3">{{ $student->email }}</td>
@@ -168,7 +168,7 @@
                                             <!-- Table data  -->
                                             <td class="px-4 py-3">{{ $loop->iteration }}</td>
                                             <td class="px-4 py-3">
-                                                <img class="w-10 h-10 object-cover object-center rounded-full" src="{{ asset('images/avatars/'.$student->avatar) }}" alt="{{ $student->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$student->avatar) }}', '{{ $student->name }}')">
+                                                <img class="w-10 h-10 object-cover object-center rounded-full transform transition-transform duration-400 hover:scale-150" src="{{ asset('images/avatars/'.$student->avatar) }}" alt="{{ $student->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$student->avatar) }}', '{{ $student->name }}')">
                                             </td>
                                             <td class="px-4 py-3">{{ $student->name }}</td>
                                             <td class="px-4 py-3">{{ $student->email }}</td>

@@ -32,7 +32,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     ->name('management-system');
 
 //Fullcalender
-    Route::get('fullcalendar','App\Http\Controllers\FullCalendarController@index');
+    Route::get('fullcalendar','App\Http\Controllers\FullCalendarController@index')->name('calendarIndex');
     Route::post('fullcalendar/create','App\Http\Controllers\FullCalendarController@create');
     Route::post('fullcalendar/update','App\Http\Controllers\FullCalendarController@update');
     Route::post('fullcalendar/delete','App\Http\Controllers\FullCalendarController@destroy');
@@ -67,9 +67,8 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
         return view('dashboard_teacher');
         })->middleware(['auth', 'verified'])->name('dashboard-teacher');
 
-    Route::get('/schedule-teacher', function () {
-        return view('pages.ql_teacher.schedule_teacher');
-        })->middleware(['auth', 'verified'])->name('schedule-teacher');
+    Route::get('/schedule-teacher', 'App\Http\Controllers\TeacherController@showCalenderTeacher')
+        ->middleware(['auth', 'verified'])->name('schedule-teacher');
 
     Route::get('/course-list-teacher', 'App\Http\Controllers\TeacherController@CourseListTeacher')
         ->middleware(['auth', 'verified', 'role:Teacher'])
@@ -222,6 +221,9 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
     Route::get('/student-list-admin', 'App\Http\Controllers\CourseRegistrationController@hienthiStudentListA')
         ->middleware(['auth', 'verified'])->name('student-list-admin');
+
+    Route::get('/schedule-admin', 'App\Http\Controllers\AdminController@showCalenderAdmin')
+        ->middleware(['auth', 'verified'])->name('schedule-admin');
 
 //Profile's Admin routes
 

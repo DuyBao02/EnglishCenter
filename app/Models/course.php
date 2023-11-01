@@ -18,10 +18,10 @@ class Course extends Model
      */
      
     protected $casts = [
-        'days' => 'json',
-        'rooms' => 'json',
-        'lessons' => 'json',
-        'students_list' => 'json',
+        'days' => 'array',
+        'rooms' => 'array',
+        'lessons' => 'array',
+        'students_list' => 'array',
     ];
 
     public $incrementing = false; //Xử lý việc khóa chính là chuỗi và không phải cột tự tăng

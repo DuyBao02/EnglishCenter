@@ -190,11 +190,18 @@ class CourseRegistrationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $course = Course::where('id_course', $id)->first();
-        
-        if (Course::where('name_course', $request->name_course)->exists()) {
-            return redirect()->back()->with('error', $request->name_course . ' already exists!'); 
+
+        if (Course::where('name_course', $request->name_course)->where('id_course', '!=', $id)->exists()) {
+            return redirect()->back()->withInput($request->input())->with('error', $request->name_course . ' already exists!'); 
         }
+        
+        if (strlen(floor($request->tuitionFee)) > 8) {
+            return redirect()->back()->withInput($request->input())->with('error', 'Tuition fees do not exceed 8 figures!');
+        }
+
+        // Update bill khi có chỉnh sửa Course
+
+        $course = Course::where('id_course', $id)->first();
     
         $a = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $days = $request->input('days');

@@ -13,12 +13,12 @@
                 </div>
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('course-admin')" :active="request()->routeIs('course-admin')">
+                    <x-nav-link :href="route('course-admin')" :active="request()->routeIs('course-admin', 'create-course', 'student-list-admin', 'course-edit')">
                         {{ __('Course Custom') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('rl-custom-admin')" :active="request()->routeIs('rl-custom-admin')">
+                    <x-nav-link :href="route('rl-custom-admin')" :active="request()->routeIs('rl-custom-admin',  'lesson-edit', 'room-edit')">
                         {{ __('Rooms & Lessons Custom') }}
                     </x-nav-link>
                 </div>
@@ -44,7 +44,11 @@
                             <span class="absolute top-4 right-0 inline-block w-2 h-2 bg-green-600 rounded-full"></span>
                         @endif
                     </x-nav-link>
-                    
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('calendarIndex')" :active="request()->routeIs('schedule-admin')">
+                        {{ __('Calendar') }}
+                    </x-nav-link>
                 </div>
             </div>
 

@@ -138,7 +138,7 @@
                                                 <td class="px-4 py-3">
                                                     @if($c->teacherUser3)
                                                         <div class="flex flex-col items-center">
-                                                            <img class="w-10 h-10 object-cover object-center rounded-full" src="{{ asset('images/avatars/'.$c->teacherUser3->avatar) }}" alt="{{ $c->teacherUser3->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$c->teacherUser3->avatar) }}')">
+                                                            <img class="w-10 h-10 object-cover object-center rounded-full transform transition-transform duration-400 hover:scale-150" src="{{ asset('images/avatars/'.$c->teacherUser3->avatar) }}" alt="{{ $c->teacherUser3->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$c->teacherUser3->avatar) }}')">
                                                             <a class="hover:text-red-500" href="javascript:void(0)" onclick="showTeacherInfo({{ json_encode($c->teacherUser3) }})">
                                                             <span>{{ $c->teacherUser3->name }}</span></a>
                                                         </div>
