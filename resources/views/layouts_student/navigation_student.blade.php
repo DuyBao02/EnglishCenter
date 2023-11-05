@@ -7,12 +7,17 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard-student') }}">
+                    <a href="{{ route('welcome') }}">
                         <x-application-logo/>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('dashboard-student')" :active="request()->routeIs('dashboard-student')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('course-list-student')" :active="request()->routeIs('course-list-student')">
                         {{ __('Register Course') }}
@@ -35,12 +40,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-800 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->role }}: {{ Auth::user()->name }} <i class="fas fa-chalkboard-teacher ml-1"></i></div>
-                            <div class="ml-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
+                            <div><img class="w-12 h-12 object-cover object-center rounded-full transform transition-transform duration-400 hover:scale-125" src="{{ asset('images/avatars/'.Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"></div>
                         </button>
                     </x-slot>
 

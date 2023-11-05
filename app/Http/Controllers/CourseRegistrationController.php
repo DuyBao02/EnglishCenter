@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Bill;
 use App\Models\Room;
 use App\Models\Lesson;
 use App\Models\Secondcourse;
@@ -181,7 +182,7 @@ class CourseRegistrationController extends Controller
             // Truyền biến $lessons vào view
             return view('pages.ql_admin.course_edit', compact('course', 'lessons', 'rooms', 'secondCourse', 'thirdCourse'));
         } else {
-            return redirect()->route('course-admin')->with('error', $course->name_course . ' not found!');
+            return redirect()->route('course-admin')->with('error', 'The Course not found!');
         }
     }
 
@@ -190,7 +191,7 @@ class CourseRegistrationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
+        
         if (Course::where('name_course', $request->name_course)->where('id_course', '!=', $id)->exists()) {
             return redirect()->back()->withInput($request->input())->with('error', $request->name_course . ' already exists!'); 
         }
@@ -199,9 +200,35 @@ class CourseRegistrationController extends Controller
             return redirect()->back()->withInput($request->input())->with('error', 'Tuition fees do not exceed 8 figures!');
         }
 
-        // Update bill khi có chỉnh sửa Course
-
         $course = Course::where('id_course', $id)->first();
+
+        // Update bill khi có chỉnh sửa Course
+        // Lấy ra danh sách bill có tên trùng với course đang cập nhật
+        $bills = Bill::get();
+
+        foreach($bills as $bill) {
+        
+            // Lấy name_bill dưới dạng mảng
+            $nameBillArray = json_decode($bill->name_bill);
+
+            // Kiểm tra id_course có trong mảng name_bill không
+            if(in_array($course->id_course, $nameBillArray)) {
+                if(!$bill->is_paid) {
+                
+                    // Lấy ra giá trị cũ của học phí trong bill
+                    $oldTuitionFee = $bill->tuitionFee; 
+
+                    // Lấy ra phần học phí của khóa học đang cập nhật
+                    $courseTuitionFee = $request->tuitionFee;
+
+                    $tuitionDifference = $courseTuitionFee - $course->tuitionFee;
+
+                    $bill->tuitionFee = $oldTuitionFee + $tuitionDifference;
+
+                    $bill->save();
+                }
+            }
+        }
     
         $a = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $days = $request->input('days');
@@ -228,7 +255,7 @@ class CourseRegistrationController extends Controller
                 }
             }
         }
-        
+
         $data = collect($request->input('days'))->map(function ($day, $index) use ($request, $a) {
             return ['day' => $day, 'lesson' => $request->input('lessons')[$index], 'room' => $request->input('rooms')[$index], 'index' => array_search($day, $a)];
         })->sortBy(['index', 'lesson']);

@@ -39,9 +39,8 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
 // Student's routes
 
-    Route::get('/dashboard-student', function () {
-        return view('dashboard_student');
-        })->middleware(['auth', 'verified'])->name('dashboard-student');
+    Route::get('/dashboard-student', 'App\Http\Controllers\StudentController@showRLDashBoardStudent')
+        ->middleware(['auth', 'verified'])->name('dashboard-student');
 
     Route::get('/schedule-student', 'App\Http\Controllers\StudentController@showCalenderStudent')
         ->middleware(['auth', 'verified'])->name('schedule-student');
@@ -59,13 +58,12 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     // PayPal
         Route::post('paypal/{id}/{date}', 'App\Http\Controllers\PaypalController@paymen')->name('paypal');
         Route::get('paypal/success', 'App\Http\Controllers\PaypalController@success')->name('paypal-success');
-        Route::get('paypal/cancel', 'App\Http\Controllers\PaypalController@cancel')->name('paypal-cancel');
+        Route::get('paypal/cancel', 'App\Http\Controllers\PaypalController@cancel')->name('paypal-cancel'); 
 
 // Teacher's routes
 
-    Route::get('/dashboard-teacher', function () {
-        return view('dashboard_teacher');
-        })->middleware(['auth', 'verified'])->name('dashboard-teacher');
+    Route::get('/dashboard-teacher', 'App\Http\Controllers\TeacherController@showRLDashBoardTeacher')
+        ->middleware(['auth', 'verified'])->name('dashboard-teacher');
 
     Route::get('/schedule-teacher', 'App\Http\Controllers\TeacherController@showCalenderTeacher')
         ->middleware(['auth', 'verified'])->name('schedule-teacher');
@@ -87,9 +85,8 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
 // Admin's routes
 
-    Route::get('/dashboard-admin', function () {
-        return view('dashboard_admin');
-        })->middleware(['auth', 'verified'])->name('dashboard-admin');
+    Route::get('/dashboard-admin', 'App\Http\Controllers\AdminController@showRLDashBoard')
+        ->middleware(['auth', 'verified'])->name('dashboard-admin');
     
     //Notification Edit to Admin
         Route::get('/edit-request', 'App\Http\Controllers\EditRequestController@showRequestToAdmin')
@@ -190,20 +187,15 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     Route::get('/rl-custom-admin', 'App\Http\Controllers\RoomCustomController@createBoth')
         ->middleware(['auth', 'verified'])->name('rl-custom-admin');
 
-    //Teacher management from Admin
-        Route::get('/teacher-management', 'App\Http\Controllers\AdminController@teacherManagement')
+    //Teachers & Students management from Admin
+        Route::get('/users-management', 'App\Http\Controllers\AdminController@usersManagement')
             ->middleware(['auth', 'verified'])
-            ->name('teacher-management');
+            ->name('users-management');
 
         //Xoa teacher khoi khoa hoc
         Route::delete('/teacher-deleteCourse/{userId}/{courseName}', 'App\Http\Controllers\AdminController@deleteTeacherfromCourse')
             ->middleware(['auth', 'verified'])
             ->name('teacher-deleteCourse');
-
-    //Student management from Admin
-        Route::get('/student-management', 'App\Http\Controllers\AdminController@studentManagement')
-            ->middleware(['auth', 'verified'])
-            ->name('student-management');
 
         //Xoa student khoi khoa hoc
         Route::delete('/student-deleteCourse/{userId}/{idCourse}', 'App\Http\Controllers\AdminController@deleteStudentfromCourse')
@@ -224,6 +216,28 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
     Route::get('/schedule-admin', 'App\Http\Controllers\AdminController@showCalenderAdmin')
         ->middleware(['auth', 'verified'])->name('schedule-admin');
+    
+    //Posts
+    Route::get('/posts', 'App\Http\Controllers\AdminController@showPosts')
+        ->name('posts');
+
+    Route::get('/posts-details/{id}', 'App\Http\Controllers\AdminController@showPostsdetails')
+        ->name('posts-details');
+
+    Route::get('/posts-admin', 'App\Http\Controllers\AdminController@showPostsManagement')
+        ->middleware(['auth', 'verified'])->name('posts-admin');
+    
+    Route::post('/create-post', 'App\Http\Controllers\AdminController@createPost')
+        ->middleware(['auth', 'verified'])->name('create-post');
+
+    Route::get('/post-edit/{id}', 'App\Http\Controllers\AdminController@editPost')
+        ->middleware(['auth', 'verified'])->name('post-edit');
+
+    Route::post('/post-update/{id}', 'App\Http\Controllers\AdminController@updatePost')
+        ->middleware(['auth', 'verified'])->name('post-update');
+
+    Route::delete('/post-delete/{id}', 'App\Http\Controllers\AdminController@deletePost')
+        ->middleware(['auth', 'verified'])->name('post-delete');
 
 //Profile's Admin routes
 

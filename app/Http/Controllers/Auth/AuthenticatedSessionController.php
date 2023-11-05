@@ -43,7 +43,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('welcome')->with('success', 'Logout successfully!');
+        return redirect()->route('welcome');
+        // ->with('success', 'Logout successfully!');
     }
 
     public function destroyHomePage(Request $request): RedirectResponse
@@ -54,7 +55,8 @@ class AuthenticatedSessionController extends Controller
     
         $request->session()->regenerateToken();
     
-        return redirect()->route('welcome')->with('success', 'Logout successfully!');
+        return redirect()->route('welcome');
+        // ->with('success', 'Logout successfully!');
     }
     
 }

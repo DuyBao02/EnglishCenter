@@ -17,6 +17,8 @@ use App\Models\Bill;
 use App\Models\Secondcourse;
 use App\Models\Thirdcourse;
 use App\Models\User;
+use App\Models\Lesson;
+use App\Models\Room;
 
 class StudentController extends Controller
 {
@@ -145,4 +147,12 @@ class StudentController extends Controller
         $courses = Course::whereJsonContains('students_list', $user->id)->get();
         return $courses;
     }
+
+    public function showRLDashBoardStudent()
+    {
+        $lessons = Lesson::all();
+        $rooms = Room::all();
+        return view('dashboard_student', compact(['lessons','rooms']));
+    }
+
 }

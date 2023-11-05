@@ -70,12 +70,20 @@ class ProfileController extends Controller
     
         $user = $request->user();
 
+        // Lấy đường dẫn đến ảnh đại diện
+        $avatarPath = public_path('images/avatars/' . $user->avatar);
+
         Auth::logout();
 
         $user->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Kiểm tra xem tệp ảnh đại diện có tồn tại không và sau đó xóa nó
+        if (file_exists($avatarPath)) {
+            unlink($avatarPath);
+        }
 
         return Redirect::to('/');
     }

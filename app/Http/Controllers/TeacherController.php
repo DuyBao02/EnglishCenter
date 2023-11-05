@@ -16,6 +16,8 @@ use App\Models\Course;
 use App\Models\Secondcourse;
 use App\Models\Thirdcourse;
 use App\Models\User;
+use App\Models\Lesson;
+use App\Models\Room;
 
 class TeacherController extends Controller
 {
@@ -104,20 +106,11 @@ class TeacherController extends Controller
         return view('pages.ql_teacher.student_list_teacher', compact('students_list'));      
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function showRLDashBoardTeacher()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        $lessons = Lesson::all();
+        $rooms = Room::all();
+        return view('dashboard_teacher', compact(['lessons','rooms']));
     }
 
     public function showCalenderTeacher(): View

@@ -45,6 +45,7 @@ class FullCalendarController extends Controller
     
             $events = [];
             $colors = ['yellow', 'blue', 'red', 'green', 'purple', 'orange', 'pink']; // Mảng màu sắc
+            $colorIndex = 0;
     
             foreach ($courses as $course) {
                 $days = $course->days; // 'days' đã được chuyển đổi thành mảng PHP
@@ -62,7 +63,7 @@ class FullCalendarController extends Controller
                         $nextDay = $time_start->copy()->addWeeks($week)->next($dayOfWeek[$day]);
                         $event['start'] = $nextDay->format('Y-m-d H:i:s');
                         $event['end'] = $nextDay->format('Y-m-d H:i:s');
-                        $event['color'] = $colors[crc32($course->id_course) % count($colors)]; // Chọn màu sắc dựa trên id khóa học
+                        $event['color'] = $colors[$colorIndex];
                         $event['allDay'] = true; // Sự kiện suốt cả ngày
     
                         // Đặt tiêu đề sự kiện
@@ -70,6 +71,10 @@ class FullCalendarController extends Controller
                         $events[] = $event;
                     }
                 }
+                $colorIndex++;
+                if($colorIndex >= count($colors)) {
+                    $colorIndex = 0; 
+                  }
             }
     
             return Response::json($events);
@@ -82,7 +87,7 @@ class FullCalendarController extends Controller
             return redirect()->route('schedule-teacher');
         }
         elseif  ($user->role == 'Admin') {
-            return redirect()->route('schedule-admin');
+            return redirect()->route('course-admin');
         }
         
     }

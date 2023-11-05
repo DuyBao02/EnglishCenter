@@ -57,6 +57,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
+                
                 <div class="my-8 mx-8 sm:rounded-lg">
                     <div class="w-full overflow-hidden rounded-lg shadow-xs">
                         <div class="w-full overflow-x-auto">

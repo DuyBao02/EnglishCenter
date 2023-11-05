@@ -107,7 +107,6 @@
                                     <th class="px-4 py-3">Room</th>
                                     <th class="px-4 py-3">Teacher</th>
                                     <th class="px-4 py-3">Student List</th>
-                                    <th class="px-4 py-3"></th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y">
@@ -115,7 +114,92 @@
                                         @foreach ($courses as $c)
                                             <tr>
                                                 <!-- Table data  -->
-                                                <td class="px-4 py-3">{{ $c->id_course }}</td>
+                                                <td class="px-4 py-3">
+                                                    <details class="p-2 border rounded-md">
+                                                        <summary class="hover:text-red-500 transform transition-transform duration-400 hover:scale-125">{{ $c->id_course }}</summary>
+                                                        <div class="mt-4">
+                                                            @if (in_array($c->id_course, $secondCourses))
+                                                                <p>
+                                                                    <div class="inline-flex items-center mb-4">
+                                                                        <img class="h-6 w-6" src="images/checkbox.png" alt="">
+                                                                        <a class="hover:text-red-500 ml-1 transform transition-transform duration-400 hover:scale-125" href="#" onclick="confirmPublicTeacher(event, '{{ route('public-to-teacher', $c->id_course) }}')">PtT</a>
+                                                                    </div>
+                                                                </p>
+                                                            @else
+                                                                <p>
+                                                                    <a class="hover:text-red-500 ml-1 transform transition-transform duration-400 hover:scale-125" href="#" onclick="confirmPublicTeacher(event, '{{ route('public-to-teacher', $c->id_course) }}')">PtT</a>
+                                                                </p>
+                                                            @endif
+
+                                                            @if (in_array($c->id_course, $thirdCourses))
+                                                                <p>
+                                                                    <div class="inline-flex items-center mb-4">
+                                                                        <img class="h-6 w-6" src="images/checkbox.png" alt="">
+                                                                        <a class="hover:text-red-500 ml-1 transform transition-transform duration-400 hover:scale-125" href="#" onclick="confirmPublicStudent(event, '{{ route('public-to-student', $c->id_course) }}')">PtS</a>
+                                                                    </div>
+                                                                </p>
+                                                            @else
+                                                                <p>
+                                                                    <a class="hover:text-red-500 ml-1 transform transition-transform duration-400 hover:scale-125" href="#" onclick="confirmPublicStudent(event, '{{ route('public-to-student', $c->id_course) }}')">PtS</a>
+                                                                </p>
+                                                            @endif
+                                                                <p>
+                                                                    <a type="buttom" class="hover:text-red-500 mr-4 inline-flex items-center mb-4 transform transition-transform duration-400 hover:scale-150" href="{{ route('course-edit', $c->id_course) }}">
+                                                                        <img class="h-6 w-6 inline-block" src="images/edit.png" alt="">
+                                                                        <span >Edit</span>
+                                                                    </a>
+                                                                </p>
+
+                                                            <p>
+                                                                <a type="buttom" class="mb-4 hover:text-red-500 inline-flex items-center transform transition-transform duration-400 hover:scale-150"
+                                                                    x-data=""
+                                                                    x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion-{{ $c->id_course }}')">
+                                                                    <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
+                                                                    <span>Delete</span>
+                                                                </a>
+                                                            </p>
+                                                            <x-modal name="confirm-user-deletion-{{ $c->id_course }}" :show="$errors->userDeletion->isNotEmpty()" focusable>
+                                                                <form method="post" action="{{ route('course-custom-destroy', $c->id_course) }}" class="p-6">
+                                                                    @csrf
+                                                                    @method('delete')
+
+                                                                    <h2 class="text-lg font-medium text-gray-900">
+                                                                        {{ __('Are you sure you want to delete ') }}{{ $c->name_course }} ?
+                                                                    </h2>
+
+                                                                    <p class="mt-1 text-sm text-gray-600">
+                                                                        {{ __('Once this course is deleted, all of its resources and data will be permanently deleted.') }}</br>
+                                                                        {{ __('Please enter your password to confirm you would like to permanently delete this course.') }}
+                                                                    </p>
+
+                                                                    <div class="mt-6">
+                                                                        <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+
+                                                                        <x-text-input
+                                                                            id="password"
+                                                                            name="password"
+                                                                            type="password"
+                                                                            class="mt-1 block w-3/4"
+                                                                            placeholder="{{ __('Password') }}"
+                                                                        />
+
+                                                                        <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                                                                    </div>
+
+                                                                    <div class="mt-6 flex justify-end">
+                                                                        <x-secondary-button x-on:click="$dispatch('close')">
+                                                                            {{ __('Cancel') }}
+                                                                        </x-secondary-button>
+
+                                                                        <x-danger-button class="ml-3">
+                                                                            {{ __('Delete Course') }}
+                                                                        </x-danger-button>
+                                                                    </div>
+                                                                </form>
+                                                            </x-modal>
+                                                        </div>
+                                                    </details>
+                                                </td>
                                                 <td class="px-4 py-3">{{ $c->name_course }}</td>
                                                 <td class="px-4 py-3">{{ \Carbon\Carbon::parse($c->time_start)->format('d-m-Y') }}<br></td>
                                                 <td class="px-4 py-3">{{ $c->weeks }}</td>
@@ -150,91 +234,13 @@
                                                             <span>{{ $c->teacherUser->name }}</span></a>
                                                         </div>
                                                     @else
-                                                        <div class="flex items-center">
+                                                        <div class="flex items-center ml-4">
                                                             <img src="images/sand-clock.png" class="h-9 w-9" alt="">
                                                         </div>
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-3">
                                                     <a class="hover:text-red-500" href="{{ route('student-list-a', ['courseID' => $c->id_course]) }}"><img class="h-12 w-12 transform transition-transform duration-400 hover:scale-150" src="images/customer.png" alt=""></a>
-                                                </td>
-                                                <td class="px-1 py-3 relative my-4">
-                                                    <button class="dropdownButton text-blue-500 hover:text-blue-700 mr-2">
-                                                        <img src="images/down-arrow.png" class="h-6 w-6" alt="">
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            
-                                            <tr class="dropdownMenu rounded-full origin-top-right absolute right-44 w-1/2 h-7 mx-auto shadow-lg bg-yellow-200 ring-1 ring-black ring-opacity-5 hidden z-50">
-                                                <td colspan="12" class="flex justify-around">
-                                                    @if (in_array($c->id_course, $secondCourses))
-                                                        <div class="inline-flex items-center mb-4">
-                                                            <img class="h-6 w-6" src="images/checkbox.png" alt="">
-                                                            <a class="hover:text-red-500 ml-1" href="#" onclick="confirmPublicTeacher(event, '{{ route('public-to-teacher', $c->id_course) }}')">Public to Teacher</a>
-                                                        </div>
-                                                    @else
-                                                    <a class="hover:text-red-500 ml-1" href="#" onclick="confirmPublicTeacher(event, '{{ route('public-to-teacher', $c->id_course) }}')">Public to Teacher</a>
-                                                    @endif
-
-                                                    @if (in_array($c->id_course, $thirdCourses))
-                                                        <div class="inline-flex items-center mb-4">
-                                                            <img class="h-6 w-6" src="images/checkbox.png" alt="">
-                                                            <a class="hover:text-red-500 ml-1" href="#" onclick="confirmPublicStudent(event, '{{ route('public-to-student', $c->id_course) }}')">Public to Students</a>
-                                                        </div>
-                                                    @else
-                                                        <a class="hover:text-red-500 ml-1" href="#" onclick="confirmPublicStudent(event, '{{ route('public-to-student', $c->id_course) }}')">Public to Students</a>
-                                                    @endif
-                                                
-                                                    <a type="buttom" class="hover:text-red-500 mr-4 inline-flex items-center mb-4 transform transition-transform duration-400 hover:scale-150" href="{{ route('course-edit', $c->id_course) }}">
-                                                        <img class="h-6 w-6 inline-block" src="images/edit.png" alt="">
-                                                        <span >Edit</span>
-                                                    </a> 
-
-                                                    <a type="buttom" class="mb-4 hover:text-red-500 inline-flex items-center transform transition-transform duration-400 hover:scale-150"
-                                                        x-data=""
-                                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion-{{ $c->id_course }}')">
-                                                        <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
-                                                        <span>Delete</span>
-                                                    </a>
-                                                    <x-modal name="confirm-user-deletion-{{ $c->id_course }}" :show="$errors->userDeletion->isNotEmpty()" focusable>
-                                                        <form method="post" action="{{ route('course-custom-destroy', $c->id_course) }}" class="p-6">
-                                                            @csrf
-                                                            @method('delete')
-
-                                                            <h2 class="text-lg font-medium text-gray-900">
-                                                                {{ __('Are you sure you want to delete ') }}{{ $c->name_course }} ?
-                                                            </h2>
-
-                                                            <p class="mt-1 text-sm text-gray-600">
-                                                                {{ __('Once this course is deleted, all of its resources and data will be permanently deleted.') }}</br>
-                                                                {{ __('Please enter your password to confirm you would like to permanently delete your account.') }}
-                                                            </p>
-
-                                                            <div class="mt-6">
-                                                                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
-
-                                                                <x-text-input
-                                                                    id="password"
-                                                                    name="password"
-                                                                    type="password"
-                                                                    class="mt-1 block w-3/4"
-                                                                    placeholder="{{ __('Password') }}"
-                                                                />
-
-                                                                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
-                                                            </div>
-
-                                                            <div class="mt-6 flex justify-end">
-                                                                <x-secondary-button x-on:click="$dispatch('close')">
-                                                                    {{ __('Cancel') }}
-                                                                </x-secondary-button>
-
-                                                                <x-danger-button class="ml-3">
-                                                                    {{ __('Delete Account') }}
-                                                                </x-danger-button>
-                                                            </div>
-                                                        </form>
-                                                    </x-modal>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -244,12 +250,68 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Calendar -->
+                <div class="bg-indigo-200 rounded-sm my-4 mx-4 ">
+                    <div class="container">
+                        <div class="response"></div>
+                        <div id='calendar' class="h-auto"></div>  
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+    <button id="back-to-top" class="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded-full hidden">
+      <i class="fas fa-arrow-up"></i>
+    </button>
 </x-app-layout>
+
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" /> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
+
+
+<style>
+    .fc-left h2 {
+        font-size: 30px; /* Đặt kích thước mong muốn ở đây */
+    }
+
+    .fc-content{
+        color: black;
+    }
+</style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
+    //Dropdown
+
+    // Lấy tất cả các phần tử details trên trang
+    var detailsElements = document.querySelectorAll('details');
+
+    // Bắt đầu theo dõi sự kiện click trên trang
+    document.addEventListener('click', function (event) {
+        // Kiểm tra xem sự kiện click có xảy ra bên trong phần tử details hay không
+        var isInsideDetails = false;
+
+        for (var i = 0; i < detailsElements.length; i++) {
+            if (detailsElements[i].contains(event.target)) {
+                isInsideDetails = true;
+                break;
+            }
+        }
+
+        // Nếu sự kiện click không xảy ra bên trong details, đóng tất cả các details trên trang
+        if (!isInsideDetails) {
+            for (var i = 0; i < detailsElements.length; i++) {
+                detailsElements[i].open = false;
+            }
+        }
+    });
+
     //Confirm register course for teacher
     function confirmPublicTeacher(event, route) {
         event.preventDefault();
@@ -283,44 +345,6 @@
             }
         });
     }
-
-    //Dropdown action for course_admin
-    var dropdownButtons = document.getElementsByClassName('dropdownButton');
-    var currentOpenDropdown = null; // Store the currently open dropdown
-
-    for (var i = 0; i < dropdownButtons.length; i++) {
-        dropdownButtons[i].addEventListener('click', function(event) {
-            event.stopPropagation(); // Prevent this click from triggering the document click event handler
-            var dropdownMenu = this.parentNode.parentNode.nextElementSibling;
-            if (dropdownMenu.classList.contains('hidden')) {
-                dropdownMenu.classList.remove('hidden');
-                // If there is a dropdown currently open, close it
-                if (currentOpenDropdown && currentOpenDropdown !== dropdownMenu) {
-                    currentOpenDropdown.classList.add('hidden');
-                }
-                // Update the currently open dropdown
-                currentOpenDropdown = dropdownMenu;
-            } else {
-                dropdownMenu.classList.add('hidden');
-                // If the dropdown is closed, clear the currently open dropdown
-                if (currentOpenDropdown === dropdownMenu) {
-                    currentOpenDropdown = null;
-                }
-            }
-        });
-    }
-
-    // Add event listener to the document
-    document.addEventListener('click', function(event) {
-        var dropdownMenus = document.getElementsByClassName('dropdownMenu');
-        for (var i = 0; i < dropdownMenus.length; i++) {
-            if (!dropdownMenus[i].contains(event.target)) {
-                dropdownMenus[i].classList.add('hidden');
-            }
-        }
-        // If the click is outside, clear the currently open dropdown
-        currentOpenDropdown = null;
-    });
 
     //Delete Course
     function confirmDelete(event, route) {
@@ -366,6 +390,96 @@
     
     function closeAvatarModal() {
         document.getElementById('avatarModal').classList.add('hidden');
+    }
+
+    // Calendar
+    $(document).ready(function () {
+         
+        var SITEURL = "{{url('/')}}";
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+ 
+        var calendar = $('#calendar').fullCalendar({
+            editable: true,
+            events: "{{ route('calendarIndex') }}",
+            displayEventTime: true,
+            editable: true,
+            eventRender: function (event, element, view) {
+                if (event.allDay === 'true') {
+                    event.allDay = true;
+                } else {
+                    event.allDay = false;
+                }
+            },
+            selectable: true,
+            selectHelper: true,
+            // select: function (start, end, allDay) {
+            //     var title = prompt('Event Title:');
+ 
+            //     if (title) {
+            //         var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+            //         var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+ 
+            //         $.ajax({
+            //             url: SITEURL + "fullcalendar/create",
+            //             data: 'title=' + title + '&start=' + start + '&end=' + end,
+            //             type: "POST",
+            //             success: function (data) {
+            //                 displayMessage("Added Successfully");
+            //             }
+            //         });
+            //         calendar.fullCalendar('renderEvent',
+            //                 {
+            //                     title: title,
+            //                     start: start,
+            //                     end: end,
+            //                     allDay: allDay
+            //                 },
+            //         true
+            //                 );
+            //     }
+            //     calendar.fullCalendar('unselect');
+            // },
+             
+            // eventDrop: function (event, delta) {
+            //             var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+            //             var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+            //             $.ajax({
+            //                 url: SITEURL + 'fullcalendar/update',
+            //                 data: 'title=' + event.title + '&start=' + start + '&end=' + end + '&id=' + event.id,
+            //                 type: "POST",
+            //                 success: function (response) {
+            //                     displayMessage("Updated Successfully");
+            //                 }
+            //             });
+            //         },
+
+            // eventClick: function (event) {
+            //     var deleteMsg = confirm("Hiển thị thông tin khóa học của ngày tương ứng");
+            //     if (deleteMsg) {
+            //         $.ajax({
+            //             type: "POST",
+            //             url: SITEURL + 'fullcalendar/delete',
+            //             data: "&id=" + event.id,
+            //             success: function (response) {
+            //                 if(parseInt(response) > 0) {
+            //                     $('#calendar').fullCalendar('removeEvents', event.id);
+            //                     displayMessage("Deleted Successfully");
+            //                 }
+            //             }
+            //         });
+            //     }
+            // }
+ 
+        });
+    });
+    
+    function displayMessage(message) {
+        $(".response").html("<div class='success'>"+message+"</div>");
+        setInterval(function() { $(".success").fadeOut(); }, 1000);
     }
 
 </script>
