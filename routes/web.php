@@ -17,9 +17,8 @@ use App\Http\Controllers\PaypalController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+Route::get('/', 'App\Http\Controllers\AdminController@showPostTeacherWelcome')
+    ->name('welcome');
 
 Route::get('/admin', function () {
     return view('welcome_admin');
@@ -29,7 +28,7 @@ Route::post('logout-homepage', 'App\Http\Controllers\Auth\AuthenticatedSessionCo
     ->name('logout-homepage');
 
 Route::get('/management-system', 'App\Http\Controllers\ManagementSystemController@index')
-    ->name('management-system');
+    ->middleware(['auth', 'verified'])->name('management-system');
 
 //Fullcalender
     Route::get('fullcalendar','App\Http\Controllers\FullCalendarController@index')->name('calendarIndex');
@@ -216,12 +215,15 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
     Route::get('/schedule-admin', 'App\Http\Controllers\AdminController@showCalenderAdmin')
         ->middleware(['auth', 'verified'])->name('schedule-admin');
+
+    Route::get('/teachers/{id}', 'App\Http\Controllers\AdminController@showTeachersdetails')
+        ->name('teachers-details');
     
     //Posts
     Route::get('/posts', 'App\Http\Controllers\AdminController@showPosts')
         ->name('posts');
 
-    Route::get('/posts-details/{id}', 'App\Http\Controllers\AdminController@showPostsdetails')
+    Route::get('/posts/{id}', 'App\Http\Controllers\AdminController@showPostsdetails')
         ->name('posts-details');
 
     Route::get('/posts-admin', 'App\Http\Controllers\AdminController@showPostsManagement')

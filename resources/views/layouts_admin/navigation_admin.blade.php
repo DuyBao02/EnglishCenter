@@ -8,7 +8,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('welcome') }}">
-                        <x-application-logo class="" />
+                        <x-application-logo/>
                     </a>
                 </div>
                 <!-- Navigation Links -->

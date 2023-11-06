@@ -25,9 +25,49 @@ class EditRequestController extends Controller
 {
 
     public function sendRequestToSecondEdit(Request $request)
-    {
+    {   
+        
         // Lấy user hiện tại
         $user = auth()->user();
+
+        // Kiểm tra xem có file avatar được tải lên hay không
+        if ($request->hasFile('avatar')) {
+            if ($request->defaultAvatar == '1') {
+                // Nếu avatar là avatar mặc định
+                $data['new']['avatar'] = 'avatar_default.png';
+            }
+            else{
+                if (!$request->file('avatar')->isValid()) {
+                    return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file!'); 
+                }
+                    
+                if ($request->file('avatar')->getSize() > 2048 * 1024) {
+                    return redirect()->back()->withInput($request->input())->with('error', 'Avatar file size must be less than 2MB!'); 
+                }
+        
+                if (!in_array($request->file('avatar')->getClientOriginalExtension(), ['jpeg', 'png', 'jpg', 'gif', 'svg'])) {
+                    return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file type!'); 
+                }
+
+                $avatarName = $user->name . '_' . explode('@', $user->email)[0] . '.' . $request->file('avatar')->getClientOriginalExtension();
+                
+                $oldAvatarPath = public_path('images/avatars/' . $user->avatar);
+                    
+                if ($user->avatar != 'avatar_default.png' && file_exists($oldAvatarPath)) {
+                    // Xóa file avatar cũ
+                    unlink($oldAvatarPath);
+                } 
+                
+                $request->file('avatar')->move(public_path('images/avatars'), $avatarName);
+
+                // Lưu tên file vào $data['new']['avatar']
+                $data['new']['avatar'] = $avatarName;
+            }
+            
+        }
+        else {
+            $data['new']['avatar'] = $user->avatar;
+        }
 
         // Validate và lấy dữ liệu
         $rules = [
@@ -52,63 +92,37 @@ class EditRequestController extends Controller
         // Lấy user hiện tại
         $user = auth()->user();
 
-        // Lấy dữ liệu cũ và mới để so sánh
-        $data = [
-            'old' => [
-                'name' => $user->name,
-                'birthday' => $user->birthday,
-                'address' => $user->address,
-                'phone' => $user->phone,
-                'experience' => $user->experience,
-                'level' => $user->level,
-                'avatar' => $user->avatar, 
-            ],
-            'new' => $request->only(['name', 'birthday', 'address', 'phone', 'experience', 'level']),
+         // Lấy dữ liệu cũ và mới để so sánh
+        $data['old'] = [
+            'name' => $user->name,
+            'birthday' => $user->birthday,
+            'address' => $user->address,
+            'phone' => $user->phone,
+            'experience' => $user->experience,
+            'level' => $user->level,
+            'avatar' => $user->avatar, 
         ];
 
-        // Kiểm tra xem có file avatar được tải lên hay không
-        if ($request->hasFile('avatar')) {
+        if($request->avatar == null)
+            $new_avt = $user->avatar;
 
-            if (!$request->file('avatar')->isValid()) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file!'); 
-            }
-                
-            if ($request->file('avatar')->getSize() > 2048 * 1024) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Avatar file size must be less than 2MB!'); 
-            }
-    
-            if (!in_array($request->file('avatar')->getClientOriginalExtension(), ['jpeg', 'png', 'jpg', 'gif', 'svg'])) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file type!'); 
-            }
+        $data['new'] = [
+            'name' => $request->name,
+            'birthday' => $request->birthday,
+            'address' => $request->address,
+            'phone' => $request->phone,
+            'experience' => $request->experience,
+            'level' => $request->level,
+            'avatar' => $new_avt, 
+        ];
 
-            $avatarName = $user->name . '_' . explode('@', $user->email)[0] . '.' . $request->file('avatar')->getClientOriginalExtension();
-            
-            $oldAvatarPath = public_path('images/avatars/' . $user->avatar);
-                
-            if ($user->avatar != 'avatar_default.png' && file_exists($oldAvatarPath)) {
-                // Xóa file avatar cũ
-                unlink($oldAvatarPath);
-            } 
-            
-            $request->file('avatar')->move(public_path('images/avatars'), $avatarName);
-
-            // Lưu tên file vào $data['new']['avatar']
-            $data['new']['avatar'] = $avatarName;
-        } 
-
-        else if ($request->defaultAvatar == '1') {
-            // Nếu avatar là avatar mặc định
-            $data['new']['avatar'] = 'avatar_default.png';
-        }
-
-        else {
-            $data['new']['avatar'] = null;
-        }
+        // Sắp xếp các mảng theo key
+        ksort($data['old']);
+        ksort($data['new']);
+        // dd($data['old'], $data['new']);
 
         // Kiểm tra xem dữ liệu đã được chỉnh sửa hay chưa
-        if ($user->name == $data['new']['name'] && $user->birthday == $data['new']['birthday'] && $user->address == $data['new']['address'] 
-            && $user->phone == $data['new']['phone'] && $user->avatar == $data['new']['avatar'] 
-            && ($user->role != 'Teacher' || ($user->experience == $data['new']['experience'] && $user->level == $data['new']['level']))) {
+        if ($data['old'] == $data['new']) {
             return redirect()->back()->withInput($request->input())->with('error', 'No changes were made!');
         }
 

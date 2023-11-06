@@ -105,8 +105,9 @@
                     </form>
                 </div>
                 
-                {{-- Post data table --}}
+                <!-- Post data table -->
                 <div class="my-4 mx-4 sm:rounded-lg">
+                    <h3 class="text-2xl font-bold mb-4">Posts List</h3>
                     <div class="w-full overflow-hidden rounded-lg shadow-xs">
                         <div class="w-full overflow-x-auto">
                             <table class="w-full whitespace-nowrap table-auto">
@@ -115,6 +116,7 @@
                                     <th class="px-4 py-3">ID</th>
                                     <th class="px-4 py-3">Title</th>
                                     <th class="px-4 py-3">Picture</th>
+                                    <th class="px-4 py-3">Content</th>
                                     <th class="px-4 py-3"></th>
                                     <th class="px-4 py-3"></th>
                                     </tr>
@@ -129,6 +131,7 @@
                                                 <td class="px-4 py-3">
                                                     <a class="hover:text-red-500 transform transition-transform duration-400 hover:scale-150" href="#" alt="{{ $p->picture }}" onclick="showPicture('{{ asset('images/posts/'.$p->picture) }}', '{{ $p->picture }}')">{{ $p->picture }}</a>
                                                 </td>
+                                                <td class="px-4 py-3">Press Edit to read the content</td>
                                                 <td class="py-3">
                                                     <a type="buttom" href="{{ route('post-edit', $p->id) }}">
                                                         <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/edit.png" alt="">

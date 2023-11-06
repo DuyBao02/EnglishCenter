@@ -5,14 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    
     <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" />
     <title>DuyBao English Center</title>
     <link rel="shortcut icon" href="images/icon_title.png">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -34,6 +31,14 @@
                         href=" {{ route('management-system') }} ">
                             <i class="fas fa-university lg:text-gray-300 text-gray-500 text-lg leading-lg mr-2"></i>
                             Management System
+                        </a>
+                    </li>
+                    <li class="flex items-center">
+                        <a class="lg:text-white lg:hover:text-gray-300 text-gray-800 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold" 
+                        href="{{ route('posts') }}">
+                            <i class="lg:text-gray-300 text-gray-500 far fa-file-alt text-lg leading-lg mr-2">
+                            </i>
+                            Posts
                         </a>
                     </li>
                 </ul>
@@ -64,9 +69,9 @@
             </div>
         </div>
     </nav>
-    <main >
-        <section class="relative block" style="height: 400px;">
-            <div class="absolute top-0 w-full h-full bg-center bg-cover bg-gray-300">
+    <main class="profile-page">
+        <section class="relative block" style="height: 500px;">
+            <div class="absolute top-0 w-full h-full bg-center bg-cover" style='background-image: url("https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80");'>
                 <span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black"></span>
             </div>
             <div class="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden" style="height: 70px;">
@@ -81,29 +86,36 @@
                     <div class="px-6">
                         <div class="flex flex-wrap justify-center">
                             <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-                                <div class="relative pb-20">
-                                    <img src="{{ asset('images/posts/'.$postDetails->picture) }}" alt="{{ $postDetails->picture }}" class="-m-16 mx-auto" />
+                                <div class="relative">
+                                    <img src="{{ asset('images/avatars/'.$teacherDetails->avatar) }}" alt="{{ $teacherDetails->avatar }}" class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16" style="max-width: 150px;" />
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center mt-12">
+                        <div class="text-center mt-28">
                             <h3 class="text-4xl font-semibold leading-normal mb-2 text-gray-800">
-                                {{ ($postDetails->title) }}
+                                {{ $teacherDetails->level }}. {{ $teacherDetails->name }}
                             </h3>
                             <div class="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
-                                <i class="fas fa-calendar mr-2 text-lg text-gray-500"></i>
-                                {{ \Carbon\Carbon::parse($postDetails->updated_at)->format('d-m-Y') }}
+                                <i class="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>
+                                {{ $teacherDetails->address }}
+                            </div>
+                            <div class="mb-2 text-gray-700 mt-10">
+                                <i class="fas fa-briefcase mr-2 text-lg text-gray-500"></i>Teaching experience: {{ $teacherDetails->experience }} years
                             </div>
                             <div class="mb-2 text-gray-700">
-                                Posted by: {{ ($postDetails->user->name) }}
+                                <i class="fas fa-paper-plane mr-2 text-lg text-gray-500"></i>Email: {{ $teacherDetails->email }}
                             </div>
                         </div>
-                        <div class="mt-10 py-10 border-t border-gray-300 text-left">
+                        <div class="mt-10 py-10 border-t border-gray-300 text-center">
                             <div class="flex flex-wrap justify-center">
                                 <div class="w-full lg:w-9/12 px-4">
-                                    <div class="mb-4 leading-relaxed text-gray-800">
-                                        {!! $postDetails->content !!}
-                                    </div>
+                                    <p class="mb-4 text-lg leading-relaxed text-gray-800">
+                                        Nghề dạy học là một nghề tôn quý và trách nhiệm, trong đó giáo viên đóng vai trò quan 
+                                        trọng trong việc hướng dẫn và truyền đạt kiến thức cho học sinh. Họ không chỉ là 
+                                        người truyền đạt kiến thức mà còn là nguồn động viên, nguồn cảm hứng cho sự phát triển 
+                                        của thế hệ trẻ. Giáo viên giúp học sinh khám phá và phát triển tiềm năng của họ, đồng thời 
+                                        xây dựng nền tảng cho tương lai của xã hội thông qua việc giáo dục và hướng dẫn.
+                                    </p>
                                 </div>
                             </div>
                         </div>

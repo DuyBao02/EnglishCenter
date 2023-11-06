@@ -26,12 +26,13 @@ class AdminController extends Controller
     public function showRLDashBoard()
     {
         $totalcourses = count(Course::all());
+        $totalposts = count(Post::all());
         $totallessons = count(Lesson::all());
         $totalrooms = count(Room::all());
         $totaladmins = count(User::where('role', 'Admin')->get());
         $totalteachers = count(User::where('role', 'Teacher')->get());
         $totalstudents = count(User::where('role', 'Student')->get());
-        return view('dashboard_admin', compact(['totalcourses','totaladmins','totalteachers','totalstudents','totallessons','totalrooms']));
+        return view('dashboard_admin', compact(['totalposts', 'totalcourses','totaladmins','totalteachers','totalstudents','totallessons','totalrooms']));
     }
 
     public function usersManagement()
@@ -304,6 +305,21 @@ class AdminController extends Controller
         return redirect()->route('posts-admin')->with('success', $post->title . ' create successful!');
     }
     
+    public function showPostTeacherWelcome()
+    {
+        // Lấy danh sách giáo viên, phân trang và mỗi trang chứa 4 giáo viên
+        $teachers = User::where('role', 'Teacher')->paginate(4);
+
+        // Lấy bài viết có id 11 và 12
+        $post11 = Post::find(11);
+        $post12 = Post::find(12);
+
+        // Lấy danh sách bài viết, phân trang và mỗi trang chứa 3 bài viết
+        $posts = Post::all();
+
+        return view('welcome', ['posts' => $posts, 'post11' => $post11, 'post12' => $post12, 'teachers' => $teachers]);
+    }
+
     public function showPosts(): View
     {
         return view('showposts', ['posts' => Post::all()]);
@@ -317,11 +333,28 @@ class AdminController extends Controller
     public function showPostsdetails($id)
     {
         $postDetails = Post::find($id);
-        // dd($postDetails);
+        
+        if (!$postDetails) {
+            return redirect()->back()->with('error', 'Post not found!');
+        }
+    
         if ($postDetails)
             return view('posts_details', compact('postDetails'));
         else
             return redirect()->back()->with('error', 'Posts not found!');
+    }
+
+    public function showTeachersdetails($id)
+    {
+        $teacherDetails = User::where('role', 'Teacher')->find($id);
+        if (!$teacherDetails) {
+            return redirect()->back()->with('error', 'Teacher not found!');
+        }
+    
+        if ($teacherDetails)
+            return view('teachers_details', compact('teacherDetails'));
+        else
+            return redirect()->back()->with('error', 'Teacher not found!');
     }
 
     public function editPost($id)

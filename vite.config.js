@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
             ],
             refresh: true,
         }),

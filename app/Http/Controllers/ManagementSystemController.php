@@ -17,10 +17,6 @@ class ManagementSystemController extends Controller
      */
     public function index() {
 
-        if (Auth::check() == null) {
-            return redirect()->route('welcome')->with('error', 'Please log in before entering the system!');
-        }
-
         if (Auth::user()->role == "Student") {
             return redirect(RouteServiceProvider::HOME_s);
         }

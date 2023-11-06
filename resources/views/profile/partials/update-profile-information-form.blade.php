@@ -197,7 +197,7 @@
         </form>
     
     @elseif (Auth::user()->role == 'Student')
-    <form method="post" action="{{ route('receive-edit-request') }}" class=" space-y-6" enctype="multipart/form-data">
+        <form method="post" action="{{ route('receive-edit-request') }}" class=" space-y-6" enctype="multipart/form-data">
             @csrf
         
             <div class="mt-6">
@@ -250,7 +250,9 @@
             </div>
         </form>
     @endif
-
+    <button id="back-to-top" class="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded-full hidden">
+      <i class="fas fa-arrow-up"></i>
+    </button>
     
 </section>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

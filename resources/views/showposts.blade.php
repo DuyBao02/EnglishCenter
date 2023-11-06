@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <link rel="shortcut icon" href="./assets/img/favicon.ico" />
+    
     <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" />
@@ -49,7 +49,11 @@
             <div class="lg:flex flex-grow items-center bg-white lg:bg-transparent lg:shadow-none hidden" id="example-collapse-navbar">
                 <ul class="flex flex-col lg:flex-row list-none mr-auto">
                     <li class="flex items-center">
-                        <a href="{{ route('welcome') }}"><x-application-logo class="" /></a>
+                        <a class="lg:text-white lg:hover:text-gray-300 text-gray-800 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold" 
+                        href=" {{ route('welcome') }} ">
+                            <i class="fas fa-home lg:text-gray-300 text-gray-500 text-lg leading-lg mr-2"></i>
+                            Home Page
+                        </a>
                     </li>
                     <li class="flex items-center">
                         <a class="lg:text-white lg:hover:text-gray-300 text-gray-800 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold" 
@@ -120,10 +124,10 @@
                         <div class="col-span-3 sm:col-span-1">
                             <a href="{{ route('posts-details', $p->id) }}">
                                 <div class="px-6">
-                                    <img src="{{ asset('images/posts/'.$p->picture) }}" alt="{{ $p->picture }}" class="transform transition-transform duration-400 hover:scale-125 shadow-lg mx-auto" />
+                                    <img src="{{ asset('images/posts/'.$p->picture) }}" alt="{{ $p->picture }}" class="transform transition-transform duration-400 hover:scale-125 shadow-lg mx-auto max-h-72" />
                                     <div class="pt-6 text-center">
                                         <i class="fas fa-calendar mr-2 mb-4"></i>
-                                        {{ \Carbon\Carbon::parse($p->updated_at)->format('d-m-Y') }}
+                                            {{ \Carbon\Carbon::parse($p->updated_at)->format('d-m-Y') }}
                                         <h5 class="text-xl font-bold">{{ $p->title }}</h5>
                                         <p class="mt-1 text-sm text-gray-500 uppercase font-semibold">
                                             <a class="hover:text-red-500" href="{{ route('posts-details', $p->id) }}">Xem thêm</a>
