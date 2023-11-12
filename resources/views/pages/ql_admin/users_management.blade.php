@@ -33,7 +33,7 @@
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -55,7 +55,15 @@
         </div>
     </div>
 
-    <div class="py-12">
+    <form action="" method="" class="flex items-center space-x-4 mx-4 lg:mx-0 lg:float-right lg:px-40 mt-4">
+        <input type="search" name="search" id="" value="{{ $search }}" placeholder="Search by name, email, birthday, add, tel" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+        <button type="" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Search</button>
+        <a href="{{ route('users-management') }}">
+            <button type="button" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded-full">Reset</button>
+        </a>
+    </form>
+
+    <div class="py-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
 
@@ -97,6 +105,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            {!! $admins->appends(\Request::except('page'))->render() !!}
                         </div>
                     </div>
                 </div>
@@ -139,7 +148,7 @@
                                             <td class="px-4 py-3">{{ $teacher->name }}</td>
                                             <td class="px-4 py-3">{{ $teacher->level }}</td>
                                             <td class="px-4 py-3">{{ $teacher->experience }} Ys</td>
-                                            <td class="px-4 py-3">{{ $teacher->email }}</td>    
+                                            <td class="px-4 py-3">{{ $teacher->email }}</td>
                                             <td class="px-4 py-3">{{ $teacher->gender }}</td>
                                             <td class="px-4 py-3">{{ \Carbon\Carbon::parse($teacher->birthday)->format('d-m-Y') }}</td>
                                             <td class="px-4 py-3">{{ $teacher->address }}</td>
@@ -209,7 +218,7 @@
                                                     x-data=""
                                                     x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion-{{ $teacher->id }}')">{{ __('Delete Account') }}
                                                 </x-danger-button>
-                                                
+
                                                 <x-modal name="confirm-user-deletion-{{ $teacher->id }}" :show="$errors->userDeletion->isNotEmpty()" focusable>
                                                     <form method="post" action="{{ route('confirm-delete', $teacher->id) }}" class="p-6">
                                                         @csrf
@@ -248,7 +257,7 @@
                                                             </x-danger-button>
                                                         </div>
                                                     </form>
-                                                </x-modal> 
+                                                </x-modal>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -326,7 +335,7 @@
                                                         <button type="submit" class="hover:text-red-500 my-1" onclick="confirmDeleteStudent(event, '{{ route('student-deleteCourse', ['userId' => $student->id, 'idCourse' => $idCourse]) }}')">
                                                             <img class="h-6 w-6 inline-block" src="images/trash.png" alt="">
                                                         </button>
-                                                    </form> 
+                                                    </form>
                                                 @endforeach
                                             </td>
                                         </tr>
@@ -370,7 +379,7 @@
                                                     x-data=""
                                                     x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion-{{ $student->id }}')">{{ __('Delete Account') }}
                                                 </x-danger-button>
-                                                
+
                                                 <x-modal name="confirm-user-deletion-{{ $student->id }}" :show="$errors->userDeletion->isNotEmpty()" focusable>
                                                     <form method="post" action="{{ route('confirm-delete', $student->id) }}" class="p-6">
                                                         @csrf
@@ -409,7 +418,7 @@
                                                             </x-danger-button>
                                                         </div>
                                                     </form>
-                                                </x-modal> 
+                                                </x-modal>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -434,7 +443,7 @@
         document.getElementById('modal-title').innerText = name;
         document.getElementById('avatarModal').classList.remove('hidden');
     }
-    
+
     function closeAvatarModal() {
         document.getElementById('avatarModal').classList.add('hidden');
     }

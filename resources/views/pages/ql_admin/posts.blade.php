@@ -4,14 +4,14 @@
             {{ __('Posts') }}
         </h2>
     </x-slot>
-    
+
     @if (Session::has('success'))
     <script>
         window.onload = function() {
             swal('Success', '{{ Session::get('success') }}', 'success', {
-                button: true, 
-                button: 'OK', 
-                timer: 5000, 
+                button: true,
+                button: 'OK',
+                timer: 5000,
             });
         }
 
@@ -35,7 +35,7 @@
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -57,54 +57,18 @@
         </div>
     </div>
 
-    <div class="py-12">
+    <form action="" method="" class="flex items-center space-x-4 mx-4 lg:mx-0 lg:float-right lg:px-40 mt-4">
+        <input type="search" name="search" id="" value="{{ $search }}" placeholder="Search by title" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+        <button type="" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Search</button>
+        <a href="{{ route('posts-admin') }}">
+            <button type="button" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded-full">Reset</button>
+        </a>
+    </form>
+
+    <div class="py-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
 
-                {{-- Create post Form --}}
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-2xl font-bold">Create new post</h3>
-                    
-                    <form action="{{ route('create-post') }}" method="POST" class="mt-6" enctype="multipart/form-data">
-                        @csrf
-                    
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
-                                <input required :value="old('title')"
-                                    type="text" 
-                                    id="title"
-                                    name="title"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </div>
-                            
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="picture" class="block text-gray-700 text-sm font-bold mb-2">Picture</label>
-                                <input required id="picture" class="block mt-1 w-full" type="file" name="picture" value="{{ old('picture') }}" autofocus autocomplete="picture" />
-                            </div>
-                        
-                        </div>
-                    
-                        <div class="mt-4">
-                            <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
-                            <textarea required="required" :value="old('content')"
-                                id="content"
-                                name="content"
-                                rows="3"
-                                autofocus autocomplete="content"
-                                class="form-control web-editor shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </textarea>
-
-                        </div>
-                    
-                        <div class="my-4 flex items-center justify-center w-full">
-                            <x-primary-button type="submit">
-                                {{ __('Create') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
-                </div>
-                
                 <!-- Post data table -->
                 <div class="my-4 mx-4 sm:rounded-lg">
                     <h3 class="text-2xl font-bold mb-4">Posts List</h3>
@@ -113,9 +77,9 @@
                             <table class="w-full whitespace-nowrap table-auto">
                                 <thead>
                                     <tr class="text-xs font-medium tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                                    <th class="px-4 py-3">ID</th>
-                                    <th class="px-4 py-3">Title</th>
-                                    <th class="px-4 py-3">Picture</th>
+                                    <th class="px-4 py-3">@sortablelink('id')</th>
+                                    <th class="px-4 py-3">@sortablelink('title')</th>
+                                    <th class="px-4 py-3">@sortablelink('picture')</th>
                                     <th class="px-4 py-3">Content</th>
                                     <th class="px-4 py-3"></th>
                                     <th class="px-4 py-3"></th>
@@ -135,7 +99,7 @@
                                                 <td class="py-3">
                                                     <a type="buttom" href="{{ route('post-edit', $p->id) }}">
                                                         <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/edit.png" alt="">
-                                                    </a> 
+                                                    </a>
                                                 </td>
 
                                                 <td class="py-3">
@@ -152,8 +116,53 @@
                                     @endif
                                 </tbody>
                             </table>
+                            {!! $posts->appends(\Request::except('page'))->render() !!}
                         </div>
                     </div>
+                </div>
+
+                {{-- Create post Form --}}
+                <div class="p-6 text-gray-900 mt-4">
+                    <h3 class="text-2xl font-bold">Create new post</h3>
+
+                    <form action="{{ route('create-post') }}" method="POST" class="mt-4" enctype="multipart/form-data">
+                        @csrf
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+                                <input required :value="old('title')"
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="picture" class="block text-gray-700 text-sm font-bold mb-2">Picture</label>
+                                <input required id="picture" class="block mt-1 w-full" type="file" name="picture" value="{{ old('picture') }}" autofocus autocomplete="picture" />
+                            </div>
+
+                        </div>
+
+                        <div class="mt-4">
+                            <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
+                            <textarea required="required" :value="old('content')"
+                                id="content"
+                                name="content"
+                                rows="3"
+                                autofocus autocomplete="content"
+                                class="form-control web-editor shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </textarea>
+
+                        </div>
+
+                        <div class="my-4 flex items-center justify-center w-full">
+                            <x-primary-button type="submit">
+                                {{ __('Create') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
                 </div>
 
             </div>
@@ -174,7 +183,7 @@
         document.getElementById('modal-title').innerText = name;
         document.getElementById('pictureModal').classList.remove('hidden');
     }
-    
+
     function closeAvatarModal() {
         document.getElementById('pictureModal').classList.add('hidden');
     }

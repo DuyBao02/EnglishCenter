@@ -7,18 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Kyslik\ColumnSortable\Sortable;
 
-class Post extends Model
+class Feedback extends Model
 {
     use HasFactory, Sortable;
 
+    protected $table = 'feedbacks';
+
     protected $fillable = [
-        'title',
-        'content',
-        'picture',
+        'comment_content',
         'user_id',
+        'datesend'
     ];
 
-    public $sortable = ['id', 'title', 'content', 'picture', 'user_id', 'created_at', 'updated_at'];
+    public $sortable = ['id', 'comment_content', 'user_id', 'datesend', 'created_at', 'updated_at'];
 
     public function user()
     {

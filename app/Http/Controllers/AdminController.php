@@ -35,7 +35,7 @@ class AdminController extends Controller
         return view('dashboard_admin', compact(['totalposts', 'totalcourses','totaladmins','totalteachers','totalstudents','totallessons','totalrooms']));
     }
 
-    public function usersManagement()
+    public function usersManagement(Request $request)
     {
         $admins = User::where('role', 'Admin')->get();
 
@@ -48,13 +48,13 @@ class AdminController extends Controller
 
         //Lay tat ca students
         $students = User::where('role', 'Student')->get();
-    
+
         //Lay tat ca courses
         $courses = Course::all();
-    
+
         //Tao 1 mang luu nhung student da dang ky Course
         $registeredStudentIds = [];
-    
+
         // Loop through each course
         foreach ($courses as $course) {
             if ($course->students_list) {
@@ -62,18 +62,32 @@ class AdminController extends Controller
                 $registeredStudentIds = array_merge($registeredStudentIds, $course->students_list);
             }
         }
-    
+
         //Loai bo Id trung
         $registeredStudentIds = array_unique($registeredStudentIds);
-    
+
         $registeredStudents = $students->whereIn('id', $registeredStudentIds);
         $notRegisteredStudents = $students->whereNotIn('id', $registeredStudentIds);
-    
+
         // Get the courses for each registered student
         foreach ($registeredStudents as $student) {
             $student->courses = $student->course()->get();
         }
-    
+
+        $search = $request['search'] ?? '';
+        if ($search != ''){
+            $admins = User::where('role', 'Admin')
+                            ->orWhere('name', 'LIKE', "%$search%")
+                            ->orWhere('email', 'LIKE', "%$search%")
+                            ->orWhere('birthday', 'LIKE', "%$search%")
+                            ->orWhere('address', 'LIKE', "%$search%")
+                            ->orWhere('phone', 'LIKE', "%$search%")
+                            ->sortable()->paginate(20);
+        }
+        else {
+            $admins = User::where('role', 'Admin')->sortable()->paginate(20);
+        }
+
         return view('pages.ql_admin.users_management', [
             'totalAdmins' => $admins->count(),
             'admins' => $admins,
@@ -81,31 +95,33 @@ class AdminController extends Controller
             'totalStudents' => $students->count(),
             'registeredStudents' => $registeredStudents,
             'notRegisteredStudents' => $notRegisteredStudents,
-            
+
             'totalTeachers' => $teachers->count(),
             'registeredTeachers' => $registeredTeachers,
             'notRegisteredTeachers' => $notRegisteredTeachers,
+
+            'search' => $search
         ]);
     }
-    
+
     public function deleteTeacherfromCourse($userId, $courseName)
     {
         $course = Course::where('name_course', $courseName)->first();
         $secondCourse = Secondcourse::where('name_course', $courseName)->first();
         $thirdCourse = Thirdcourse::where('name_course', $courseName)->first();
         $user = User::find($userId);
-    
+
         if (!$course && !$secondCourse && !$thirdCourse) {
             return response()->json(['error' => $courseName .' not found!'], 404);
         }
-    
+
         if (!$user) {
             return response()->json(['error' => 'User not found!'], 404);
         }
-    
+
         // Kiểm tra (có cột teacher, cột is_registered là true trong SecondCourse)
-        if (($secondCourse && $secondCourse->teacher == $userId && $secondCourse->is_registered) || 
-            ($thirdCourse && $thirdCourse->teacher == $userId) || 
+        if (($secondCourse && $secondCourse->teacher == $userId && $secondCourse->is_registered) ||
+            ($thirdCourse && $thirdCourse->teacher == $userId) ||
             ($course && $course->teacher == $userId)) {
             // Kiểm tra nếu students_list không rỗng trong Course)
             if (!empty($course->students_list) && !empty($thirdCourse->students_list)) {
@@ -118,17 +134,17 @@ class AdminController extends Controller
                     $secondCourse->is_registered = false;
                     $secondCourse->save();
                 }
-    
+
                 if ($thirdCourse) {
                     $thirdCourse->teacher = null;
                     $thirdCourse->save();
                 }
-    
+
                 if ($course) {
                     $course->teacher = null;
                     $course->save();
                 }
-    
+
                 return response()->json(['success' => 'Teacher removed from ' . $courseName . ' successfully!'], 200);
             }
         } else {
@@ -139,19 +155,19 @@ class AdminController extends Controller
     public function confirmDelete(Request $request, $id)
     {
         $userToDelete = User::find($id);
-    
+
         // Get the current authenticated user
         $currentUser = Auth::user();
-    
+
         if (!$userToDelete) {
-            return redirect()->back()->with('error', 'User not found!'); 
+            return redirect()->back()->with('error', 'User not found!');
         }
-    
+
         // Check if the current user's password matches the input password
         if (!Hash::check($request->password, $currentUser->password)) {
             return redirect()->back()->with('error', 'Incorrect password!');
         }
-    
+
         $userToDelete->delete();
 
         // Lấy đường dẫn đến ảnh đại diện
@@ -161,34 +177,34 @@ class AdminController extends Controller
         if (file_exists($avatarPath)) {
             unlink($avatarPath);
         }
-    
+
         return redirect()->back()->with('success', 'User removed successfully!');
     }
-    
+
     public function deleteStudentfromCourse($userId, $idCourse)
     {
-        
+
         // Kiểm tra courseName có tồn tại trong bảng Course không
         $course = Course::where('id_course', $idCourse)->first();
         $thirdCourse = ThirdCourse::where('id_3course', $idCourse)->first();
         $user = User::find($userId);
-    
+
         if (!$course && !$thirdCourse) {
             return response()->json(['error' => 'Course not found!'], 404);
         }
-    
+
         if (!$user) {
             return response()->json(['error' => 'User not found!'], 404);
         }
-    
+
         // Kiểm tra userId có tồn tại trong mảng students_list không
         $studentsListCourse = $course ? $course->students_list : [];
         $studentsListThirdCourse = $thirdCourse ? $thirdCourse->students_list : [];
-    
+
         if (!in_array($userId, $studentsListCourse) && !in_array($userId, $studentsListThirdCourse)) {
             return response()->json(['error' => 'This user not found in Course!'], 404);
         }
-        
+
         // User thanh toán rồi thì không được xóa khỏi Course
         $bills = Bill::where('user_id', $userId)->get();
         foreach ($bills as $bill) {
@@ -214,7 +230,7 @@ class AdminController extends Controller
             }
         }
 
-        // User thanh toán tiền rôì vẫn xóa khỏi Course được và xóa luôn bill đã thanh toán 
+        // User thanh toán tiền rôì vẫn xóa khỏi Course được và xóa luôn bill đã thanh toán
         // $bill = Bill::where('user_id', $userId)->first();
         // if($bill){
         //     $nameBill = json_decode($bill->name_bill, true);
@@ -230,11 +246,11 @@ class AdminController extends Controller
         //         }
         //     }
         // }
-        
+
         // Xóa userId khỏi mảng students_list
         $studentsListCourse = array_diff($studentsListCourse, [$userId]);
         $studentsListThirdCourse = array_diff($studentsListThirdCourse, [$userId]);
-            
+
         // Cập nhật lại students_list trong bảng Course và ThirdCourse
         if ($course) {
             $course->students_list = array_values($studentsListCourse);
@@ -244,11 +260,11 @@ class AdminController extends Controller
             $thirdCourse->students_list = array_values($studentsListThirdCourse);
             $thirdCourse->save();
         }
-            
+
         return response()->json(['success' => 'Student removed from ' . $idCourse . ' successfully!'], 200);
-            
+
     }
-    
+
     public function getRegisteredCoursesAdmin()
     {
         $courses = Course::all();
@@ -258,53 +274,53 @@ class AdminController extends Controller
     public function createPost(Request $request)
     {
         if (Post::where('title', $request->title)->exists()) {
-            return redirect()->back()->withInput($request->input())->with('error', 'Title already exists!'); 
+            return redirect()->back()->withInput($request->input())->with('error', 'Title already exists!');
         }
-    
+
         $newName = null;
 
         if ($request->hasFile('picture')) {
             if (!$request->file('picture')->isValid()) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Invalid picture file!'); 
+                return redirect()->back()->withInput($request->input())->with('error', 'Invalid picture file!');
             }
 
             if ($request->file('picture')->getSize() > 5 * 1024 * 1024) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Picture file size must be less than 5MB!'); 
+                return redirect()->back()->withInput($request->input())->with('error', 'Picture file size must be less than 5MB!');
             }
-    
+
             if (!in_array($request->file('picture')->getClientOriginalExtension(), ['jpeg', 'png', 'jpg', 'gif', 'svg'])) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Invalid picture file type!'); 
+                return redirect()->back()->withInput($request->input())->with('error', 'Invalid picture file type!');
             }
-    
+
             $newName = $request->title . '.' . $request->file('picture')->getClientOriginalExtension();
-    
+
             // Di chuyển và đổi tên file
             $request->file('picture')->move(public_path('images/posts'), $newName);
         }
-        
+
         // dd($request->title,$request->content, $newName );
-    
+
         $request->validate([
             'title'  => ['required'],
             'content' => ['required'],
         ]);
-    
+
         $post = Post::create([
             'title' => $request->title,
             'content' => $request->content,
             'user_id' => Auth::user()->id,
             'picture' => $newName,
         ]);
-    
+
         if(!$post) {
             return redirect()->back()->with('error', 'Failed to create post');
         }
-    
+
         event(new Registered($post));
-    
+
         return redirect()->route('posts-admin')->with('success', $post->title . ' create successful!');
     }
-    
+
     public function showPostTeacherWelcome()
     {
         // Lấy danh sách giáo viên, phân trang và mỗi trang chứa 4 giáo viên
@@ -325,19 +341,31 @@ class AdminController extends Controller
         return view('showposts', ['posts' => Post::all()]);
     }
 
-    public function showPostsManagement(): View
+    public function showPostsManagement(Request $request)
     {
-        return view('pages.ql_admin.posts', ['posts' => Post::all()]);
+        $search = $request['search'] ?? '';
+
+        if ($search != ''){
+            $posts =  Post::where('title', 'LIKE', "%$search%")->sortable()->paginate(4);
+        }
+        else {
+            $posts = Post::sortable()->paginate(4);
+        }
+
+        return view('pages.ql_admin.posts', [
+            'posts' => $posts,
+            'search' => $search
+        ]);
     }
 
     public function showPostsdetails($id)
     {
         $postDetails = Post::find($id);
-        
+
         if (!$postDetails) {
             return redirect()->back()->with('error', 'Post not found!');
         }
-    
+
         if ($postDetails)
             return view('posts_details', compact('postDetails'));
         else
@@ -350,7 +378,7 @@ class AdminController extends Controller
         if (!$teacherDetails) {
             return redirect()->back()->with('error', 'Teacher not found!');
         }
-    
+
         if ($teacherDetails)
             return view('teachers_details', compact('teacherDetails'));
         else
@@ -369,27 +397,27 @@ class AdminController extends Controller
         $request->validate([
             'title' => ['required'],
         ]);
-        
+
         $post = Post::find($id);
 
-        // $existingNamePost = Post::where('title', $request->title)->where('title', '!=', $id)->first();
-    
-        // if ($existingNamePost) {
-        //     session()->flash('error', 'Post name ' . $request->title . ' already exists!');
-        //     return redirect()->back();
-        // }
+        $existingNamePost = Post::where('title', $request->title)->where('title', '!=', $id)->first();
+
+        if ($existingNamePost) {
+            session()->flash('error', 'Post name ' . $request->title . ' already exists!');
+            return redirect()->back();
+        }
         // dd($post->picture);
         if ($request->hasFile('picture')) {
             if (!$request->file('picture')->isValid()) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Invalid picture file!'); 
+                return redirect()->back()->withInput($request->input())->with('error', 'Invalid picture file!');
             }
 
             if ($request->file('picture')->getSize() > 5 * 1024 * 1024) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Picture file size must be less than 5MB!'); 
+                return redirect()->back()->withInput($request->input())->with('error', 'Picture file size must be less than 5MB!');
             }
-    
+
             if (!in_array($request->file('picture')->getClientOriginalExtension(), ['jpeg', 'png', 'jpg', 'gif', 'svg'])) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Invalid picture file type!'); 
+                return redirect()->back()->withInput($request->input())->with('error', 'Invalid picture file type!');
             }
 
             $pictureName = $request->title . '.' . $request->file('picture')->getClientOriginalExtension();
@@ -399,7 +427,7 @@ class AdminController extends Controller
             if (file_exists($oldPicturePath)) {
                 // Xóa file avatar cũ
                 unlink($oldPicturePath);
-            } 
+            }
             $request->file('picture')->move(public_path('images/posts'), $pictureName);
             $post->picture = $pictureName;
         }
@@ -408,7 +436,7 @@ class AdminController extends Controller
         $post->content = $request->content;
         $post->user_id =  Auth::user()->id;
         $post->save();
-        
+
         // dd($post);
 
         return redirect()->route('posts-admin')->with('success', $post->title . ' update successful!');
@@ -419,7 +447,7 @@ class AdminController extends Controller
         $post = Post::where('id', $id)->first();
         if ($post) {
             $post->delete();
-            
+
             unlink(public_path("images/posts/$post->picture"));
 
             return response()->json(['success' => true]);
@@ -427,5 +455,6 @@ class AdminController extends Controller
             return response()->json(['success' => false]);
         }
     }
+
 
 }

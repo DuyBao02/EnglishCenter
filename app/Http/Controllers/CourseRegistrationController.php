@@ -24,14 +24,32 @@ class CourseRegistrationController extends Controller
     /**
      * Display the registration view for regular users.
      */
-    public function create(): View
-    {   
-        $courses = Course::all();
+    public function create(Request $request)
+    {
         $secondCourses = Secondcourse::all()->pluck('id_2course')->toArray();
         $thirdCourses = Thirdcourse::all()->pluck('id_3course')->toArray();
-        return view('pages.ql_admin.course_admin', ['courses' => $courses, 'secondCourses' => $secondCourses, 'thirdCourses' => $thirdCourses]);
+
+
+        $search = $request['search'] ?? '';
+        if ($search != ''){
+            $courses =  Course::where('id_course', 'LIKE', "%$search%")
+                                ->orWhere('name_course', 'LIKE', "%$search%")
+                                ->orWhere('tuitionFee', 'LIKE', "%$search%")
+                                ->orWhere('days', 'LIKE', "%$search%")
+                                ->sortable()->paginate(3);
+        }
+        else {
+            $courses = Course::sortable()->paginate(3);
+        }
+
+        return view('pages.ql_admin.course_admin', [
+            'courses' => $courses,
+            'secondCourses' => $secondCourses,
+            'thirdCourses' => $thirdCourses,
+            'search' => $search
+        ]);
     }
-    
+
     /**
      * Handle an incoming registration request for regular users.
      *
@@ -51,15 +69,15 @@ class CourseRegistrationController extends Controller
             'teacher' => ['nullable'],
             'students_list.*' => ['nullable'],
         ]);
-    
+
         if (Course::where('id_course', $request->id_course)->exists() ) {
             return redirect()->back()->withInput($request->input())->with('error', $request->id_course . ' already exists!');
         }
 
         if (Course::where('name_course', $request->name_course)->exists()) {
-            return redirect()->back()->withInput($request->input())->with('error', $request->name_course . ' already exists!'); 
+            return redirect()->back()->withInput($request->input())->with('error', $request->name_course . ' already exists!');
         }
-    
+
         if (strlen(floor($request->tuitionFee)) > 8) {
             return redirect()->back()->withInput($request->input())->with('error', 'Tuition fees do not exceed 8 figures!');
         }
@@ -89,7 +107,7 @@ class CourseRegistrationController extends Controller
                 }
             }
         }
-        
+
         $data = collect($request->input('days'))->map(function ($day, $index) use ($request, $a) {
             return ['day' => $day, 'lesson' => $request->input('lessons')[$index], 'room' => $request->input('rooms')[$index], 'index' => array_search($day, $a)];
         })->sortBy(['index', 'lesson']);
@@ -116,7 +134,7 @@ class CourseRegistrationController extends Controller
                 }
             }
         }
-    
+
         $course = Course::create([
             'id_course'  => $request->id_course,
             'name_course' => $request->name_course,
@@ -130,7 +148,7 @@ class CourseRegistrationController extends Controller
             'teacher' => $request->teacher,
             'students_list' => array_filter($request->input('students_list', [])),
         ]);
-        
+
         // Kiểm tra xem trường 'teacher' có giá trị hay không
         if ($request->teacher) {
             // Tạo một bản ghi mới trong bảng 'Secondcourse'
@@ -151,11 +169,11 @@ class CourseRegistrationController extends Controller
         }
 
         event(new Registered($course));
-        
+
         return redirect()->route('course-registration-create', ['courses' => Course::all()])
         ->with('success', $course->name_course . ' registration successful!');
     }
-    
+
 
     public function getLessonsAndRoomsForCreateCourse()
     {
@@ -165,7 +183,11 @@ class CourseRegistrationController extends Controller
         $notRegisteredTeachers = $teachers->filter(function ($teacher) {
             return $teacher->registeredCourse == null;
         });
-        return view('pages.ql_admin.create_course', ['rooms' => $rooms, 'lessons' => $lessons, 'notRegisteredTeachers' => $notRegisteredTeachers]);
+        return view('pages.ql_admin.create_course', [
+            'rooms' => $rooms,
+            'lessons' => $lessons,
+            'notRegisteredTeachers' => $notRegisteredTeachers
+        ]);
     }
 
     /**
@@ -178,9 +200,21 @@ class CourseRegistrationController extends Controller
         $thirdCourse = $course->thirdCourse;
         $lessons = Lesson::all();
         $rooms = Room::all();
+
+        $teachers = User::where('role', 'Teacher')->get();
+        // $notRegisteredTeachers = $teachers->filter(function ($teacher) {
+        //     return $teacher->registeredCourse == null;
+        // });
+
         if ($course) {
-            // Truyền biến $lessons vào view
-            return view('pages.ql_admin.course_edit', compact('course', 'lessons', 'rooms', 'secondCourse', 'thirdCourse'));
+            return view('pages.ql_admin.course_edit', compact(
+                'course',
+                'lessons',
+                'rooms',
+                'secondCourse',
+                'thirdCourse',
+                'teachers'
+            ));
         } else {
             return redirect()->route('course-admin')->with('error', 'The Course not found!');
         }
@@ -191,11 +225,12 @@ class CourseRegistrationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        
+        // dd($request->all());
+
         if (Course::where('name_course', $request->name_course)->where('id_course', '!=', $id)->exists()) {
-            return redirect()->back()->withInput($request->input())->with('error', $request->name_course . ' already exists!'); 
+            return redirect()->back()->withInput($request->input())->with('error', $request->name_course . ' already exists!');
         }
-        
+
         if (strlen(floor($request->tuitionFee)) > 8) {
             return redirect()->back()->withInput($request->input())->with('error', 'Tuition fees do not exceed 8 figures!');
         }
@@ -207,16 +242,16 @@ class CourseRegistrationController extends Controller
         $bills = Bill::get();
 
         foreach($bills as $bill) {
-        
+
             // Lấy name_bill dưới dạng mảng
             $nameBillArray = json_decode($bill->name_bill);
 
             // Kiểm tra id_course có trong mảng name_bill không
             if(in_array($course->id_course, $nameBillArray)) {
                 if(!$bill->is_paid) {
-                
+
                     // Lấy ra giá trị cũ của học phí trong bill
-                    $oldTuitionFee = $bill->tuitionFee; 
+                    $oldTuitionFee = $bill->tuitionFee;
 
                     // Lấy ra phần học phí của khóa học đang cập nhật
                     $courseTuitionFee = $request->tuitionFee;
@@ -229,60 +264,16 @@ class CourseRegistrationController extends Controller
                 }
             }
         }
-    
-        $a = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        $days = $request->input('days');
-        $rooms = $request->input('rooms');
-        $lessons = $request->input('lessons');
-
-        for ($i = 0; $i < count($days); $i++) {
-            for ($j = 0; $j < count($days) - $i - 1; $j++) {
-                if (array_search($days[$j], $a) > array_search($days[$j + 1], $a) || (array_search($days[$j], $a) == array_search($days[$j + 1], $a) && $lessons[$j] > $lessons[$j + 1])) {
-                    // Swap days
-                    $temp = $days[$j];
-                    $days[$j] = $days[$j + 1];
-                    $days[$j + 1] = $temp;
-
-                    // Swap lessons
-                    $temp = $lessons[$j];
-                    $lessons[$j] = $lessons[$j + 1];
-                    $lessons[$j + 1] = $temp;
-
-                    // Swap rooms
-                    $temp = $rooms[$j];
-                    $rooms[$j] = $rooms[$j + 1];
-                    $rooms[$j + 1] = $temp;
-                }
-            }
-        }
-
-        $data = collect($request->input('days'))->map(function ($day, $index) use ($request, $a) {
-            return ['day' => $day, 'lesson' => $request->input('lessons')[$index], 'room' => $request->input('rooms')[$index], 'index' => array_search($day, $a)];
-        })->sortBy(['index', 'lesson']);
-
-        if ($data->duplicates(function ($value) {
-            return $value['day'] . $value['lesson'];
-        })->isNotEmpty()) {
-            return redirect()->back()->withInput($request->input())->with('error', 'Lessons ' . $duplicate['lesson'] . ' overlap within ' . $duplicate['day'] . '!');
-        }
-
-        $existingCourses2 = Course::where('id_course', '!=', $id)->get();
-        foreach ($existingCourses2 as $existingCourse2) {
-            for ($i = 0; $i < count($data); $i++) {
-                for ($j = 0; $j < count($existingCourse2->days); $j++) {
-                    if ($data[$i]['day'] == $existingCourse2->days[$j] && $data[$i]['lesson'] == $existingCourse2->lessons[$j] && $data[$i]['room'] == $existingCourse2->rooms[$j]) {
-                        return redirect()->back()->withInput($request->input())->with('error', $data[$i]['day'] . ', Lesson ' . $data[$i]['lesson'] . ', Room ' . $data[$i]['room'] . ' already exist in ' . $existingCourse->name_course . '!');
-                    }
-                }
-            }
-        }
 
         $course->update($request->all());
 
         $secondCourse = $course->secondCourse;
         if ($secondCourse) {
+            $secondCourse->teacher = $request->teacher;
+            $secondCourse->is_registered = true;
             $secondCourse->update($request->all());
         }
+        // dd($secondCourse);
 
         $thirdCourse = $course->thirdCourse;
         if ($thirdCourse) {
@@ -328,7 +319,7 @@ class CourseRegistrationController extends Controller
     public function StudentListAdmin($courseID)
     {
         $course = Course::find($courseID);
-    
+
         if ($course) {
             if ($course->teacherUser) {
                 $students_list = User::whereIn('id', $course->students_list)->get();
@@ -353,5 +344,5 @@ class CourseRegistrationController extends Controller
         $get_id_course = session('get_id_course');
         return view('pages.ql_admin.student_list_admin', compact('students_list', 'get_name_course', 'get_id_course'));
     }
-    
+
 }

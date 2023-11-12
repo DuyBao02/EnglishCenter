@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Model;
 use App\Models\Course;
+use Kyslik\ColumnSortable\Sortable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +33,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'level',
         'avatar',
     ];
+
+    public $sortable = ['id', 'name', 'email', 'gender', 'birthday', 'address', 'phone', 'experience', 'level', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -62,7 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $bill = $this->bills()->where('name_bill', 'like', '%' . $courseId . '%')->first();
         return $bill ? $bill->is_paid : false;
     }
-    
+
     public function isCoursePaid($courseName)
     {
         $course = Course::where('name_course', $courseName)->first();
@@ -86,7 +89,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Course::class, 'teacher', 'id');
     }
-    
+
     public function registeredCourseStudent()
     {
         $courses = Course::whereJsonContains('students_list', $this->id)->get();
@@ -118,7 +121,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Edit::class)->where('status', 'pending');
     }
-    
+
     public function pendingSecondEdit()
     {
         return $this->hasOne(Secondedit::class)->where('status', 'pending');

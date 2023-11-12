@@ -61,11 +61,11 @@ class TeacherController extends Controller
         $user = User::find($userId);
         $course = Course::find($courseId);
         if($user && $course){
-                
+
             $course->teacher = $user->id;
-    
+
             $course->save();
-        
+
             // Update the is_registered field of the corresponding secondcourse
             $secondcourse = Secondcourse::where('id_2course', $courseId)->first();
             if ($secondcourse) {
@@ -73,19 +73,19 @@ class TeacherController extends Controller
                 $secondcourse->teacher = $user->id;
                 $secondcourse->save();
             }
-    
+
             $thirdcourse = Thirdcourse::where('id_3course', $courseId)->first();
             if ($thirdcourse) {
                 $thirdcourse->teacher = $user->id;
                 $thirdcourse->save();
             }
-        
+
                 return redirect()->back()->with('success', 'Register successfully!');
 
         } else {
 
             return redirect()->back()->with('error', 'User or Course not found!');
-            
+
         }
     }
 
@@ -99,11 +99,11 @@ class TeacherController extends Controller
         }
         return redirect()->back()->with('error', 'Unauthorized access');
     }
-    
+
     public function hienthiStudentList()
     {
         $students_list = session('students_list'); // Lấy dữ liệu từ session
-        return view('pages.ql_teacher.student_list_teacher', compact('students_list'));      
+        return view('pages.ql_teacher.student_list_teacher', compact('students_list'));
     }
 
     public function showRLDashBoardTeacher()
@@ -114,13 +114,13 @@ class TeacherController extends Controller
     }
 
     public function showCalenderTeacher(): View
-    {   
+    {
         return view('pages.ql_teacher.schedule_teacher');
     }
-    
+
     public function getRegisteredCoursesTeacher()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
         $courses = Course::where('teacher', $user->id)->get();
         return $courses;
     }

@@ -36,7 +36,7 @@
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -57,7 +57,7 @@
             </div>
         </div>
     </div>
-    
+
     @if (Auth::user()->role == 'Admin')
         <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
             @csrf
@@ -71,7 +71,7 @@
 
                     <input type="hidden" id="defaultAvatar" name="defaultAvatar">
                     <button id="setDefaultAvatar" type="button" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Set Default Avatar</button>
-                    
+
                     <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
                 </div>
 
@@ -80,7 +80,7 @@
                     <x-text-input placher readonly id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
                     <x-input-error class="mt-2" :messages="$errors->get('email')" />
                 </div>
-                
+
                 <div class="max-w-xl mt-6">
                     <x-input-label for="name" :value="__('Name')" />
                     <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
@@ -104,10 +104,10 @@
                     <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" required autofocus autocomplete="phone" />
                     <x-input-error class="mt-2" :messages="$errors->get('phone')" />
                 </div>
-        
+
                 <div class="flex items-center gap-4 mt-6">
                     <x-primary-button>{{ __('Save') }}</x-primary-button>
-        
+
                     @if (session('status') === 'profile-updated')
                         <p
                             x-data="{ show: true }"
@@ -124,7 +124,7 @@
     @elseif (Auth::user()->role == 'Teacher')
         <form method="post" action="{{ route('receive-edit-request') }}" class=" space-y-6" enctype="multipart/form-data">
             @csrf
-        
+
             <div class="mt-6">
                 <div class="max-w-xl mt-6 flex flex-col items-center">
                     <x-input-label for="avatar" :value="__('Avatar')" />
@@ -136,19 +136,19 @@
                     <input type="hidden" id="defaultAvatar" name="defaultAvatar">
                     <button id="setDefaultAvatar" type="button" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Set Default Avatar</button>
                 </div>
-                
+
                 <div class="max-w-xl mt-6">
                     <x-input-label for="email" :value="__('Email')" />
                     <x-text-input placher readonly id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
                     <x-input-error class="mt-2" :messages="$errors->get('email')" />
                 </div>
-                
+
                 <div class="max-w-xl mt-6">
                     <x-input-label for="name" :value="__('Name')" />
                     <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                 </div>
-        
+
                 <div class="max-w-xl mt-6">
                     <x-input-label for="experience" :value="__('Experience')" />
                     <x-text-input id="experience" name="experience" type="text" class="mt-1 block w-full" :value="old('experience', $user->experience)" required autofocus autocomplete="experience" />
@@ -185,7 +185,7 @@
                     <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" required autofocus autocomplete="phone" />
                     <x-input-error class="mt-2" :messages="$errors->get('phone')" />
                 </div>
-        
+
                 <div class="flex items-center gap-4 mt-6">
                     @if (Auth::user()->pendingEdit()->exists() || Auth::user()->pendingSecondEdit()->exists())
                         <x-primary-button disabled class="cursor-not-allowed">{{ __('Waiting...') }}</x-primary-button>
@@ -195,11 +195,11 @@
                 </div>
             </div>
         </form>
-    
+
     @elseif (Auth::user()->role == 'Student')
         <form method="post" action="{{ route('receive-edit-request') }}" class=" space-y-6" enctype="multipart/form-data">
             @csrf
-        
+
             <div class="mt-6">
                 <div class="max-w-xl mt-6 flex flex-col items-center">
                     <x-input-label for="avatar" :value="__('Avatar')" />
@@ -215,7 +215,7 @@
                     <x-text-input placher readonly id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
                     <x-input-error class="mt-2" :messages="$errors->get('email')" />
                 </div>
-                
+
                 <div class="max-w-xl mt-6">
                     <x-input-label for="name" :value="__('Name')" />
                     <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
@@ -239,7 +239,7 @@
                     <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" required autofocus autocomplete="phone" />
                     <x-input-error class="mt-2" :messages="$errors->get('phone')" />
                 </div>
-        
+
                 <div class="flex items-center gap-4 mt-6">
                     @if (Auth::user()->pendingEdit()->exists() || Auth::user()->pendingSecondEdit()->exists())
                         <x-primary-button disabled class="cursor-not-allowed">{{ __('Waiting...') }}</x-primary-button>
@@ -253,7 +253,7 @@
     <button id="back-to-top" class="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded-full hidden">
       <i class="fas fa-arrow-up"></i>
     </button>
-    
+
 </section>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -286,6 +286,6 @@
         this.classList.remove('bg-blue-500', 'hover:bg-blue-700');
         this.classList.add('bg-red-500', 'hover:bg-red-700');
     });
-    
+
 </script>
 

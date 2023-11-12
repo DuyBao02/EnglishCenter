@@ -53,11 +53,11 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
     Route::get('/tuition-student', 'App\Http\Controllers\StudentController@showCourseBillStudent')
         ->middleware(['auth', 'verified'])->name('tuition-student');
-    
+
     // PayPal
         Route::post('paypal/{id}/{date}', 'App\Http\Controllers\PaypalController@paymen')->name('paypal');
         Route::get('paypal/success', 'App\Http\Controllers\PaypalController@success')->name('paypal-success');
-        Route::get('paypal/cancel', 'App\Http\Controllers\PaypalController@cancel')->name('paypal-cancel'); 
+        Route::get('paypal/cancel', 'App\Http\Controllers\PaypalController@cancel')->name('paypal-cancel');
 
 // Teacher's routes
 
@@ -70,7 +70,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     Route::get('/course-list-teacher', 'App\Http\Controllers\TeacherController@CourseListTeacher')
         ->middleware(['auth', 'verified', 'role:Teacher'])
         ->name('course-list-teacher');
-        
+
     Route::get('/register-course-teacher/{userId}/{courseId}', 'App\Http\Controllers\TeacherController@registerCourseTeacher')
         ->middleware(['auth', 'verified', 'role:Teacher'])
         ->name('register-course-teacher');
@@ -86,7 +86,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
     Route::get('/dashboard-admin', 'App\Http\Controllers\AdminController@showRLDashBoard')
         ->middleware(['auth', 'verified'])->name('dashboard-admin');
-    
+
     //Notification Edit to Admin
         Route::get('/edit-request', 'App\Http\Controllers\EditRequestController@showRequestToAdmin')
             ->middleware(['auth', 'verified'])->name('edit-request');
@@ -96,7 +96,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
         Route::post('/edit-accept/{id_user}/{id_edit}', 'App\Http\Controllers\EditRequestController@editAcceptFromAdmin')
             ->name('edit-accept');
-        
+
         Route::post('/edit-refuse/{id_edit}', 'App\Http\Controllers\EditRequestController@editRefuseFromAdmin')
             ->name('edit-refuse');
 
@@ -218,7 +218,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
     Route::get('/teachers/{id}', 'App\Http\Controllers\AdminController@showTeachersdetails')
         ->name('teachers-details');
-    
+
     //Posts
     Route::get('/posts', 'App\Http\Controllers\AdminController@showPosts')
         ->name('posts');
@@ -228,7 +228,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
     Route::get('/posts-admin', 'App\Http\Controllers\AdminController@showPostsManagement')
         ->middleware(['auth', 'verified'])->name('posts-admin');
-    
+
     Route::post('/create-post', 'App\Http\Controllers\AdminController@createPost')
         ->middleware(['auth', 'verified'])->name('create-post');
 
@@ -240,6 +240,19 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
 
     Route::delete('/post-delete/{id}', 'App\Http\Controllers\AdminController@deletePost')
         ->middleware(['auth', 'verified'])->name('post-delete');
+
+    //Feedback
+    Route::get('/contact', 'App\Http\Controllers\FeedbackController@contactus')
+        ->name('contact');
+
+    Route::post('/contact/create-feedback', 'App\Http\Controllers\FeedbackController@createFeedback')
+        ->name('feedback');
+
+    Route::get('/showFeedbacks', 'App\Http\Controllers\FeedbackController@showFeedbacks')
+        ->name('showFeedbacks');
+
+    Route::get('/showFeedbackstoAdmin', 'App\Http\Controllers\FeedbackController@showFBtoAdmin')
+        ->middleware(['auth', 'verified'])->name('showFBtoAdmin');
 
 //Profile's Admin routes
 
@@ -258,13 +271,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
-    
+
         return redirect('/home');
     })->middleware(['auth', 'signed'])->name('verification.verify');
 
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
-    
+
         return back()->with('message', 'Verification link sent!');
     })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 

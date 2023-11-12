@@ -39,7 +39,7 @@
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -87,25 +87,33 @@
         </div>
     </div>
 
-    <div class="py-12">
+    <form action="" method="" class="flex items-center space-x-4 mx-4 lg:mx-0 lg:float-right lg:px-40 mt-4">
+        <input type="search" name="search" id="" value="{{ $search }}" placeholder="Search by Id, name, tuitionfee, days" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+        <button type="" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Search</button>
+        <a href="{{ route('course-admin') }}">
+            <button type="button" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded-full">Reset</button>
+        </a>
+    </form>
+
+    <div class="py-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="my-4 mx-4 sm:rounded-lg">
+                <div class="my-4 mx-4 sm:rounded-lg mb-12">
                     <div class="w-full overflow-hidden rounded-lg shadow-xs">
                         <div class="w-full overflow-x-auto">
                             <table class="w-full whitespace-nowrap table-auto">
                                 <thead>
                                     <tr class="text-xs font-medium tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                                    <th class="px-4 py-3">ID</th>
-                                    <th class="px-4 py-3">Name</th>
-                                    <th class="px-4 py-3">Time Start</th>
-                                    <th class="px-4 py-3">Weeks</th>
+                                    <th class="px-4 py-3">@sortablelink('id_course')</th>
+                                    <th class="px-4 py-3">@sortablelink('name_course')</th>
+                                    <th class="px-4 py-3">@sortablelink('time_start')</th>
+                                    <th class="px-4 py-3">@sortablelink('weeks')</th>
                                     <th class="px-4 py-3">Student</th>
-                                    <th class="px-4 py-3">Tuition Fee</th>
+                                    <th class="px-4 py-3">@sortablelink('tuitionFee')</th>
                                     <th class="px-4 py-3">Days</th>
                                     <th class="px-4 py-3">Lesson</th>
                                     <th class="px-4 py-3">Room</th>
-                                    <th class="px-4 py-3">Teacher</th>
+                                    <th class="px-4 py-3">@sortablelink('teacher')</th>
                                     <th class="px-4 py-3">Student List</th>
                                     </tr>
                                 </thead>
@@ -220,7 +228,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-3">
-                                                    @if (is_array($c->rooms))    
+                                                    @if (is_array($c->rooms))
                                                         @foreach($c->rooms as $room)
                                                             {{ $room }}<br>
                                                         @endforeach
@@ -247,6 +255,7 @@
                                     @endif
                                 </tbody>
                             </table>
+                            {!! $courses->appends(\Request::except('page'))->render() !!}
                         </div>
                     </div>
                 </div>
@@ -255,7 +264,7 @@
                 <div class="bg-indigo-200 rounded-sm my-4 mx-4 ">
                     <div class="container">
                         <div class="response"></div>
-                        <div id='calendar' class="h-auto"></div>  
+                        <div id='calendar' class="h-auto"></div>
                     </div>
                 </div>
 
@@ -287,7 +296,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-    //Dropdown
 
     // Lấy tất cả các phần tử details trên trang
     var detailsElements = document.querySelectorAll('details');
@@ -363,7 +371,7 @@
             }
         });
     }
-    
+
     //showTeacherInfo
     function showTeacherInfo(teacher) {
         var birthday = new Date(teacher.birthday);
@@ -371,7 +379,7 @@
         var info = 'Email: ' + teacher.email + '\n' +
                    'Gender: ' + teacher.gender + '\n' +
                    'Level: ' + teacher.level + '\n' +
-                   'Experience: ' + teacher.experience + ' years' + '\n' + 
+                   'Experience: ' + teacher.experience + ' years' + '\n' +
                    'Address: ' + teacher.address + '\n' +
                    'Phone: 0' + teacher.phone;
         document.getElementById('teacherInfo').innerText = info;
@@ -387,21 +395,21 @@
         document.getElementById('avatarImage').src = imageSrc;
         document.getElementById('avatarModal').classList.remove('hidden');
     }
-    
+
     function closeAvatarModal() {
         document.getElementById('avatarModal').classList.add('hidden');
     }
 
     // Calendar
     $(document).ready(function () {
-         
+
         var SITEURL = "{{url('/')}}";
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
- 
+
         var calendar = $('#calendar').fullCalendar({
             editable: true,
             events: "{{ route('calendarIndex') }}",
@@ -418,11 +426,11 @@
             selectHelper: true,
             // select: function (start, end, allDay) {
             //     var title = prompt('Event Title:');
- 
+
             //     if (title) {
             //         var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
             //         var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
- 
+
             //         $.ajax({
             //             url: SITEURL + "fullcalendar/create",
             //             data: 'title=' + title + '&start=' + start + '&end=' + end,
@@ -443,7 +451,7 @@
             //     }
             //     calendar.fullCalendar('unselect');
             // },
-             
+
             // eventDrop: function (event, delta) {
             //             var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
             //             var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
@@ -473,10 +481,10 @@
             //         });
             //     }
             // }
- 
+
         });
     });
-    
+
     function displayMessage(message) {
         $(".response").html("<div class='success'>"+message+"</div>");
         setInterval(function() { $(".success").fadeOut(); }, 1000);

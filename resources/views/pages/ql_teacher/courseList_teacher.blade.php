@@ -62,7 +62,7 @@
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -80,7 +80,7 @@
             </div>
         </div>
     </div>
-        
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
@@ -127,7 +127,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-3">
-                                                    @if(is_array($c->rooms))    
+                                                    @if(is_array($c->rooms))
                                                         @foreach($c->rooms as $room)
                                                             {{ $room }}<br>
                                                         @endforeach
@@ -188,13 +188,13 @@
             }
         });
     }
-    
+
     //Zoom in avatar
     function showAvatar(imageSrc, teacherName) {
         document.getElementById('avatarImage').src = imageSrc;
         document.getElementById('avatarModal').classList.remove('hidden');
     }
-    
+
     function closeAvatarModal() {
         document.getElementById('avatarModal').classList.add('hidden');
     }
@@ -206,7 +206,7 @@
         var info = 'Email: ' + teacher.email + '\n' +
                    'Gender: ' + teacher.gender + '\n' +
                    'Level: ' + teacher.level + '\n' +
-                   'Experience: ' + teacher.experience + ' years' + '\n' + 
+                   'Experience: ' + teacher.experience + ' years' + '\n' +
                    'Address: ' + teacher.address + '\n' +
                    'Phone: 0' + teacher.phone;
         document.getElementById('teacherInfo').innerText = info;

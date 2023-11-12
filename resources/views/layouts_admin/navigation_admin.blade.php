@@ -33,11 +33,16 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('posts-admin')" :active="request()->routeIs('posts-admin', 'post-edit')">
+                        {{ __('Posts') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     @php
                         $secondEdits = \App\Models\Secondedit::all();
                         $buttonColor = $secondEdits->count() > 0 ? 'relative' : '';
                     @endphp
-                    
+
                     <x-nav-link :href="route('edit-request')" :active="request()->routeIs('edit-request')" class="{{ $buttonColor }}">
                         {{ __('Edit Request') }}
                         @if($secondEdits->count() > 0)
@@ -46,8 +51,16 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('posts-admin')" :active="request()->routeIs('posts-admin', 'post-edit')">
-                        {{ __('Posts') }}
+                    @php
+                        $secondFeedbacks = \App\Models\SecondFeedbacks::all();
+                        $buttonColor = $secondFeedbacks->count() > 0 ? 'relative' : '';
+                    @endphp
+
+                    <x-nav-link :href="route('showFBtoAdmin')" :active="request()->routeIs('showFBtoAdmin', 'showFeedbacks')" class="{{ $buttonColor }}">
+                        {{ __('Feedbacks') }}
+                        @if($secondFeedbacks->count() > 0)
+                            <span class="absolute top-4 right-0 inline-block w-2 h-2 bg-green-600 rounded-full"></span>
+                        @endif
                     </x-nav-link>
                 </div>
             </div>
@@ -87,7 +100,7 @@
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                </button>en }
+                </button>
             </div>
         </div>
     </div>

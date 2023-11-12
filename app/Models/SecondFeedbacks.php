@@ -5,23 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use Kyslik\ColumnSortable\Sortable;
 
-class Post extends Model
+class SecondFeedbacks extends Model
 {
-    use HasFactory, Sortable;
+    use HasFactory;
+
+    protected $table = 'secondfeedbacks';
 
     protected $fillable = [
-        'title',
-        'content',
-        'picture',
-        'user_id',
+        'comment_content',
+        'user_id'
     ];
-
-    public $sortable = ['id', 'title', 'content', 'picture', 'user_id', 'created_at', 'updated_at'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }

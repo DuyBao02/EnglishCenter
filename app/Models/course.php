@@ -6,16 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 
 class Course extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Sortable;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-     
+
     protected $casts = [
         'days' => 'array',
         'rooms' => 'array',
@@ -41,6 +42,8 @@ class Course extends Model
         'user_id_create',
     ];
 
+    public $sortable = ['id_course', 'name_course', 'time_start', 'weeks', 'tuitionFee', 'teacher', 'created_at', 'updated_at'];
+
     public function lesson()
     {
         return $this->belongsToMany(Lesson::class, 'course_lesson', 'course_id', 'lesson_id');
@@ -59,7 +62,7 @@ class Course extends Model
         }
         return 0;
     }
-    
+
     public function homework()
     {
         return $this->hasMany(Homework::class);
@@ -74,7 +77,7 @@ class Course extends Model
     {
         return $this->belongsTo(User::class, 'teacher');
     }
-    
+
     public function secondCourse()
     {
         return $this->hasOne(Secondcourse::class, 'id_2course', 'id_course');
@@ -84,5 +87,5 @@ class Course extends Model
     {
         return $this->hasOne(Thirdcourse::class, 'id_3course', 'id_course');
     }
-    
+
 }

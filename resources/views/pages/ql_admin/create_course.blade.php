@@ -42,7 +42,7 @@
                                 <label for="name_course" class="block text-sm font-medium text-gray-700">Name Course</label>
                                 <input required type="text" id="name_course" name="name_course" value="{{ old('name_course') }}" class="{{ $errors->any('name_course') ? 'border-red-500' : '' }} mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
-                        </div> 
+                        </div>
                         <div class="grid grid-cols-3 gap-4 mt-4">
 
                             <div class="col-span-3 sm:col-span-1">
@@ -55,7 +55,7 @@
                                 <input required type="text" id="tuitionFee" name="tuitionFee" value="{{ old('tuitionFee') }}" class="{{ $errors->any('tuitionFee') ? 'border-red-500' : '' }} mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
 
-                            <div class="col-span-3 sm:col-span-1"> 
+                            <div class="col-span-3 sm:col-span-1">
                                 <label for="teacher" class="block text-sm font-medium text-gray-700">Teacher</label>
                                 <div class="flex justify-around">
                                     <select id="teacher" name="teacher" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" autofocus autocomplete="teacher">
@@ -65,7 +65,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>  
+                            </div>
 
                             <div class="col-span-3 sm:col-span-1">
                                 <label for="day1" class="block text-sm font-medium text-gray-700">Day 1</label>
@@ -79,7 +79,7 @@
                                         <option value="Friday" {{ old('days.0') == 'Friday' ? 'selected' : '' }}>Friday</option>
                                         <option value="Saturday" {{ old('days.0') == 'Saturday' ? 'selected' : '' }}>Saturday</option>
                                     </select>
-                                    
+
                                 </div>
                             </div>
                             <div class="col-span-3 sm:col-span-1">
@@ -89,8 +89,8 @@
                                         <option hidden>Lesson 1</option>
                                         @foreach($lessons as $lesson)
                                             <option value="{{ $lesson->id_lesson }}" {{ old('lessons.0') == $lesson->id_lesson ? 'selected' : '' }}>
-                                                {{ $lesson->id_lesson }}: 
-                                                {{ \Carbon\Carbon::parse($lesson->start_time)->format('H:i') }} - 
+                                                {{ $lesson->id_lesson }}:
+                                                {{ \Carbon\Carbon::parse($lesson->start_time)->format('H:i') }} -
                                                 {{ \Carbon\Carbon::parse($lesson->end_time)->format('H:i') }}
                                             </option>
                                         @endforeach
@@ -123,8 +123,8 @@
                                         <option value="Friday" {{ old('days.1') == 'Friday' ? 'selected' : '' }}>Friday</option>
                                         <option value="Saturday" {{ old('days.1') == 'Saturday' ? 'selected' : '' }}>Saturday</option>
                                     </select>
-                                    
-                                </div> 
+
+                                </div>
                             </div>
 
                             <div class="col-span-3 sm:col-span-1">
@@ -134,13 +134,13 @@
                                         <option hidden>Lesson 2</option>
                                         @foreach($lessons as $lesson)
                                             <option value="{{ $lesson->id_lesson }}" {{ old('lessons.1') == $lesson->id_lesson ? 'selected' : '' }}>
-                                                {{ $lesson->id_lesson }}: 
-                                                {{ \Carbon\Carbon::parse($lesson->start_time)->format('H:i') }} - 
+                                                {{ $lesson->id_lesson }}:
+                                                {{ \Carbon\Carbon::parse($lesson->start_time)->format('H:i') }} -
                                                 {{ \Carbon\Carbon::parse($lesson->end_time)->format('H:i') }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    
+
                                 </div>
                             </div>
                             <div class="col-span-3 sm:col-span-1">
@@ -169,7 +169,7 @@
                                         <option value="Friday" {{ old('days.2') == 'Friday' ? 'selected' : '' }}>Friday</option>
                                         <option value="Saturday" {{ old('days.2') == 'Saturday' ? 'selected' : '' }}>Saturday</option>
                                     </select>
-                                </div> 
+                                </div>
                             </div>
 
                             <div class="col-span-3 sm:col-span-1">
@@ -179,8 +179,8 @@
                                         <option hidden>Lesson 3</option>
                                         @foreach($lessons as $lesson)
                                             <option value="{{ $lesson->id_lesson }}" {{ old('lessons.2') == $lesson->id_lesson ? 'selected' : '' }}>
-                                                {{ $lesson->id_lesson }}: 
-                                                {{ \Carbon\Carbon::parse($lesson->start_time)->format('H:i') }} - 
+                                                {{ $lesson->id_lesson }}:
+                                                {{ \Carbon\Carbon::parse($lesson->start_time)->format('H:i') }} -
                                                 {{ \Carbon\Carbon::parse($lesson->end_time)->format('H:i') }}
                                             </option>
                                         @endforeach
@@ -201,15 +201,15 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="grid grid-cols-2 gap-4 mt-4">
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="maxStudents" class="block text-sm font-medium text-gray-700">Max Students</label>
-                                <input required type="text" value="{{ old('maxStudents', 3) }}" id="maxStudents" name="maxStudents" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input required type="number" value="{{ old('maxStudents', 3) }}" id="maxStudents" name="maxStudents" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="weeks" class="block text-sm font-medium text-gray-700">Number of Weeks</label>
-                                <input required type="text" id="weeks" value="{{ old('weeks', 3) }}" name="weeks" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input required type="number" id="weeks" value="{{ old('weeks', 3) }}" name="weeks" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                         </div>
 
