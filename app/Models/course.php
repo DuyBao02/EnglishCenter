@@ -63,11 +63,6 @@ class Course extends Model
         return 0;
     }
 
-    public function homework()
-    {
-        return $this->hasMany(Homework::class);
-    }
-
     public function user()
     {
         return $this->belongsToMany(User::class, 'course_room', 'course_id', 'user_id');

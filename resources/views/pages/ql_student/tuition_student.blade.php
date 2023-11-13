@@ -44,6 +44,7 @@
                                                         <th class="px-4 py-3">ID-BILL</th>
                                                         <th class="px-4 py-3">Name-Course</th>
                                                         <th class="px-4 py-3">TimePay</th>
+                                                        <th class="px-4 py-3">TuitionFee</th>
                                                         <th class="px-4 py-3">Status</th>
                                                     </tr>
                                                 </thead>
@@ -60,6 +61,7 @@
                                                             @endforeach
                                                         </td>
                                                         <td class="px-4 py-3">{{ $b->payment_time }}</td>
+                                                        <td class="px-4 py-3">{{ number_format($b->tuitionFee) }}</td>
                                                         <td class="px-4 py-3">
                                                             <div class="flex items-center">
                                                                 <img src="images/checkbox.png" class="h-7 w-7" alt="">
@@ -71,7 +73,7 @@
                                         </div>
                                     </div>
                                 </div>
-                    
+
                             @else
                                 <div class="p-6 text-gray-900">
                                     <div class="flex flex-col w-full mb-20">

@@ -8,10 +8,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use Kyslik\ColumnSortable\Sortable;
 
 class Edit extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Sortable;
 
     protected $casts = [
         'data' => 'json',
@@ -21,11 +22,14 @@ class Edit extends Model
     protected $fillable = [
         'user_id',
         'data',
+        'status',
     ];
+
+    public $sortable = ['id', 'user_id', 'status', 'created_at', 'updated_at'];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    
+
 }

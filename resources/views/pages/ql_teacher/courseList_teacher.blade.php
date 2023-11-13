@@ -81,7 +81,15 @@
         </div>
     </div>
 
-    <div class="py-12">
+    <form action="" method="" class="flex items-center space-x-4 mx-4 lg:mx-0 lg:float-right lg:px-40 mt-4">
+        <input type="search" name="search" id="" value="{{ $search }}" placeholder="Id, name, tuitionfee, day, room, teacher" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+        <button type="" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Search</button>
+        <a href="{{ route('course-list-teacher') }}">
+            <button type="button" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded-full">Reset</button>
+        </a>
+    </form>
+
+    <div class="py-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="my-8 mx-8 sm:rounded-lg">
@@ -90,12 +98,12 @@
                             <table class="w-full whitespace-nowrap">
                                 <thead>
                                     <tr class="text-xs font-medium tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                                        <th class="px-4 py-3">ID</th>
-                                        <th class="px-4 py-3">Name</th>
-                                        <th class="px-4 py-3">Time Start</th>
-                                        <th class="px-4 py-3">Weeks</th>
+                                        <th class="px-4 py-3">@sortablelink('id_2course')</th>
+                                        <th class="px-4 py-3">@sortablelink('name_course')</th>
+                                        <th class="px-4 py-3">@sortablelink('time_start')</th>
+                                        <th class="px-4 py-3">@sortablelink('weeks')</th>
                                         <th class="px-4 py-3">Student</th>
-                                        <th class="px-4 py-3">Tuition Fee</th>
+                                        <th class="px-4 py-3">@sortablelink('tuitionFee')</th>
                                         <th class="px-4 py-3">Days</th>
                                         <th class="px-4 py-3">Lesson</th>
                                         <th class="px-4 py-3">Room</th>
@@ -161,6 +169,7 @@
                                     @endif
                                 </tbody>
                             </table>
+                            {!! $course2->appends(\Request::except('page'))->render() !!}
                         </div>
                     </div>
                 </div>

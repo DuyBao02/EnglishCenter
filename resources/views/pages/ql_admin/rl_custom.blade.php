@@ -32,7 +32,7 @@
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 text-center text-3xl">
                     <div class="grid grid-cols-2 gap-4">
-                        <!-- Lesson form --> 
+                        <!-- Lesson form -->
                         <div class="bg-red-200 max-h-72 overflow-hidden shadow-sm sm:rounded-lg col-span-2 sm:col-span-1">
                             <div class="text-lg mt-2">Add new Lesson</div>
                             <form action="{{ route('lesson-custom-store') }}" method="POST" class="flex flex-col items-center my-auto">
@@ -41,17 +41,17 @@
                                     <label for="id_lesson" class="block text-sm font-medium text-gray-700 mr-2">ID Lesson</label>
                                     <input value="{{ old('id_lesson') }}" required type="text" id="id_lesson" name="id_lesson" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
-                        
+
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="start_time" class="block text-sm font-medium text-gray-700 mr-2">Time Start</label>
                                     <input value="{{ old('start_time') }}" required type="time" id="start_time" name="start_time" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
-                        
+
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="end_time" class="block text-sm font-medium text-gray-700 mr-2">Time End</label>
                                     <input value="{{ old('end_time') }}" required type="time" id="end_time" name="end_time" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
-                        
+
                                 <div class="my-4 flex items-center justify-center w-full">
                                     <x-primary-button type="submit">
                                         {{ __('Save') }}
@@ -80,11 +80,11 @@
                                                     <td class="px-4 py-3">{{ $l->id_lesson }}</td>
                                                     <td class="px-4 py-3">{{ $l->start_time }}</td>
                                                     <td class="px-4 py-3">{{ $l->end_time }}</td>
-                                                    
+
                                                     <td class="py-3">
                                                         <a type="buttom" href="{{ route('lesson-edit', $l->id_lesson) }}">
                                                             <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/edit.png" alt="">
-                                                        </a> 
+                                                        </a>
                                                     </td>
 
                                                     <td class="py-3">
@@ -104,7 +104,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-2 gap-4 mt-8">
                         <!-- Room form -->
                         <div class="bg-red-200 max-h-56 overflow-hidden shadow-sm sm:rounded-lg col-span-2 sm:col-span-1">
@@ -115,12 +115,12 @@
                                     <label for="id_room" class="block text-sm font-medium text-gray-700 mr-2">ID Room</label>
                                     <input value="{{ old('id_room') }}" required type="text" id="id_room" name="id_room" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
-                        
+
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="name_room" class="block text-sm font-medium text-gray-700 mr-2">Name</label>
                                     <input value="{{ old('name_room') }}" required type="text" id="name_room" name="name_room" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
-                        
+
                                 <div class="my-4 flex items-center justify-center w-full">
                                     <x-primary-button type="submit">
                                         {{ __('Save') }}
@@ -128,7 +128,7 @@
                                 </div>
                             </form>
                         </div>
-                        
+
                         <!-- Room Data -->
                         <div class="w-full overflow-hidden rounded-lg shadow-xs col-span-2 sm:col-span-1">
                             <div class="w-full overflow-x-auto">
@@ -160,7 +160,7 @@
                                                         <button type="submit" onclick="confirmDeleteRoom(event, '{{ route('room-custom-destroy', $r->id_room) }}')">
                                                             <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/trash.png" alt="">
                                                         </button>
-                                                    </form>  
+                                                    </form>
                                                 </td>
                                                 </tr>
                                             @endforeach
@@ -194,7 +194,7 @@
         var startTimeStr = startTime.toISOString().substr(11, 5);
         document.getElementById('start_time').value = startTimeStr;
     });
-    
+
     //ConfirmDeleteRoom
     function confirmDeleteRoom(event, route) {
         event.preventDefault();
@@ -263,6 +263,30 @@
                         }, 5000);
                     }
                 });
+            } else if (!data.success) {
+                swal(data.message, {
+                    icon: "error",
+                    timer: 5000,
+                    buttons: {
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            closeModal: true
+                        }
+                    }
+                })
+                .then((value) => {
+                    // Reload the page when user clicks on OK or after 5 seconds
+                    if (value) {
+                        location.reload();
+                    } else {
+                        setTimeout(function() {
+                            location.reload();
+                        }, 5000);
+                    }
+                });
+
             } else {
                 swal("Oops! Something went wrong, please refresh your website!", {
                     icon: "error",
@@ -304,6 +328,31 @@
                         }, 5000);
                     }
                 });
+
+            } else if (!data.success) {
+                swal(data.message, {
+                    icon: "error",
+                    timer: 5000,
+                    buttons: {
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            closeModal: true
+                        }
+                    }
+                })
+                .then((value) => {
+                    // Reload the page when user clicks on OK or after 5 seconds
+                    if (value) {
+                        location.reload();
+                    } else {
+                        setTimeout(function() {
+                            location.reload();
+                        }, 5000);
+                    }
+                });
+
             } else {
                 swal("Oops! Something went wrong, please refresh your website!", {
                     icon: "error",
@@ -312,4 +361,5 @@
             }
         });
     }
+
 </script>

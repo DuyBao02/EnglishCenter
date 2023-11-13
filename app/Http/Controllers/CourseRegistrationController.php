@@ -35,7 +35,21 @@ class CourseRegistrationController extends Controller
             $courses =  Course::where('id_course', 'LIKE', "%$search%")
                                 ->orWhere('name_course', 'LIKE', "%$search%")
                                 ->orWhere('tuitionFee', 'LIKE', "%$search%")
-                                ->orWhere('days', 'LIKE', "%$search%")
+
+                                ->orWhere(function ($query) use ($search) {
+                                    $query->orWhere('rooms', 'LIKE', "%$search%")
+                                        ->orWhereRaw('LENGTH(rooms) = 3 AND rooms LIKE ?', ['%' . $search . '%']);
+                                })
+
+                                ->orWhereHas('teacherUser', function ($query) use ($search) {
+                                    $query->where('name', 'LIKE', "%$search%");
+                                })
+
+                                ->orWhere(function ($query) use ($search) {
+                                    for ($i = 0; $i < 7; $i++) {
+                                        $query->orWhereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(days, "$['.$i.']"))) LIKE ?', ['%' . strtolower($search) . '%']);
+                                    }
+                                })
                                 ->sortable()->paginate(3);
         }
         else {

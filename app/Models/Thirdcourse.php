@@ -8,16 +8,17 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\User;
+use Kyslik\ColumnSortable\Sortable;
 
 class Thirdcourse extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Sortable;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-     
+
     protected $casts = [
         'days' => 'array',
         'rooms' => 'array',
@@ -42,6 +43,8 @@ class Thirdcourse extends Model
         'students_list',
         'is_registered',
     ];
+
+    public $sortable = ['id_3course', 'name_course', 'time_start', 'weeks', 'tuitionFee', 'teacher', 'created_at', 'updated_at'];
 
     public function teacherUser3()
     {

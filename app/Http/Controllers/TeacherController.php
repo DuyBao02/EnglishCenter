@@ -50,10 +50,34 @@ class TeacherController extends Controller
         }
     }
 
-    public function CourseListTeacher()
+    public function CourseListTeacher(Request $request)
     {
-        $course2 = Secondcourse::all();
-        return view('pages.ql_teacher.courseList_teacher', ['course2' => $course2]);
+        $search = $request['search'] ?? '';
+        if ($search != ''){
+            $course2 =  Secondcourse::where('id_2course', 'LIKE', "%$search%")
+                                ->orWhere('name_course', 'LIKE', "%$search%")
+                                ->orWhere('tuitionFee', 'LIKE', "%$search%")
+
+                                ->orWhere(function ($query) use ($search) {
+                                    $query->orWhere('rooms', 'LIKE', "%$search%")
+                                        ->orWhereRaw('LENGTH(rooms) = 3 AND rooms LIKE ?', ['%' . $search . '%']);
+                                })
+
+                                ->orWhereHas('teacherUser2', function ($query) use ($search) {
+                                    $query->where('name', 'LIKE', "%$search%");
+                                })
+
+                                ->orWhere(function ($query) use ($search) {
+                                    for ($i = 0; $i < 7; $i++) { //Kiem tra 7 ngay trong tuan
+                                        $query->orWhereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(days, "$['.$i.']"))) LIKE ?', ['%' . strtolower($search) . '%']);
+                                    }
+                                })
+                                ->sortable()->paginate(3);
+        }
+        else {
+            $course2 = Secondcourse::sortable()->paginate(3);
+        }
+        return view('pages.ql_teacher.courseList_teacher', ['course2' => $course2, 'search' => $search]);
     }
 
     public function registerCourseTeacher($userId, $courseId)

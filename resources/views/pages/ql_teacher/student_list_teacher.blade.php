@@ -68,7 +68,7 @@
                                                     <td class="px-4 py-3">{{ $student->gender }}</td>
                                                     <td class="px-4 py-3">{{ \Carbon\Carbon::parse( $student->birthday )->format('d-m-Y') }}</td>
                                                     <td class="px-4 py-3">{{ $student->address }}</td>
-                                                    <td class="px-4 py-3">0{{ $student->phone }}</td>
+                                                    <td class="px-4 py-3">{{ $student->phone }}</td>
                                                 </tr>
                                             @endforeach
                                         @endif

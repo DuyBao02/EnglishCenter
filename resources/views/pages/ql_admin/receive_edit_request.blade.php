@@ -54,29 +54,36 @@
         </div>
     </div>
 
-    <div class="py-12">
+    <form action="" method="" class="flex items-center space-x-4 mx-4 lg:mx-0 lg:float-right lg:px-40 mt-4">
+        <input type="search" name="search" id="" value="{{ $search }}" placeholder="Search by Id, email, date, status" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+        <button type="" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Search</button>
+        <a href="{{ route('edit-request') }}">
+            <button type="button" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded-full">Reset</button>
+        </a>
+    </form>
+
+    <div class="py-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
-
                 <div class="my-8 mx-8 sm:rounded-lg">
                     <div class="w-full overflow-hidden rounded-lg shadow-xs">
                         <div class="w-full overflow-x-auto">
-                            <div class="mb-4">Teacher Request</div>
+
                             <table class="w-full whitespace-nowrap">
                                 <thead>
                                     <tr class="text-xs font-medium tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                                        <th class="px-4 py-3">ID</th>
-                                        <th class="px-4 py-3">User-email</th>
+                                        <th class="px-4 py-3">@sortablelink('id')</th>
+                                        <th class="px-4 py-3">@sortablelink('user_id')</th>
                                         <th class="px-4 py-3">Content</th>
-                                        <th class="px-4 py-3">Request-Time</th>
-                                        <th class="px-4 py-3">Status</th>
+                                        <th class="px-4 py-3">@sortablelink('created_at')</th>
+                                        <th class="px-4 py-3">@sortablelink('status')</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y">
-                                    @if(isset($editsTeacher))
-                                        @foreach($editsTeacher as $e)
+                                    @if(isset($allEdits))
+                                        @foreach($allEdits as $e)
                                             <tr>
-                                                <td class="px-4 py-3">{{ $loop->iteration }}</td>
+                                                <td class="px-4 py-3">{{ $e->id }}</td>
                                                 <td class="px-4 py-3">{{ $e->user->email }}</td>
                                                 <td class="px-4 py-3">
                                                     @php
@@ -92,7 +99,6 @@
                                                                     @else
                                                                         <a class="hover:text-red-500" href="#" onclick="showAvatar('{{ asset('images/avatars/'.$oldData[$field]) }}')">{{ $oldValue }}</a> ->
                                                                     @endif
-
                                                                     @if(is_array($newData[$field]))
                                                                         {{ json_encode($newData[$field]) }}
                                                                     @else
@@ -112,7 +118,6 @@
                                                     @endforeach
                                                 </td>
                                                 <td class="px-4 py-3">{{ $e->created_at }}</td>
-
                                                 <td class="px-4 py-3">
                                                     @if ($e->status == 'accepted')
                                                         {{__('Accepted')}}
@@ -122,102 +127,22 @@
                                                         <div class="flex items-center">
                                                             <a class="hover:text-red-500 transform transition-transform duration-400 hover:scale-150" href="#" onclick="confirmAcceptEdit(event, ' {{ route('edit-accept', ['id_user' => $e->user_id, 'id_edit' => $e->id]) }} ')">
                                                                 <img class="h-7 w-7" src="images/checkbox.png" alt=""></a>
-
                                                             <a class="hover:text-red-500 ml-4 transform transition-transform duration-400 hover:scale-150" href="#" onclick="confirmRefuseEdit(event, ' {{ route('edit-refuse', ['id_edit' => $e->id]) }} ')">
                                                                 <img class="h-10 w-10" src="images/cancel.png" alt=""></a>
                                                         </div>
                                                     @endif
-
                                                 </td>
                                             </tr>
                                         @endforeach
                                     @endif
                                 </tbody>
                             </table>
+                            {!! $allEdits->appends(\Request::except('page'))->render() !!}
+
                         </div>
                     </div>
                 </div>
 
-                <div class="my-8 mx-8 sm:rounded-lg">
-                    <div class="w-full overflow-hidden rounded-lg shadow-xs">
-                        <div class="w-full overflow-x-auto">
-                            <div class="mb-4">Student Request</div>
-                            <table class="w-full whitespace-nowrap">
-                                <thead>
-                                    <tr class="text-xs font-medium tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                                        <th class="px-4 py-3">ID</th>
-                                        <th class="px-4 py-3">User-email</th>
-                                        <th class="px-4 py-3">Content</th>
-                                        <th class="px-4 py-3">Request-Time</th>
-                                        <th class="px-4 py-3">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y">
-                                    @if(isset($editsStudent))
-                                        @foreach($editsStudent as $es)
-                                            <tr>
-                                                <td class="px-4 py-3">{{ $loop->iteration }}</td>
-                                                <td class="px-4 py-3">{{ $es->user->email }}</td>
-                                                <td class="px-4 py-3">
-                                                    @php
-                                                        $oldData = json_decode($es->data, true)['old'];
-                                                        $newData = json_decode($es->data, true)['new'];
-                                                    @endphp
-                                                    @foreach($oldData as $field => $oldValue)
-                                                        @if(array_key_exists($field, $newData) && $oldValue != $newData[$field])
-                                                            @if($field == 'avatar')
-                                                                <p><strong>{{ $field }}</strong>:
-                                                                    @if(is_array($oldData[$field]))
-                                                                        {{ json_encode($oldData[$field]) }}
-                                                                    @else
-                                                                        <a class="hover:text-red-500" href="#" onclick="showAvatar('{{ asset('images/avatars/'.$oldData[$field]) }}')">{{ $oldValue }}</a> ->
-                                                                    @endif
-
-                                                                    @if(is_array($newData[$field]))
-                                                                        {{ json_encode($newData[$field]) }}
-                                                                    @else
-                                                                        <a class="hover:text-red-500" href="#" onclick="showAvatar('{{ asset('images/avatars/'.$newData[$field]) }}')">{{ $newData[$field] }}</a>
-                                                                    @endif
-                                                                </p>
-                                                            @else
-                                                                <p><strong>{{ $field }}</strong>: {{ $oldValue }} ->
-                                                                    @if(is_array($newData[$field]))
-                                                                        {{ json_encode($newData[$field]) }}
-                                                                    @else
-                                                                        {{ $newData[$field] }}
-                                                                    @endif
-                                                                </p>
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
-
-                                                </td>
-                                                <td class="px-4 py-3">{{ $es->created_at }}</td>
-
-                                                <td class="px-4 py-3">
-                                                    @if ($es->status == 'accepted')
-                                                        {{__('Accepted')}}
-                                                    @elseif ($es->status == 'refused')
-                                                        {{__('Refused')}}
-                                                    @else
-                                                        <div class="flex items-center">
-                                                            <a class="hover:text-red-500 transform transition-transform duration-400 hover:scale-150" href="#" onclick="confirmAcceptEdit(event, ' {{ route('edit-accept', ['id_user' => $es->user_id, 'id_edit' => $es->id]) }} ')">
-                                                                <img class="h-7 w-7" src="images/checkbox.png" alt=""></a>
-
-                                                            <a class="hover:text-red-500 ml-4 transform transition-transform duration-400 hover:scale-150" href="#" onclick="confirmRefuseEdit(event, ' {{ route('edit-refuse', ['id_edit' => $es->id]) }} ')">
-                                                                <img class="h-10 w-10" src="images/cancel.png" alt=""></a>
-                                                        </div>
-                                                    @endif
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

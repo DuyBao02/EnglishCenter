@@ -34,7 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'avatar',
     ];
 
-    public $sortable = ['id', 'name', 'email', 'gender', 'birthday', 'address', 'phone', 'experience', 'level', 'created_at', 'updated_at'];
+    public $sortable = ['id', 'name', 'email', 'role', 'gender', 'birthday', 'address', 'phone', 'experience', 'level', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for serialization.

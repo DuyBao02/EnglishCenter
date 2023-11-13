@@ -76,16 +76,16 @@ class AdminController extends Controller
 
         $search = $request['search'] ?? '';
         if ($search != ''){
-            $admins = User::where('role', 'Admin')
-                            ->orWhere('name', 'LIKE', "%$search%")
+            $search_user = User::where('name', 'LIKE', "%$search%")
+                            ->orWhere('role', 'LIKE', "%$search%")
                             ->orWhere('email', 'LIKE', "%$search%")
                             ->orWhere('birthday', 'LIKE', "%$search%")
                             ->orWhere('address', 'LIKE', "%$search%")
                             ->orWhere('phone', 'LIKE', "%$search%")
-                            ->sortable()->paginate(20);
+                            ->sortable()->paginate(4);
         }
         else {
-            $admins = User::where('role', 'Admin')->sortable()->paginate(20);
+            $search_user = User::sortable()->paginate(4);
         }
 
         return view('pages.ql_admin.users_management', [
@@ -100,7 +100,8 @@ class AdminController extends Controller
             'registeredTeachers' => $registeredTeachers,
             'notRegisteredTeachers' => $notRegisteredTeachers,
 
-            'search' => $search
+            'search' => $search,
+            'search_user' => $search_user
         ]);
     }
 

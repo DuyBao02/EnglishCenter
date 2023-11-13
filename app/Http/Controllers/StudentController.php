@@ -29,7 +29,7 @@ class StudentController extends Controller
         if (!$course) {
             return redirect()->back()->with('error', 'Course not found!');
         }
-        
+
         $course2 = Secondcourse::find($id);
         if (!$course2) {
             return redirect()->back()->with('error', 'You must public '. $course->name_course .' to teacher first!');
@@ -55,18 +55,42 @@ class StudentController extends Controller
             $thirdcourse->tuitionFee = $course->tuitionFee;
             $thirdcourse->teacher = $course->teacher;
             $thirdcourse->students_list = $course->students_list;
-            
+
             $thirdcourse->save();
-            
+
             return redirect()->back()->with('success', 'Public to student successfully!');
         }
     }
-    
 
-    public function CourseListStudent()
+
+    public function CourseListStudent(Request $request)
     {
-        $course3 = thirdcourse::all();
-        return view('pages.ql_student.register_course_student', ['course3' => $course3]);
+        $search = $request['search'] ?? '';
+        if ($search != ''){
+            $course3 =  Thirdcourse::where('id_3course', 'LIKE', "%$search%")
+                                ->orWhere('name_course', 'LIKE', "%$search%")
+                                ->orWhere('tuitionFee', 'LIKE', "%$search%")
+
+                                ->orWhere(function ($query) use ($search) {
+                                    $query->orWhere('rooms', 'LIKE', "%$search%")
+                                        ->orWhereRaw('LENGTH(rooms) = 3 AND rooms LIKE ?', ['%' . $search . '%']);
+                                })
+
+                                ->orWhereHas('teacherUser3', function ($query) use ($search) {
+                                    $query->where('name', 'LIKE', "%$search%");
+                                })
+
+                                ->orWhere(function ($query) use ($search) {
+                                    for ($i = 0; $i < 7; $i++) { //Kiem tra 7 ngay trong tuan
+                                        $query->orWhereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(days, "$['.$i.']"))) LIKE ?', ['%' . strtolower($search) . '%']);
+                                    }
+                                })
+                                ->sortable()->paginate(3);
+        }
+        else {
+            $course3 = Thirdcourse::sortable()->paginate(3);
+        }
+        return view('pages.ql_student.register_course_student', ['course3' => $course3, 'search' => $search]);
     }
 
     public function registerCourseStudent($userId, $courseId)
@@ -76,7 +100,7 @@ class StudentController extends Controller
         $secondcourse = Secondcourse::where('id_2course', $courseId)->first();
         $thirdcourse = Thirdcourse::where('id_3course', $courseId)->first();
         if($user && $course){
-            
+
             if ($course->teacher == null && $secondcourse->teacher == null &&  $thirdcourse->teacher == null){
                 return redirect()->back()->with('error', 'The ' . $course->name_course . ' does not have a teacher!');
             }
@@ -85,7 +109,7 @@ class StudentController extends Controller
             array_push($students_list, $user->id);
             $course->students_list = $students_list;
             $course->save();
-            
+
             if ($thirdcourse) {
                 $students_list = $thirdcourse->students_list;
                 array_push($students_list, $user->id);
@@ -94,11 +118,11 @@ class StudentController extends Controller
             }
 
             $bills = Bill::where('user_id', $userId)->get();
-            
+
             $unpaidBill = $bills->first(function ($bill) {
                 return !$bill->is_paid;
             });
-            
+
             if ($unpaidBill) {
                 // Update existing bill
                 $name_bill = json_decode($unpaidBill->name_bill, true);
@@ -115,7 +139,7 @@ class StudentController extends Controller
                 $bill->tuitionFee = $course->tuitionFee;
                 $bill->save();
             }
-    
+
             return redirect()->back()->with('success', 'Register successfully!');
         } else {
             return redirect()->back()->with('error', 'User or Course not found!');
@@ -123,13 +147,13 @@ class StudentController extends Controller
     }
 
     public function showCourseBillStudent(): View
-    {   
+    {
         // Lấy người dùng hiện tại
-        $user = Auth::user(); 
-    
+        $user = Auth::user();
+
         // Lấy tất cả hóa đơn của người dùng hiện tại
         $bills = Bill::where('user_id', $user->id)->get();
-    
+
         if(!$bills->isEmpty())
             return view('pages.ql_student.tuition_student', ['bills' => $bills]);
         else
@@ -137,13 +161,13 @@ class StudentController extends Controller
     }
 
     public function showCalenderStudent(): View
-    {   
+    {
         return view('pages.ql_student.schedule_student');
     }
-    
+
     public function getRegisteredCourses()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
         $courses = Course::whereJsonContains('students_list', $user->id)->get();
         return $courses;
     }

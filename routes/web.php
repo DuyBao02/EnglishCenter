@@ -147,8 +147,8 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     Route::get('/room-edit/{id}', 'App\Http\Controllers\RoomCustomController@edit')
         ->middleware(['auth', 'verified'])->name('room-edit');
 
-    Route::get('/room-custom', 'App\Http\Controllers\RoomCustomController@create')
-        ->middleware(['auth', 'verified'])->name('room-custom-create');
+    // Route::get('/room-custom', 'App\Http\Controllers\RoomCustomController@create')
+    //     ->middleware(['auth', 'verified'])->name('room-custom-create');
 
     Route::post('/room-custom', 'App\Http\Controllers\RoomCustomController@store')
         ->middleware(['auth', 'verified'])->name('room-custom-store');
@@ -167,8 +167,8 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     Route::get('/lesson-edit/{id}', 'App\Http\Controllers\LessonCustomController@edit')
         ->middleware(['auth', 'verified'])->name('lesson-edit');
 
-    Route::get('/lesson-custom', 'App\Http\Controllers\LessonCustomController@create')
-        ->middleware(['auth', 'verified'])->name('lesson-custom-create');
+    // Route::get('/lesson-custom', 'App\Http\Controllers\LessonCustomController@create')
+    //     ->middleware(['auth', 'verified'])->name('lesson-custom-create');
 
     Route::post('/lesson-custom', 'App\Http\Controllers\LessonCustomController@store')
         ->middleware(['auth', 'verified'])->name('lesson-custom-store');

@@ -25,8 +25,8 @@ class EditRequestController extends Controller
 {
 
     public function sendRequestToSecondEdit(Request $request)
-    {   
-        
+    {
+
         // Lấy user hiện tại
         $user = auth()->user();
 
@@ -38,32 +38,32 @@ class EditRequestController extends Controller
             }
             else{
                 if (!$request->file('avatar')->isValid()) {
-                    return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file!'); 
+                    return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file!');
                 }
-                    
+
                 if ($request->file('avatar')->getSize() > 2048 * 1024) {
-                    return redirect()->back()->withInput($request->input())->with('error', 'Avatar file size must be less than 2MB!'); 
+                    return redirect()->back()->withInput($request->input())->with('error', 'Avatar file size must be less than 2MB!');
                 }
-        
+
                 if (!in_array($request->file('avatar')->getClientOriginalExtension(), ['jpeg', 'png', 'jpg', 'gif', 'svg'])) {
-                    return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file type!'); 
+                    return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file type!');
                 }
 
                 $avatarName = $user->name . '_' . explode('@', $user->email)[0] . '.' . $request->file('avatar')->getClientOriginalExtension();
-                
+
                 $oldAvatarPath = public_path('images/avatars/' . $user->avatar);
-                    
+
                 if ($user->avatar != 'avatar_default.png' && file_exists($oldAvatarPath)) {
                     // Xóa file avatar cũ
                     unlink($oldAvatarPath);
-                } 
-                
+                }
+
                 $request->file('avatar')->move(public_path('images/avatars'), $avatarName);
 
                 // Lưu tên file vào $data['new']['avatar']
                 $data['new']['avatar'] = $avatarName;
             }
-            
+
         }
         else {
             $data['new']['avatar'] = $user->avatar;
@@ -86,9 +86,9 @@ class EditRequestController extends Controller
         $request->validate($rules);
 
         if ($request->role == 'Teacher' && ($request->experience < 1 || $request->experience > 50)) {
-            return redirect()->back()->with('error', 'Experience must be between 1 and 50!'); 
+            return redirect()->back()->with('error', 'Experience must be between 1 and 50!');
         }
-    
+
         // Lấy user hiện tại
         $user = auth()->user();
 
@@ -100,7 +100,7 @@ class EditRequestController extends Controller
             'phone' => $user->phone,
             'experience' => $user->experience,
             'level' => $user->level,
-            'avatar' => $user->avatar, 
+            'avatar' => $user->avatar,
         ];
 
         if($request->avatar == null)
@@ -113,7 +113,7 @@ class EditRequestController extends Controller
             'phone' => $request->phone,
             'experience' => $request->experience,
             'level' => $request->level,
-            'avatar' => $new_avt, 
+            'avatar' => $new_avt,
         ];
 
         // Sắp xếp các mảng theo key
@@ -132,14 +132,14 @@ class EditRequestController extends Controller
         $secondEdit->data = json_encode($data);
         $secondEdit->status = 'pending'; // Khởi tạo trạng thái
         $secondEdit->save();
-    
+
         return redirect()->back()->withInput($request->input())->with('success', 'Success! Please wait for Admin to agree');
     }
-    
-    public function showRequestToAdmin()
-    {   
+
+    public function showRequestToAdmin(Request $request)
+    {
         $secondEdits = Secondedit::all();
-    
+
         foreach ($secondEdits as $secondEdit) {
             // Tạo một instance mới của Edit và lưu dữ liệu từ second edit
             $edit = new Edit;
@@ -150,38 +150,23 @@ class EditRequestController extends Controller
             $secondEdit->delete();
         }
 
-        // Lấy tất cả các edit requests
-        $allEdits = Edit::with('user')->orderBy('created_at', 'desc')->get();
-
-        // Chia danh sách edits thành hai dựa trên cột role
-        [$editsStudent, $editsTeacher] = $allEdits->partition(function ($edit) {
-            return $edit->user->role == "Student"; // Thay đổi điều kiện này theo yêu cầu của bạn
-        });
-
-        // Nếu số lượng edit requests của Student lớn hơn 10
-        if ($editsStudent->count() > 10) {
-            // Xóa các edit requests cũ nhất của Student cho đến khi chỉ còn lại 10
-            $editsStudent->sortBy('created_at')->take($editsStudent->count() - 10)->each(function ($edit) {
-                $edit->delete();
-            });
-            // Lấy lại danh sách edit requests sau khi đã xóa
-            $editsStudent = $editsStudent->diff($editsStudent->sortBy('created_at')->take($editsStudent->count() - 10));
+        $search = $request['search'] ?? '';
+        if ($search != ''){
+            $allEdits =  Edit::where('id', 'LIKE', "%$search%")
+                                ->orWhere('status', 'LIKE', "%$search%")
+                                ->orWhereHas('user', function ($query) use ($search) {
+                                    $query->where('email', 'LIKE', "%$search%");
+                                })
+                                ->sortable()->paginate(10);
+        }
+        else {
+            $allEdits = Edit::with('user')->sortable()->paginate(10);
         }
 
-        // Nếu số lượng edit requests của Teacher lớn hơn 10
-        if ($editsTeacher->count() > 10) {
-            // Xóa các edit requests cũ nhất của Teacher cho đến khi chỉ còn lại 10
-            $editsTeacher->sortBy('created_at')->take($editsTeacher->count() - 10)->each(function ($edit) {
-                $edit->delete();
-            });
-            // Lấy lại danh sách edit requests sau khi đã xóa
-            $editsTeacher = $editsTeacher->diff($editsTeacher->sortBy('created_at')->take($editsTeacher->count() - 10));
-        }
-
-        return view('pages.ql_admin.receive_edit_request', compact('editsStudent', 'editsTeacher'));
+        return view('pages.ql_admin.receive_edit_request', compact('allEdits', 'search'));
     }
-    
-    
+
+
     public function editAcceptFromAdmin($id_user, $id_edit)
     {
 
@@ -198,7 +183,7 @@ class EditRequestController extends Controller
 
         // Tìm user bằng user_id trong edit request
         $user = User::find($id_user);
-        
+
         // Cập nhật thông tin user với dữ liệu mới
         $user->name = $data['new']['name'];
         $user->birthday = $data['new']['birthday'];
@@ -211,7 +196,7 @@ class EditRequestController extends Controller
         if (isset($data['new']['avatar'])) {
             $user->avatar = $data['new']['avatar'];
         }
-        
+
         $user->save();
 
         // Cập nhật trạng thái của edit request thành 'accepted'
