@@ -205,11 +205,11 @@
                         <div class="grid grid-cols-2 gap-4 mt-4">
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="maxStudents" class="block text-sm font-medium text-gray-700">Max Students</label>
-                                <input required type="number" value="{{ old('maxStudents', 3) }}" id="maxStudents" name="maxStudents" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input required type="number" min=3 value="{{ old('maxStudents', 3) }}" id="maxStudents" name="maxStudents" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="weeks" class="block text-sm font-medium text-gray-700">Number of Weeks</label>
-                                <input required type="number" id="weeks" value="{{ old('weeks', 3) }}" name="weeks" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input required type="number" min=3 id="weeks" value="{{ old('weeks', 3) }}" name="weeks" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                         </div>
 

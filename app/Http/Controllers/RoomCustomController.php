@@ -96,7 +96,7 @@ class RoomCustomController extends Controller
             $courses = Course::all();
             foreach ($courses as $course) {
                 if (in_array($room->id_room, $course->rooms)) {
-                    return response()->json(['success' => false, 'message' => 'Cannot delete room as it exists in ' . $course->id_course]);
+                    return response()->json(['success' => false, 'message' => 'Cannot delete room as it exists in ' . $course->id_course . ' !']);
                 }
             }
             $room->delete();

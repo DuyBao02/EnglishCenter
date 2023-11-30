@@ -7,16 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 
 class Bill extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    use HasApiTokens, HasFactory, Notifiable, Sortable;
 
     protected $primaryKey = 'id_bill';
 
@@ -27,8 +22,12 @@ class Bill extends Model
     protected $fillable = [
         'name_bill',
         'is_paid',
+        'payment_time',
+        'tuitionFee',
         'user_id',
     ];
+
+    public $sortable = ['id', 'name_bill', 'user_id', 'payment_time', 'tuitionFee', 'created_at', 'updated_at'];
 
     public function course()
     {

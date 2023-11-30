@@ -8,9 +8,9 @@
     <script>
         window.onload = function() {
             swal('Success', '{{ Session::get('success') }}', 'success', {
-                button: true, 
-                button: 'OK', 
-                timer: 5000, 
+                button: true,
+                button: 'OK',
+                timer: 5000,
             });
         }
 
@@ -22,7 +22,7 @@
             swal('Error', '{{ $errors->first('email') }}', 'error', {
                 button: true,
                 button: 'OK',
-                timer: 5000, 
+                timer: 5000,
             });
         }
     </script>
@@ -63,6 +63,20 @@
 
                         <div class="bg-violet-300 max-h-56 overflow-hidden shadow-sm sm:rounded-lg col-span-2 sm:col-span-1">
                             <a href="{{ route('rl-custom-admin') }}"><div class="text-lg mt-2">Total Rooms: {{ $totalrooms }}</div></a>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 mt-4">
+                        <div class="bg-gray-50 max-h-72 overflow-hidden shadow-sm sm:rounded-lg col-span-3 sm:col-span-1">
+                            <a href="{{ route('showFBtoAdmin') }}"><div class="text-lg mt-2">Total Feedbacks: {{ $totalfeedbacks }}</div></a>
+                        </div>
+
+                        <div class="bg-gray-50 max-h-56 overflow-hidden shadow-sm sm:rounded-lg col-span-3 sm:col-span-1">
+                            <a href="{{ route('banners') }}"><div class="text-lg mt-2">Total Banners: {{ $totalbanners }}</div></a>
+                        </div>
+
+                        <div class="bg-gray-50 max-h-56 overflow-hidden shadow-sm sm:rounded-lg col-span-3 sm:col-span-1">
+                            <a href="{{ route('bills') }}"><div class="text-lg mt-2">Total Bills: {{ $totalbills }}</div></a>
                         </div>
                     </div>
                 </div>

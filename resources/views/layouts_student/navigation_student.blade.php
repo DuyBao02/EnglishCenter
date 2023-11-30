@@ -20,7 +20,7 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('course-list-student')" :active="request()->routeIs('course-list-student')">
-                        {{ __('Register Course') }}
+                        {{ __('Courses List') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">

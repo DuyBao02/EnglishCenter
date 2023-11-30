@@ -28,7 +28,7 @@ class FeedbackController extends Controller
             })->sortable()->paginate(10);
         }
         else {
-            $allfbs = Feedback::sortable()->paginate(10);
+            $allfbs = Feedback::orderBy('created_at', 'desc')->sortable()->paginate(10);
         }
 
         return view('pages.ql_admin.feedbacks', compact('allfbs', 'search'));

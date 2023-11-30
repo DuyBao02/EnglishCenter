@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Posts') }}
+            {{ __('Banners') }}
         </h2>
     </x-slot>
 
@@ -60,7 +60,7 @@
     <form action="" method="" class="flex items-center space-x-4 mx-4 lg:mx-0 lg:float-right lg:px-40 mt-4">
         <input type="search" name="search" id="" value="{{ $search }}" placeholder="Search by title" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
         <button type="" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Search</button>
-        <a href="{{ route('posts-admin') }}">
+        <a href="{{ route('banners') }}">
             <button type="button" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded-full">Reset</button>
         </a>
     </form>
@@ -69,7 +69,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
 
-                <!-- Post data table -->
+                <!-- Bill data table -->
                 <div class="my-4 mx-4 sm:rounded-lg">
                     <h3 class="text-2xl font-bold mb-4">List</h3>
                     <div class="w-full overflow-hidden rounded-lg shadow-xs">
@@ -81,37 +81,29 @@
                                     <th class="px-4 py-3">User Created</th>
                                     <th class="px-4 py-3">@sortablelink('title')</th>
                                     <th class="px-4 py-3">@sortablelink('picture')</th>
-                                    <th class="px-4 py-3">Content</th>
-                                    <th class="px-4 py-3">@sortablelink('updated_at')</th>
-                                    <th class="px-4 py-3"></th>
+                                    <th class="px-4 py-3">@sortablelink('created_at')</th>
                                     <th class="px-4 py-3"></th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y">
-                                    @if(isset($posts))
-                                        @foreach ($posts as $p)
+                                    @if(isset($banners))
+                                        @foreach ($banners as $b)
                                             <tr>
                                                 <!-- Table data  -->
-                                                <td class="px-4 py-3">{{ $p->id }}</td>
-                                                <td class="px-4 py-3">{{ $p->user->name }}</td>
-                                                <td class="px-4 py-3">{{ $p->title }}</td>
+                                                <td class="px-4 py-3">{{ $b->id }}</td>
+                                                <td class="px-4 py-3">{{ $b->user->name }}</td>
+                                                <td class="px-4 py-3">{{ $b->title }}</td>
                                                 <td class="px-4 py-3">
-                                                    <a class="hover:text-red-500 transform transition-transform duration-400 hover:scale-150" href="#" alt="{{ $p->picture }}" onclick="showPicture('{{ asset('images/posts/'.$p->picture) }}', '{{ $p->picture }}')">{{ $p->picture }}</a>
-                                                </td>
-                                                <td class="px-4 py-3">Press Edit to read</td>
-                                                <td class="px-4 py-3">{{ $p->updated_at }}</td>
-
-                                                <td class="py-3">
-                                                    <a type="buttom" href="{{ route('post-edit', $p->id) }}">
-                                                        <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/edit.png" alt="">
-                                                    </a>
+                                                    <a class="hover:text-red-500 transform transition-transform duration-400 hover:scale-150" href="#" alt="{{ $b->picture }}" onclick="showPicture('{{ asset('images/banners/'.$b->picture) }}', '{{ $b->picture }}')">{{ $b->picture }}</a>
                                                 </td>
 
+                                                <td class="px-4 py-3">{{ $b->created_at }}</td>
+
                                                 <td class="py-3">
-                                                    <form action="{{ route('post-delete', $p->id) }}" method="POST" onsubmit="confirmDelete()">
+                                                    <form action="{{ route('banner-delete', $b->id) }}" method="POST" onsubmit="confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" onclick="confirmDeletePost(event, '{{ route('post-delete', $p->id) }}')">
+                                                        <button type="submit" onclick="confirmDeleteBanner(event, '{{ route('banner-delete', $b->id) }}')">
                                                             <img class="h-6 w-6 inline-block transform transition-transform duration-400 hover:scale-150" src="images/trash.png" alt="">
                                                         </button>
                                                     </form>
@@ -121,16 +113,16 @@
                                     @endif
                                 </tbody>
                             </table>
-                            {!! $posts->appends(\Request::except('page'))->render() !!}
+                            {!! $banners->appends(\Request::except('page'))->render() !!}
                         </div>
                     </div>
                 </div>
 
-                {{-- Create post Form --}}
+                {{-- Create banner Form --}}
                 <div class="p-6 text-gray-900 mt-4">
-                    <h3 class="text-2xl font-bold">Create new post</h3>
+                    <h3 class="text-2xl font-bold">Create new Banner</h3>
 
-                    <form action="{{ route('create-post') }}" method="POST" class="mt-4" enctype="multipart/form-data">
+                    <form action="{{ route('create-banner') }}" method="POST" class="mt-4" enctype="multipart/form-data">
                         @csrf
 
                         <div class="grid grid-cols-2 gap-4">
@@ -147,18 +139,6 @@
                                 <label for="picture" class="block text-gray-700 text-sm font-bold mb-2">Picture</label>
                                 <input required id="picture" class="block mt-1 w-full" type="file" name="picture" value="{{ old('picture') }}" autofocus autocomplete="picture" />
                             </div>
-
-                        </div>
-
-                        <div class="mt-4">
-                            <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
-                            <textarea required="required" :value="old('content')"
-                                id="content"
-                                name="content"
-                                rows="3"
-                                autofocus autocomplete="content"
-                                class="form-control web-editor shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </textarea>
 
                         </div>
 
@@ -179,7 +159,6 @@
 </x-app-layout>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script src="{{ Vite::asset('vendor/tinymce/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
 
 <script>
     //Zoom in picture
@@ -193,18 +172,12 @@
         document.getElementById('pictureModal').classList.add('hidden');
     }
 
-    tinymce.init({
-        selector: '.web-editor', // Replace this CSS selector to match the placeholder element for TinyMCE
-        plugins: 'code table lists',
-        toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
-    });
-
     //ConfirmDeletePost
-    function confirmDeletePost(event, route) {
+    function confirmDeleteBanner(event, route) {
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this post!",
+            text: "Once deleted, you will not be able to recover this banner!",
             icon: "warning",
             buttons: true,
             timer: 5000,
@@ -212,12 +185,12 @@
         })
         .then((willDelete) => {
             if (willDelete) {
-                deletePost(route);
+                deleteBanner(route);
             }
         });
     }
 
-    function deletePost(route) {
+    function deleteBanner(route) {
         fetch(route, {
             method: 'DELETE',
             headers: {
@@ -227,7 +200,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                swal("Poof! Post has been deleted!", {
+                swal("Poof! Banner has been deleted!", {
                     icon: "success",
                     timer: 5000,
                     buttons: {

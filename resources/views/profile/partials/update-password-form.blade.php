@@ -9,6 +9,29 @@
         </p>
     </header>
 
+    @if (Session::has('success'))
+        <script>
+        window.onload = function() {
+            swal('Success', '{{ Session::get('success') }}', 'success',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
+    @if (Session::has('error'))
+        <script>
+        window.onload = function() {
+            swal('Error', '{{ Session::get('error') }}', 'error',{
+                button:true,
+                button:'OK',
+                timer:5000,
+            });
+        }
+        </script>
+    @endif
+
     <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('put')
@@ -34,7 +57,7 @@
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
-            @if (session('status') === 'password-updated')
+            {{-- @if (session('status') === 'password-updated')
                 <p
                     x-data="{ show: true }"
                     x-show="show"
@@ -42,7 +65,9 @@
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
                 >{{ __('Saved.') }}</p>
-            @endif
+            @endif --}}
         </div>
     </form>
 </section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

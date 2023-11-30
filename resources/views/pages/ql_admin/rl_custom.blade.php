@@ -267,6 +267,7 @@
                 swal(data.message, {
                     icon: "error",
                     timer: 5000,
+                    title: 'Error',
                     buttons: {
                         confirm: {
                             text: "OK",
@@ -333,6 +334,7 @@
                 swal(data.message, {
                     icon: "error",
                     timer: 5000,
+                    title: 'Error',
                     buttons: {
                         confirm: {
                             text: "OK",

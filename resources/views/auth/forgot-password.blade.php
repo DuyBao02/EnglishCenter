@@ -21,5 +21,24 @@
                 {{ __('Email Password Reset Link') }}
             </x-primary-button>
         </div>
+
+        <!-- Spinner -->
+        <div id="spinner" class="fixed z-50 inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="flex items-center justify-center h-screen">
+                <div class="relative">
+                    <div class="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
+                    <div class="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin">
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
 </x-guest-layout>
+
+<script>
+    //Loading spinner
+    document.querySelector('form').addEventListener('submit', function() {
+        document.getElementById('spinner').style.display = 'flex';
+    });
+</script>

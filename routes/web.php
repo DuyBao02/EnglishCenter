@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use App\Http\Controllers\PaypalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +87,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
         ->middleware(['auth', 'verified'])->name('dashboard-admin');
 
     //Notification Edit to Admin
-        Route::get('/edit-request', 'App\Http\Controllers\EditRequestController@showRequestToAdmin')
+        Route::get('/edit-requests', 'App\Http\Controllers\EditRequestController@showRequestToAdmin')
             ->middleware(['auth', 'verified'])->name('edit-request');
 
         Route::post('/receive-edit-request', 'App\Http\Controllers\EditRequestController@sendRequestToSecondEdit')
@@ -103,7 +102,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     Route::get('/create-course', 'App\Http\Controllers\CourseRegistrationController@getLessonsAndRoomsForCreateCourse')
         ->middleware(['auth', 'verified'])->name('create-course');
 
-    Route::get('/course-admin', 'App\Http\Controllers\CourseRegistrationController@create')
+    Route::get('/courses', 'App\Http\Controllers\CourseRegistrationController@create')
         ->middleware(['auth', 'verified'])->name('course-admin');
 
     // Course Registration routes
@@ -183,7 +182,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
         ->middleware(['auth', 'verified'])->name('lesson-custom-update');
     //
 
-    Route::get('/rl-custom-admin', 'App\Http\Controllers\RoomCustomController@createBoth')
+    Route::get('/rooms-lessons', 'App\Http\Controllers\RoomCustomController@createBoth')
         ->middleware(['auth', 'verified'])->name('rl-custom-admin');
 
     //Teachers & Students management from Admin
@@ -241,6 +240,20 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     Route::delete('/post-delete/{id}', 'App\Http\Controllers\AdminController@deletePost')
         ->middleware(['auth', 'verified'])->name('post-delete');
 
+    //Banner
+    Route::get('/banners', 'App\Http\Controllers\BannerController@list')
+        ->name('banners');
+
+    Route::post('/create-banner', 'App\Http\Controllers\BannerController@create')
+        ->middleware(['auth', 'verified'])->name('create-banner');
+
+    Route::delete('/banner-delete/{id}', 'App\Http\Controllers\BannerController@delete')
+        ->middleware(['auth', 'verified'])->name('banner-delete');
+
+    //Bill
+    Route::get('/bills', 'App\Http\Controllers\AdminController@showBills')
+        ->name('bills');
+
     //Feedback
     Route::get('/contact', 'App\Http\Controllers\FeedbackController@contactus')
         ->name('contact');
@@ -248,7 +261,7 @@ Route::get('/management-system', 'App\Http\Controllers\ManagementSystemControlle
     Route::post('/contact/create-feedback', 'App\Http\Controllers\FeedbackController@createFeedback')
         ->name('feedback');
 
-    Route::get('/showFeedbacks', 'App\Http\Controllers\FeedbackController@showFeedbacks')
+    Route::get('/feedbacks', 'App\Http\Controllers\FeedbackController@showFeedbacks')
         ->name('showFeedbacks');
 
     Route::get('/showFeedbackstoAdmin', 'App\Http\Controllers\FeedbackController@showFBtoAdmin')

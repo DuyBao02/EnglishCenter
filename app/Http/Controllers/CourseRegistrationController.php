@@ -297,12 +297,6 @@ class CourseRegistrationController extends Controller
         return redirect()->route('course-admin')->with('success', $course->name_course . ' update successful!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
     {
         $user = Auth::user();

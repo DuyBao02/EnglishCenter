@@ -1,21 +1,12 @@
 <div class="swiper-container banner-box">
     <div class="swiper-wrapper">
-        <!-- Slide 1 -->
-        <div class="swiper-slide banner-content">
-            <img src="https://giaviet.edu.vn/public/upload/slide/PANO%201600X700-optimize.png" alt="Banner 1" class="banner-image">
-        </div>
-        <!-- Slide 2 -->
-        <div class="swiper-slide banner-content">
-            <img src="https://giaviet.edu.vn/public/upload/slide/WEB%202011(1).png" alt="Banner 2" class="banner-image">
-        </div>
-        <!-- Slide 3 -->
-        <div class="swiper-slide banner-content">
-            <img src="https://ila.edu.vn/wp-content/uploads/2023/06/co-so-vat-chat-khoa-hoc-smart-teen.png" alt="Banner 3" class="banner-image">
-        </div>
-        <!-- Slide 4 -->
-        <div class="swiper-slide banner-content">
-            <img src="https://ila.edu.vn/wp-content/uploads/2023/03/center-4.png" alt="Banner 4" class="banner-image">
-        </div>
+
+        @foreach ($banners as $b)
+            <div class="swiper-slide banner-content">
+                <img src="images/banners/{{ $b->picture }}"  alt="Banner " . {{ $b->id}} class="banner-image">
+            </div>
+        @endforeach
+
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
@@ -45,7 +36,7 @@
             disableOnInteraction: false,
         },
     });
-    
+
 </script>
 
 <style>
@@ -70,7 +61,7 @@
         padding: 20px;
         text-align: center;
     }
-    
+
     .swiper-container, .swiper-slide {
         padding-top: 20px;
         padding-bottom: 20px;

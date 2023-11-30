@@ -160,7 +160,7 @@ class EditRequestController extends Controller
                                 ->sortable()->paginate(10);
         }
         else {
-            $allEdits = Edit::with('user')->sortable()->paginate(10);
+            $allEdits = Edit::with('user')->orderBy('created_at', 'desc')->sortable()->paginate(10);
         }
 
         return view('pages.ql_admin.receive_edit_request', compact('allEdits', 'search'));

@@ -83,6 +83,7 @@
                                         <th class="px-4 py-3">@sortablelink('birthday')</th>
                                         <th class="px-4 py-3">@sortablelink('address')</th>
                                         <th class="px-4 py-3">@sortablelink('phone')</th>
+                                        <th class="px-4 py-3">@sortablelink('created_at')</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y">
@@ -100,6 +101,7 @@
                                             <td class="px-4 py-3">{{ \Carbon\Carbon::parse($su->birthday)->format('d-m-Y') }}</td>
                                             <td class="px-4 py-3">{{ $su->address }}</td>
                                             <td class="px-4 py-3">{{ $su->phone }}</td>
+                                            <th class="px-4 py-3">{{ $su->created_at }}</th>
                                         </tr>
                                     @endforeach
                                 </tbody>

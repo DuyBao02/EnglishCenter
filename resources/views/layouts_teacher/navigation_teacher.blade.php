@@ -25,7 +25,7 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('calendarIndex')" :active="request()->routeIs('calendarIndex', 'schedule-teacher')">
-                        {{ __('Schedule') }}
+                        {{ __('Calandar') }}
                     </x-nav-link>
                 </div>
             </div>

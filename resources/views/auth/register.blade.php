@@ -26,7 +26,7 @@
         </script>
     @endif
 
-    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('registerUser') }}" enctype="multipart/form-data">
         @csrf
         <div class="columns-2">
             <!-- Name -->
@@ -45,16 +45,16 @@
             <div class="mt-4">
                 <x-input-label for="password" :value="__('Password')" />
 
-                <div class="flex mt-1 mb-2"> 
+                <div class="flex mt-1 mb-2">
                     <div class="relative flex-1 col-span-4" x-data="{ show: true }">
                         <input class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 id="password"
                                 :type="show ? 'password' : 'text'"
                                 name="password"
                                 required autocomplete="new-password"
-                                placeholder = "Least 8 characters" 
+                                placeholder = "Least 8 characters"
                                 />
-                
+
                         <button type="button" class="flex absolute inset-y-0 right-0 items-center pr-3" @click="show = !show" :class="{'hidden': !show, 'block': show }">
                             <!-- Heroicon name: eye -->
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -77,15 +77,15 @@
             <div class="mt-4">
                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
-                <div class="flex mt-1 mb-2"> 
+                <div class="flex mt-1 mb-2">
                     <div class="relative flex-1 col-span-4" x-data="{ show: true }">
                         <input class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 id="password_confirmation"
                                 :type="show ? 'password' : 'text'"
                                 name="password_confirmation"
-                                required autocomplete="new-password" 
+                                required autocomplete="new-password"
                                 placeholder = "Least 8 characters" />
-                
+
                         <button type="button" class="flex absolute inset-y-0 right-0 items-center pr-3" @click="show = !show" :class="{'hidden': !show, 'block': show }">
                             <!-- Heroicon name: eye -->
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -131,7 +131,7 @@
                         <option value="Teacher">Teacher</option>
                         <option value="Student">Student</option>
                     </select>
-                </div>            
+                </div>
             </div>
 
         </div>
@@ -142,12 +142,12 @@
                 <x-input-label for="experience" :value="__('Teaching Experience')"/>
                 <x-text-input id="experience" class="block mt-1 w-full" type="text" min="1" max="50" name="experience" :value="old('experience')" placeholder="From 1 to 50"/>
             </div>
-        
+
             <!-- Level -->
             <div class="col-span-2 sm:col-span-1">
                 <x-input-label for="level" :value="__('Level')" />
                 <select id="level" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" name="level" :value="old('level')">
-                    <option hidden>Level</option>
+                    <option value="" hidden {{ old('level') == '' ? 'selected' : '' }}>Level</option>
                     <option value="Professor" {{ old('level') == 'Professor' ? 'selected' : '' }}>Professor</option>
                     <option value="AssociateProfessor" {{ old('level') == 'AssociateProfessor' ? 'selected' : '' }}>Associate Professor</option>
                     <option value="PhD" {{ old('level') == 'PhD' ? 'selected' : '' }}>PhD</option>
@@ -237,5 +237,5 @@
             teacherFields.classList.add('opacity-0');
         }
     });
-    
+
 </script>

@@ -19,7 +19,7 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('course-admin')" :active="request()->routeIs('course-admin', 'create-course', 'student-list-admin', 'course-edit')">
-                        {{ __('Course') }}
+                        {{ __('Courses') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -33,18 +33,13 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('posts-admin')" :active="request()->routeIs('posts-admin', 'post-edit')">
-                        {{ __('Posts') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     @php
                         $secondEdits = \App\Models\Secondedit::all();
                         $buttonColor = $secondEdits->count() > 0 ? 'relative' : '';
                     @endphp
 
                     <x-nav-link :href="route('edit-request')" :active="request()->routeIs('edit-request')" class="{{ $buttonColor }}">
-                        {{ __('Edit Request') }}
+                        {{ __('Edit Requests') }}
                         @if($secondEdits->count() > 0)
                             <span class="absolute top-4 right-0 inline-block w-2 h-2 bg-green-600 rounded-full"></span>
                         @endif
@@ -62,6 +57,26 @@
                             <span class="absolute top-4 right-0 inline-block w-2 h-2 bg-green-600 rounded-full"></span>
                         @endif
                     </x-nav-link>
+                </div>
+
+                <div class="hidden sm:flex sm:items-center sm:ml-10">
+                    <x-dropdown align="left" width="48">
+                        <x-slot name="trigger">
+                           Other
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('posts-admin')">
+                                {{ __('Posts') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('banners')">
+                                {{ __('Banners') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('bills')">
+                                {{ __('Bills') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
                 </div>
             </div>
 

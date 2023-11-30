@@ -104,7 +104,7 @@ class LessonCustomController extends Controller
             $courses = Course::all();
             foreach ($courses as $course) {
                 if (in_array($lesson->id_lesson, $course->lessons)) {
-                    return response()->json(['success' => false, 'message' => 'Cannot delete lesson as it exists in ' . $course->id_course]);
+                    return response()->json(['success' => false, 'message' => 'Cannot delete lesson as it exists in ' . $course->id_course . ' !']);
                 }
             }
             $lesson->delete();

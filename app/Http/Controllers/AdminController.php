@@ -5,34 +5,42 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Course;
-use App\Models\Bill;
 use App\Models\Secondcourse;
 use App\Models\Post;
 use App\Models\Thirdcourse;
 use App\Models\Room;
+use App\Models\Bill;
 use App\Models\Lesson;
+use App\Models\Banner;
 use App\Http\Controllers\Controller;
+use App\Models\Feedback;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\View\View;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 
 class AdminController extends Controller
 {
 
     public function showRLDashBoard()
     {
-        $totalcourses = count(Course::all());
-        $totalposts = count(Post::all());
-        $totallessons = count(Lesson::all());
-        $totalrooms = count(Room::all());
-        $totaladmins = count(User::where('role', 'Admin')->get());
-        $totalteachers = count(User::where('role', 'Teacher')->get());
-        $totalstudents = count(User::where('role', 'Student')->get());
-        return view('dashboard_admin', compact(['totalposts', 'totalcourses','totaladmins','totalteachers','totalstudents','totallessons','totalrooms']));
+        $totalcourses = Course::get()->count();
+        $totalposts = Post::get()->count();
+        $totallessons = Lesson::get()->count();
+        $totalrooms = Room::get()->count();
+        $totalfeedbacks = Feedback::get()->count();
+        $totalbanners = Banner::get()->count();
+        $totalbills = Bill::where('is_paid', 1)->get()->count();
+        $totaladmins = User::where('role', 'Admin')->get()->count();
+        $totalteachers = User::where('role', 'Teacher')->get()->count();
+        $totalstudents = User::where('role', 'Student')->get()->count();
+        return view('dashboard_admin', compact([
+            'totalposts', 'totalcourses',
+            'totaladmins','totalteachers',
+            'totalstudents','totallessons',
+            'totalrooms', 'totalfeedbacks',
+            'totalbanners', 'totalbills'
+        ]));
     }
 
     public function usersManagement(Request $request)
@@ -333,13 +341,41 @@ class AdminController extends Controller
 
         // Lấy danh sách bài viết, phân trang và mỗi trang chứa 3 bài viết
         $posts = Post::all();
+        $banners = Banner::all();
 
-        return view('welcome', ['posts' => $posts, 'post11' => $post11, 'post12' => $post12, 'teachers' => $teachers]);
+        return view('welcome', [
+            'banners' => $banners,
+            'posts' => $posts,
+            'post11' => $post11,
+            'post12' => $post12,
+            'teachers' => $teachers
+        ]);
     }
 
     public function showPosts(): View
     {
         return view('showposts', ['posts' => Post::all()]);
+    }
+
+    public function showBills(Request $request)
+    {
+        // $search = $request['search'] ?? '';
+
+        // if ($search != ''){
+        //     $bills = Bill::where('is_paid', 1)
+        //                     ->orWhere('name_bill', 'LIKE', "%$search%")
+        //                     ->sortable()->paginate(4);
+        // }
+        // else {
+        //     $bills = Bill::where('is_paid', 1)->sortable()->paginate(4);
+        // }
+
+        $bills = Bill::where('is_paid', 1)->sortable()->paginate(4);
+
+        return view('pages.ql_admin.bills', [
+            'bills' => $bills,
+            // 'search' => $search
+        ]);
     }
 
     public function showPostsManagement(Request $request)
