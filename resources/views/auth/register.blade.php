@@ -127,7 +127,7 @@
                 <x-input-label for="role" :value="__('Role')" />
                 <div class="flex justify-around">
                     <select id="role" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" name="role" :value="old('role')" required autofocus autocomplete="role">
-                        <option hidden>Role</option>
+                        <option value="" {{ old('role') == '' ? 'selected' : '' }}>Role</option>
                         <option value="Teacher">Teacher</option>
                         <option value="Student">Student</option>
                     </select>
@@ -140,7 +140,7 @@
             <!-- Teaching Experience -->
             <div class="col-span-2 sm:col-span-1" >
                 <x-input-label for="experience" :value="__('Teaching Experience')"/>
-                <x-text-input id="experience" class="block mt-1 w-full" type="text" min="1" max="50" name="experience" :value="old('experience')" placeholder="From 1 to 50"/>
+                <x-text-input id="experience" class="block mt-1 w-full" type="text" min="1" max="50" name="experience" :value="old('experience')" placeholder="From 1 year"/>
             </div>
 
             <!-- Level -->
@@ -193,7 +193,7 @@
                 </div>
                 <!-- Avatar -->
                 <div class="col-span-2 sm:col-span-1">
-                    <x-input-label for="avatar" :value="__('Avatar')" />
+                    <x-input-label for="avatar" :value="__('Avatar (less than 4MB)')" />
                     <input id="avatar" class="block mt-1 w-full" type="file" name="avatar" value="{{ old('avatar') }}" autofocus autocomplete="avatar" />
                 </div>
         </div>

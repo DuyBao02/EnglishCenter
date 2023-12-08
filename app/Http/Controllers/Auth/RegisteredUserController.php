@@ -33,6 +33,7 @@ class RegisteredUserController extends Controller
     public function storeUser(Request $request): RedirectResponse
     {
 
+        // dd($request->all());
         if (User::where('email', $request->email)->exists()) {
             return redirect()->back()->withInput($request->input())->with('error', 'Email already exists!');
         }
@@ -45,9 +46,10 @@ class RegisteredUserController extends Controller
             return redirect()->back()->withInput($request->input())->with('error', 'Confirmation passwords are not the same!');
         }
 
-        if ($request->role == 'Teacher' && ($request->experience < 1 || $request->experience > 50)) {
-            return redirect()->back()->withInput($request->input())->with('error', 'Experience must be between 1 and 50!');
+        if ($request->role == 'Teacher' && ($request->experience < 1)) {
+            return redirect()->back()->withInput($request->input())->with('error', 'Experience must be greater than 1 year!');
         }
+        // || $request->experience > 50
 
         if ($request->role == 'Teacher' && empty($request->level)) {
             return redirect()->back()->withInput($request->input())->with('error', 'Level is required for Teacher!');

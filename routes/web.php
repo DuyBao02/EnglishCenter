@@ -19,9 +19,19 @@ use Illuminate\Http\Request;
 Route::get('/', 'App\Http\Controllers\AdminController@showPostTeacherWelcome')
     ->name('welcome');
 
-Route::get('/admin', function () {
-    return view('welcome_admin');
-});
+//Authenticate Admin
+
+// Route::get('/admin', function () {
+//     return view('welcome_admin');
+// });
+Route::get('/registerAdmin', 'App\Http\Controllers\Auth\AuthenticateAdminController@showRegisterAdmin')->name('showRegisterAdmin');
+
+Route::get('/admin', 'App\Http\Controllers\Auth\AuthenticateAdminController@showformAdmin');
+
+Route::post('accuracyAdmin', 'App\Http\Controllers\Auth\AuthenticateAdminController@AuthenticateAdmin')
+    ->name('accuracyAdmin');
+
+
 
 Route::post('logout-homepage', 'App\Http\Controllers\Auth\AuthenticatedSessionController@destroyHomePage')
     ->name('logout-homepage');
