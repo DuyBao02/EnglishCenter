@@ -26,7 +26,7 @@
         </script>
     @endif
 
-    <form method="POST" action="{{ route('registerUser') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
         <div class="columns-2">
             <!-- Name -->

@@ -4,22 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Course;
-use App\Models\Room;
-use App\Models\Lesson;
-use App\Models\Secondcourse;
-use App\Models\Thirdcourse;
 use App\Http\Controllers\Controller;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\View\View;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use App\Models\Edit;
 use App\Models\Secondedit;
-use Carbon\Carbon;
 
 class EditRequestController extends Controller
 {
@@ -29,6 +16,26 @@ class EditRequestController extends Controller
 
         // Lấy user hiện tại
         $user = auth()->user();
+
+        // Validate và lấy dữ liệu
+        $rules = [
+            'name' => 'required|string|max:255',
+            'birthday' => 'required|date',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+        ];
+
+        if ($user->role == 'Teacher') {
+            $rules['experience'] = 'required|integer';
+            $rules['level'] = 'required|string|max:255';
+        }
+
+        $request->validate($rules);
+
+        if ($request->role == 'Teacher' && ($request->experience < 1 || $request->experience > 50)) {
+            return redirect()->back()->with('error', 'Experience must be between 1 and 50!');
+        }
 
         // Kiểm tra xem có file avatar được tải lên hay không
         if ($request->hasFile('avatar')) {
@@ -41,52 +48,24 @@ class EditRequestController extends Controller
                     return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file!');
                 }
 
-                if ($request->file('avatar')->getSize() > 2048 * 1024) {
-                    return redirect()->back()->withInput($request->input())->with('error', 'Avatar file size must be less than 2MB!');
+                if ($request->file('avatar')->getSize() > 4096 * 1024) {
+                    return redirect()->back()->withInput($request->input())->with('error', 'Avatar file size must be less than 4MB!');
                 }
 
                 if (!in_array($request->file('avatar')->getClientOriginalExtension(), ['jpeg', 'png', 'jpg', 'gif', 'svg'])) {
                     return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file type!');
                 }
 
-                $avatarName = $user->name . '_' . explode('@', $user->email)[0] . '.' . $request->file('avatar')->getClientOriginalExtension();
-
-                $oldAvatarPath = public_path('images/avatars/' . $user->avatar);
-
-                if ($user->avatar != 'avatar_default.png' && file_exists($oldAvatarPath)) {
-                    // Xóa file avatar cũ
-                    unlink($oldAvatarPath);
-                }
+                $avatarName = now()->format('Ymd_His') . '_' . explode('@', $user->email)[0] . '.' . $request->file('avatar')->getClientOriginalExtension();
 
                 $request->file('avatar')->move(public_path('images/avatars'), $avatarName);
 
-                // Lưu tên file vào $data['new']['avatar']
-                $data['new']['avatar'] = $avatarName;
+                $new_avt = $avatarName;
             }
 
         }
         else {
-            $data['new']['avatar'] = $user->avatar;
-        }
-
-        // Validate và lấy dữ liệu
-        $rules = [
-            'name' => 'required|string|max:255',
-            'birthday' => 'required|date',
-            'address' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
-            'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ];
-
-        if ($user->role == 'Teacher') {
-            $rules['experience'] = 'required|integer';
-            $rules['level'] = 'required|string|max:255';
-        }
-
-        $request->validate($rules);
-
-        if ($request->role == 'Teacher' && ($request->experience < 1 || $request->experience > 50)) {
-            return redirect()->back()->with('error', 'Experience must be between 1 and 50!');
+            $new_avt = $user->avatar;
         }
 
         // Lấy user hiện tại
@@ -103,9 +82,6 @@ class EditRequestController extends Controller
             'avatar' => $user->avatar,
         ];
 
-        if($request->avatar == null)
-            $new_avt = $user->avatar;
-
         $data['new'] = [
             'name' => $request->name,
             'birthday' => $request->birthday,
@@ -119,7 +95,6 @@ class EditRequestController extends Controller
         // Sắp xếp các mảng theo key
         ksort($data['old']);
         ksort($data['new']);
-        // dd($data['old'], $data['new']);
 
         // Kiểm tra xem dữ liệu đã được chỉnh sửa hay chưa
         if ($data['old'] == $data['new']) {

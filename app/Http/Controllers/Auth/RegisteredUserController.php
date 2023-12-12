@@ -20,7 +20,7 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view for regular users.
      */
-    public function createUser(): View
+    public function create(): View
     {
         return view('auth.register');
     }
@@ -30,7 +30,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function storeUser(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
 
         // dd($request->all());
@@ -46,6 +46,10 @@ class RegisteredUserController extends Controller
             return redirect()->back()->withInput($request->input())->with('error', 'Confirmation passwords are not the same!');
         }
 
+        if (strlen($request->phone) < 10) {
+            return redirect()->back()->withInput($request->input())->with('error', 'The phone number must have at least 10 digits!');
+        }
+
         if ($request->role == 'Teacher' && ($request->experience < 1)) {
             return redirect()->back()->withInput($request->input())->with('error', 'Experience must be greater than 1 year!');
         }
@@ -53,28 +57,6 @@ class RegisteredUserController extends Controller
 
         if ($request->role == 'Teacher' && empty($request->level)) {
             return redirect()->back()->withInput($request->input())->with('error', 'Level is required for Teacher!');
-        }
-
-        // Lấy tên file gốc và tạo tên mới cho file
-        $newName = 'avatar_default.png';
-
-        if ($request->hasFile('avatar')) {
-            if (!$request->file('avatar')->isValid()) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file!');
-            }
-
-            if ($request->file('avatar')->getSize() > 4096 * 1024) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Avatar file size must be less than 4MB!');
-            }
-
-            if (!in_array($request->file('avatar')->getClientOriginalExtension(), ['jpeg', 'png', 'jpg', 'gif', 'svg'])) {
-                return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file type!');
-            }
-
-            $newName = $request->name . '_' . explode('@', $request->email)[0] . '.' . $request->file('avatar')->getClientOriginalExtension();
-
-            // Di chuyển và đổi tên file
-            $request->file('avatar')->move(public_path('images/avatars'), $newName);
         }
 
         $request->validate([
@@ -111,6 +93,28 @@ class RegisteredUserController extends Controller
         //     // Hoặc bạn có thể chuyển hướng trở lại với thông báo lỗi
         //     return redirect()->back()->withErrors($validator)->withInput($request->input());
         // }
+
+        // Lấy tên file gốc và tạo tên mới cho file
+        $newName = 'avatar_default.png';
+
+        if ($request->hasFile('avatar')) {
+            if (!$request->file('avatar')->isValid()) {
+                return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file!');
+            }
+
+            if ($request->file('avatar')->getSize() > 4096 * 1024) {
+                return redirect()->back()->withInput($request->input())->with('error', 'Avatar file size must be less than 4MB!');
+            }
+
+            if (!in_array($request->file('avatar')->getClientOriginalExtension(), ['jpeg', 'png', 'jpg', 'gif', 'svg'])) {
+                return redirect()->back()->withInput($request->input())->with('error', 'Invalid avatar file type!');
+            }
+
+            $newName = $request->name . '_' . explode('@', $request->email)[0] . '.' . $request->file('avatar')->getClientOriginalExtension();
+
+            // Di chuyển và đổi tên file
+            $request->file('avatar')->move(public_path('images/avatars'), $newName);
+        }
 
         $user = User::create([
             'name' => $request->name,

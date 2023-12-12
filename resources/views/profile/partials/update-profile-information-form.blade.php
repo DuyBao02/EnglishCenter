@@ -130,11 +130,6 @@
                     <x-input-label for="avatar" :value="__('Avatar')" />
                     <a href="#" onclick="showAvatar('{{ asset('images/avatars/'.$user->avatar) }}')"><img src="{{ asset('images/avatars/' . $user->avatar) }}" alt="Current Avatar" class="w-32 h-32 rounded-full mb-2" data-avatar-name="{{ $user->avatar }}"></a>
                     <input id="avatar" name="avatar" type="file" class="mt-1 block w-full" />
-
-                    <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
-
-                    <input type="hidden" id="defaultAvatar" name="defaultAvatar">
-                    <button id="setDefaultAvatar" type="button" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Set Default Avatar</button>
                 </div>
 
                 <div class="max-w-xl mt-6">
@@ -205,9 +200,6 @@
                     <x-input-label for="avatar" :value="__('Avatar')" />
                     <a href="#" onclick="showAvatar('{{ asset('images/avatars/'.$user->avatar) }}')"><img src="{{ asset('images/avatars/' . $user->avatar) }}" alt="Current Avatar" class="w-32 h-32 rounded-full mb-2" data-avatar-name="{{ $user->avatar }}"></a>
                     <input id="avatar" name="avatar" type="file" class="mt-1 block w-full" />
-                    <input type="hidden" id="defaultAvatar" name="defaultAvatar">
-                    <button id="setDefaultAvatar" type="button" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Set Default Avatar</button>
-                    <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
                 </div>
 
                 <div class="max-w-xl mt-6">

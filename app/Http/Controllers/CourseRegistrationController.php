@@ -50,10 +50,10 @@ class CourseRegistrationController extends Controller
                                         $query->orWhereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(days, "$['.$i.']"))) LIKE ?', ['%' . strtolower($search) . '%']);
                                     }
                                 })
-                                ->sortable()->paginate(3);
+                                ->sortable()->paginate(5);
         }
         else {
-            $courses = Course::sortable()->paginate(3);
+            $courses = Course::sortable()->paginate(5);
         }
 
         return view('pages.ql_admin.course_admin', [
@@ -71,18 +71,6 @@ class CourseRegistrationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'id_course'  => ['required'],
-            'name_course' => ['required'],
-            'weeks' => ['required'],
-            'days.*' => ['required'],
-            'rooms.*' => ['required'],
-            'lessons.*' => ['required'],
-            'maxStudents' => ['required'],
-            'tuitionFee' => ['required'],
-            'teacher' => ['nullable'],
-            'students_list.*' => ['nullable'],
-        ]);
 
         if (Course::where('id_course', $request->id_course)->exists() ) {
             return redirect()->back()->withInput($request->input())->with('error', $request->id_course . ' already exists!');
@@ -95,6 +83,19 @@ class CourseRegistrationController extends Controller
         if (strlen(floor($request->tuitionFee)) > 8) {
             return redirect()->back()->withInput($request->input())->with('error', 'Tuition fees do not exceed 8 figures!');
         }
+
+        $request->validate([
+            'id_course'  => ['required'],
+            'name_course' => ['required'],
+            'weeks' => ['required'],
+            'days.*' => ['required'],
+            'rooms.*' => ['required'],
+            'lessons.*' => ['required'],
+            'maxStudents' => ['required'],
+            'tuitionFee' => ['required'],
+            'teacher' => ['nullable'],
+            'students_list.*' => ['nullable'],
+        ]);
 
         $a = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $days = $request->input('days');
