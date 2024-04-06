@@ -38,3 +38,7 @@
     @endif
 
 </head>
+
+    {{-- Rasa chatbot --}}
+    <div id="rasa-chat-widget" data-websocket-url="http://localhost:5005"></div>
+    <script src="https://unpkg.com/@rasahq/rasa-chat" type="application/javascript"></script>

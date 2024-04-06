@@ -18,10 +18,12 @@
                                 Welcome to</br>
                                 DB English center!
                             </h1>
-                            <p class="mt-8 text-lg text-gray-300">
-                                Comprehensive curriculum that equally develops all four skills of
-                                </br>Listening - Speaking - Reading - Writing, including courses on TOEIC and IELTS.
-                            </p>
+                            <marquee width="500" scrollamount="10">
+                                <p class="mt-8 text-lg text-gray-300">
+                                    Comprehensive curriculum that equally develops all four skills of
+                                    Listening - Speaking - Reading - Writing, including courses on TOEIC and IELTS.
+                                </p>
+                            </marquee>
                         </div>
                     </div>
                 </div>
@@ -217,6 +219,14 @@
                 </div>
             </div>
         </section>
+
+        <div
+            class="fb-like"
+            data-share="true"
+            data-width="450"
+            data-show-faces="true">
+        </div>
+
     </main>
 
     @include('components.footer-homepage')
@@ -230,6 +240,15 @@
             }
         }
     </script>
+
+    {{-- <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+    intent="WELCOME"
+    chat-title="ChatbotDBEC"
+    agent-id="ae8db5f1-9747-41d3-97d6-7f95ec08e6f4"
+    language-code="en"
+    ></df-messenger> --}}
+
 </body>
 
 </html>

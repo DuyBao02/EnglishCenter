@@ -14,7 +14,7 @@
                 <div class="mt-6 content-left items-left justify-center">
                     <i class="fas fa-envelope"></i> dbec@gmail.com
                     <span class="jax-header-seperator mr-4"></span>
-                    <i class="fas fa-clock"></i> 7:30 - 20:30
+                    <i class="fas fa-clock"></i> 7:30 - 21:00
                     <span class="jax-header-seperator mr-4"></span>
                     <i class="fas fa-phone"></i> (0123) 4 567 789 - 0932 941 222
                 </div>
@@ -68,7 +68,7 @@
         </div>
         <hr class="my-6 border-gray-400" />
     </div>
-    <button id="back-to-top" class="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded-full hidden">
+    <button id="back-to-top" class="fixed bottom-5 left-5 bg-blue-500 text-white p-2 rounded-full hidden">
         <i class="fas fa-arrow-up"></i>
     </button>
 

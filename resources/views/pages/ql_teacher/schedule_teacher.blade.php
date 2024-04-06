@@ -12,7 +12,7 @@
                 <div class="bg-indigo-200 rounded-sm my-4 mx-4">
                     <div class="container ">
                         <div class="response"></div>
-                        <div id='calendar'></div>  
+                        <div id='calendar'></div>
                     </div>
                 </div>
             </div>
@@ -41,14 +41,14 @@
 
 <script>
     $(document).ready(function () {
-         
+
         var SITEURL = "{{url('/')}}";
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
- 
+
         var calendar = $('#calendar').fullCalendar({
             editable: true,
             events: "{{ route('calendarIndex') }}",
@@ -65,11 +65,11 @@
             selectHelper: true,
             // select: function (start, end, allDay) {
             //     var title = prompt('Event Title:');
- 
+
             //     if (title) {
             //         var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
             //         var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
- 
+
             //         $.ajax({
             //             url: SITEURL + "fullcalendar/create",
             //             data: 'title=' + title + '&start=' + start + '&end=' + end,
@@ -90,7 +90,7 @@
             //     }
             //     calendar.fullCalendar('unselect');
             // },
-             
+
             // eventDrop: function (event, delta) {
             //             var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
             //             var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
@@ -120,10 +120,10 @@
             //         });
             //     }
             // }
- 
+
         });
     });
-    
+
     function displayMessage(message) {
         $(".response").html("<div class='success'>"+message+"</div>");
         setInterval(function() { $(".success").fadeOut(); }, 1000);

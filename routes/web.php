@@ -21,9 +21,6 @@ Route::get('/', 'App\Http\Controllers\AdminController@showPostTeacherWelcome')
 
 //Authenticate Admin
 
-// Route::get('/admin', function () {
-//     return view('welcome_admin');
-// });
 Route::get('/registerAdmin', 'App\Http\Controllers\Auth\AuthenticateAdminController@showRegisterAdmin')->name('showRegisterAdmin');
 
 Route::get('/admin', 'App\Http\Controllers\Auth\AuthenticateAdminController@showformAdmin');
@@ -32,12 +29,15 @@ Route::post('accuracyAdmin', 'App\Http\Controllers\Auth\AuthenticateAdminControl
     ->name('accuracyAdmin');
 
 
-
 Route::post('logout-homepage', 'App\Http\Controllers\Auth\AuthenticatedSessionController@destroyHomePage')
     ->name('logout-homepage');
 
 Route::get('/management-system', 'App\Http\Controllers\ManagementSystemController@index')
     ->middleware(['auth', 'verified'])->name('management-system');
+
+Route::get('/currentcourses', 'App\Http\Controllers\FeedbackController@showCurrentcourses')
+    ->name('current_courses');
+
 
 //Fullcalender
     Route::get('fullcalendar','App\Http\Controllers\FullCalendarController@index')->name('calendarIndex');
@@ -303,5 +303,10 @@ Route::middleware('auth')->group(function () {
 
         return back()->with('message', 'Verification link sent!');
     })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+//Chatbot Route
+    Route::get('/getAllUser', 'App\Http\Controllers\Chatbot\getAlluserController@allUser')
+    ->name('getAllUser');
 
 require __DIR__.'/auth.php';

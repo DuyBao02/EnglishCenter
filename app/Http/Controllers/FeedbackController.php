@@ -10,6 +10,8 @@ use Illuminate\View\View;
 use Illuminate\Auth\Events\Registered;
 use App\Models\Feedback;
 use App\Models\SecondFeedbacks;
+use App\Models\Secondcourse;
+use App\Models\Thirdcourse;
 
 class FeedbackController extends Controller
 {
@@ -73,6 +75,17 @@ class FeedbackController extends Controller
 
         return redirect()->route('showFeedbacks');
 
+    }
+
+    public function showCurrentcourses(): View
+    {
+        $currentCoursesforTeacher = Secondcourse::all();
+        $currentCoursesforStudent = Thirdcourse::all();
+
+        return  view('showCurrencourse', [
+            'currentCoursesforTeacher'=>$currentCoursesforTeacher,
+            'currentCoursesforStudent'=>$currentCoursesforStudent
+        ]);
     }
 
 }

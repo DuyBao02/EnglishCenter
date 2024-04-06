@@ -15,7 +15,7 @@
                     <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
                         <div class="pr-12">
                             <h1 class="text-white font-semibold text-5xl">
-                                Posts!
+                                Posts
                             </h1>
                             <div class="mt-8 text-gray-300 text-xl">
                                 This is the place to update the latest news from DBEC
