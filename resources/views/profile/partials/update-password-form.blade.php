@@ -63,6 +63,7 @@
                     </button>
                 </div>
             </div>
+            <p id="capslock-warning-current-password" class="text-red-500" hidden>Caps Lock is on.</p>
 
             <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
         </div>
@@ -94,6 +95,7 @@
                     </button>
                 </div>
             </div>
+            <p id="capslock-warning-password" class="text-red-500" hidden>Caps Lock is on.</p>
 
             <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
         </div>
@@ -125,6 +127,7 @@
                     </button>
                 </div>
             </div>
+            <p id="capslock-warning-password-confirm" class="text-red-500" hidden>Caps Lock is on.</p>
 
             <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
         </div>
@@ -146,3 +149,40 @@
 </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    const currentpasswordInput  = document.getElementById('current_password')
+    const warningCurrentpassword = document.getElementById('capslock-warning-current-password')
+
+    currentpasswordInput.addEventListener('keyup', (event) => {
+        if (event.getModifierState('CapsLock')){
+            warningCurrentpassword.hidden = false
+        }
+        else {
+            warningCurrentpassword.hidden = true
+        }
+    })
+
+    const passwordInput  = document.getElementById('password')
+    const warning = document.getElementById('capslock-warning-password')
+
+    passwordInput.addEventListener('keyup', (event) => {
+        if (event.getModifierState('CapsLock')){
+            warning.hidden = false
+        }
+        else {
+            warning.hidden = true
+        }
+    })
+
+    const passwordconfirmationInput  = document.getElementById('password_confirmation')
+    const warningPasswordconfirm = document.getElementById('capslock-warning-password-confirm')
+
+    passwordconfirmationInput.addEventListener('keyup', (event) => {
+        if (event.getModifierState('CapsLock')){
+            warningPasswordconfirm.hidden = false
+        }
+        else {
+            warningPasswordconfirm.hidden = true
+        }
+    })
+</script>

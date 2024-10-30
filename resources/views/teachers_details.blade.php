@@ -29,7 +29,13 @@
                         </div>
                         <div class="text-center mt-28">
                             <h3 class="text-4xl font-semibold leading-normal mb-2 text-gray-800">
-                                {{ $teacherDetails->level }}. {{ $teacherDetails->name }}
+                                @if($teacherDetails->gender == 'male')
+                                    Mr. {{ $teacherDetails->name }}
+                                @elseif($teacherDetails->gender == 'female')
+                                    Mrs. {{ $teacherDetails->name }}
+                                @else
+                                    {{ $teacherDetails->name }}
+                                @endif
                             </h3>
                             <div class="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
                                 <i class="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>
@@ -40,6 +46,9 @@
                             </div>
                             <div class="mb-2 text-gray-700">
                                 <i class="fas fa-paper-plane mr-2 text-lg text-gray-500"></i>Email: {{ $teacherDetails->email }}
+                            </div>
+                            <div class="mb-2 text-gray-700">
+                                <i class="fas fa-pencil-alt mr-2 text-lg text-gray-500"></i>Level: {{ $teacherDetails->level }}
                             </div>
                         </div>
                         <div class="mt-10 py-10 border-t border-gray-300 text-center">
@@ -60,7 +69,7 @@
             </div>
         </section>
     </main>
-    <button id="back-to-top" class="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded-full hidden">
+    <button id="back-to-top" class="fixed bottom-5 left-5 bg-blue-500 text-white p-2 rounded-full hidden">
         <i class="fas fa-arrow-up"></i>
     </button>
 </body>

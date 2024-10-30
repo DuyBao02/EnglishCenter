@@ -100,76 +100,89 @@
         <section class="pt-20 pb-48">
             <div class="container mx-auto px-4">
                 <div class="bg-emerald-200 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="my-8 mx-8 sm:rounded-lg">
-                        <div class="w-full overflow-hidden rounded-lg shadow-xs">
-                            <div class="w-full overflow-x-auto">
-                                <table class="w-full whitespace-nowrap">
-                                    <thead>
-                                        <tr class="text-xs font-medium tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                                            <th class="px-4 py-3">ID</th>
-                                            <th class="px-4 py-3">NameCourse</th>
-                                            <th class="px-4 py-3">TimeStart</th>
-                                            <th class="px-4 py-3">Weeks</th>
-                                            <th class="px-4 py-3">Student</th>
-                                            <th class="px-4 py-3">TuitionFee</th>
-                                            <th class="px-4 py-3">Days</th>
-                                            <th class="px-4 py-3">Lesson</th>
-                                            <th class="px-4 py-3">Room</th>
-                                            <th class="px-4 py-3">Teacher</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y">
-                                        @if(isset($currentCoursesforStudent))
-                                            @foreach($currentCoursesforStudent as $c)
-                                                <tr>
-                                                    <td class="px-4 py-3">{{ $c->id_3course }}</td>
-                                                    <td class="px-4 py-3">{{ $c->name_course }}</td>
-                                                    <td class="px-4 py-3">{{ \Carbon\Carbon::parse($c->time_start)->format('d-m-Y') }}<br></td>
-                                                    <td class="px-4 py-3">{{ $c->weeks }}</td>
-                                                    <td class="px-4 py-3">{{ count($c->students_list) }} / {{ $c->maxStudents }}</td>
-                                                    <td class="px-4 py-3">{{ number_format($c->tuitionFee) }}</td>
-                                                    <td class="px-4 py-3">
-                                                        @if(is_array($c->days))
-                                                            @foreach($c->days as $day)
-                                                                {{ $day }}<br>
-                                                            @endforeach
-                                                        @endif
-                                                    </td>
-                                                    <td class="px-4 py-3">
-                                                        @if(is_array($c->lessons))
-                                                            @foreach($c->lessons as $lesson)
-                                                                {{ $lesson }}<br>
-                                                            @endforeach
-                                                        @endif
-                                                    </td>
-                                                    <td class="px-4 py-3">
-                                                        @if(is_array($c->rooms))
-                                                            @foreach($c->rooms as $room)
-                                                                {{ $room }}<br>
-                                                            @endforeach
-                                                        @endif
-                                                    </td>
-                                                    <td class="px-4 py-3">
-                                                        @if($c->teacherUser3)
-                                                            <div class="flex flex-col items-center">
-                                                                <img class="w-10 h-10 object-cover object-center rounded-full transform transition-transform duration-400 hover:scale-150" src="{{ asset('images/avatars/'.$c->teacherUser3->avatar) }}" alt="{{ $c->teacherUser3->name }}" onclick="showAvatar('{{ asset('images/avatars/'.$c->teacherUser3->avatar) }}')">
-                                                                <a class="hover:text-red-500" href="javascript:void(0)" onclick="showTeacherInfo({{ json_encode($c->teacherUser3) }})">
-                                                                <span>{{ $c->teacherUser3->name }}</span></a>
-                                                            </div>
-                                                        @else
-                                                            <div class="flex items-center">
-                                                                <img src="images/sand-clock.png" class="h-9 w-9" alt="">
-                                                            </div>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
+                    @if ($currentCoursesforStudent)
+                        <div class="my-8 mx-8 sm:rounded-lg">
+                            <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                                <div class="w-full overflow-x-auto">
+                                    <table class="w-full whitespace-nowrap">
+                                        <thead>
+                                            <tr
+                                                class="text-xs font-medium tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
+                                                <th class="px-4 py-3">ID</th>
+                                                <th class="px-4 py-3">NameCourse</th>
+                                                <th class="px-4 py-3">TimeStart</th>
+                                                <th class="px-4 py-3">Weeks</th>
+                                                <th class="px-4 py-3">Student</th>
+                                                <th class="px-4 py-3">TuitionFee</th>
+                                                <th class="px-4 py-3">Days</th>
+                                                <th class="px-4 py-3">Lesson</th>
+                                                <th class="px-4 py-3">Room</th>
+                                                <th class="px-4 py-3">Teacher</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y">
+                                            @if (isset($currentCoursesforStudent))
+                                                @foreach ($currentCoursesforStudent as $c)
+                                                    <tr>
+                                                        <td class="px-4 py-3">{{ $c->id_3course }}</td>
+                                                        <td class="px-4 py-3">{{ $c->name_course }}</td>
+                                                        <td class="px-4 py-3">
+                                                            {{ \Carbon\Carbon::parse($c->time_start)->format('d-m-Y') }}<br>
+                                                        </td>
+                                                        <td class="px-4 py-3">{{ $c->weeks }}</td>
+                                                        <td class="px-4 py-3">{{ count($c->students_list) }} /
+                                                            {{ $c->maxStudents }}</td>
+                                                        <td class="px-4 py-3">{{ number_format($c->tuitionFee) }}</td>
+                                                        <td class="px-4 py-3">
+                                                            @if (is_array($c->days))
+                                                                @foreach ($c->days as $day)
+                                                                    {{ $day }}<br>
+                                                                @endforeach
+                                                            @endif
+                                                        </td>
+                                                        <td class="px-4 py-3">
+                                                            @if (is_array($c->lessons))
+                                                                @foreach ($c->lessons as $lesson)
+                                                                    {{ $lesson }}<br>
+                                                                @endforeach
+                                                            @endif
+                                                        </td>
+                                                        <td class="px-4 py-3">
+                                                            @if (is_array($c->rooms))
+                                                                @foreach ($c->rooms as $room)
+                                                                    {{ $room }}<br>
+                                                                @endforeach
+                                                            @endif
+                                                        </td>
+                                                        <td class="px-4 py-3">
+                                                            @if ($c->teacherUser3)
+                                                                <div class="flex flex-col items-center">
+                                                                    <img class="w-10 h-10 object-cover object-center rounded-full transform transition-transform duration-400 hover:scale-150"
+                                                                        src="{{ asset('images/avatars/' . $c->teacherUser3->avatar) }}"
+                                                                        alt="{{ $c->teacherUser3->name }}"
+                                                                        onclick="showAvatar('{{ asset('images/avatars/' . $c->teacherUser3->avatar) }}')">
+                                                                    <a class="hover:text-red-500"
+                                                                        href="javascript:void(0)"
+                                                                        onclick="showTeacherInfo({{ json_encode($c->teacherUser3) }})">
+                                                                        <span>{{ $c->teacherUser3->name }}</span></a>
+                                                                </div>
+                                                            @else
+                                                                <div class="flex items-center">
+                                                                    <img src="images/sand-clock.png" class="h-9 w-9"
+                                                                        alt="">
+                                                                </div>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
+                    <div class="text-center text-xl font-semibold">Chưa có khóa học được công bố</div>
                 </div>
             </div>
         </section>

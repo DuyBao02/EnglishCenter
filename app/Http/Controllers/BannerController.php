@@ -76,6 +76,15 @@ class BannerController extends Controller
         return redirect()->route('banners')->with('success', $banner->title . ' create successful!');
     }
 
+    public function updateShowHide(Request $request, $id)
+    {
+        $banner = Banner::findOrFail($id);
+        $banner->showhide = $request->showhide == 1 ? 0 : 1; // Đảo ngược giá trị showhide
+        $banner->save();
+
+        return redirect()->back()->with('success', 'Banner updated successfully!');
+    }
+
     public function delete($id)
     {
         $banner = Banner::where('id', $id)->first();

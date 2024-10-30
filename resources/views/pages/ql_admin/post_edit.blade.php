@@ -4,14 +4,14 @@
             {{ __('Edit Post') }}
         </h2>
     </x-slot>
-    
+
     @if (Session::has('success'))
     <script>
         window.onload = function() {
             swal('Success', '{{ Session::get('success') }}', 'success', {
-                button: true, 
-                button: 'OK', 
-                timer: 5000, 
+                button: true,
+                button: 'OK',
+                timer: 5000,
             });
         }
 
@@ -37,28 +37,28 @@
                 {{-- Create post Form --}}
                 <div class="p-6 text-gray-900">
                     <h3 class="text-2xl font-bold">Edit post</h3>
-                    
+
                     <form action="{{ isset($post) ? route('post-update', $post->id) : route('create-post') }}" method="POST" class="mt-6" enctype="multipart/form-data">
                         @csrf
-                    
+
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
                                 <input value="{{ isset($post) ? $post->title : '' }}"
-                                    type="text" 
+                                    type="text"
                                     id="title"
                                     name="title"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </div>
-                            
+
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="picture" class="block text-gray-700 text-sm font-bold mb-2">Picture</label>
                                 <input id="picture" class="block mt-1 w-full" type="file" name="picture" autofocus autocomplete="picture" />
-                                Old picture: {{ isset($post) ? $post->picture : '' }} 
+                                Old picture: {{ isset($post) ? $post->picture : '' }}
                             </div>
-                        
+
                         </div>
-                    
+
                         <div class="mt-4">
                             <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
                             <textarea
@@ -71,7 +71,7 @@
                             </textarea>
 
                         </div>
-                    
+
                         <div class="my-4 flex items-center justify-center w-full">
                             <x-primary-button type="submit">
                                 {{ __('Save') }}

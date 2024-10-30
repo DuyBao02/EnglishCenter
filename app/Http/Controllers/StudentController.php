@@ -117,28 +117,11 @@ class StudentController extends Controller
                 $thirdcourse->save();
             }
 
-            $bills = Bill::where('user_id', $userId)->get();
-
-            $unpaidBill = $bills->first(function ($bill) {
-                return !$bill->is_paid;
-            });
-
-            if ($unpaidBill) {
-                // Update existing bill
-                $name_bill = json_decode($unpaidBill->name_bill, true);
-                array_push($name_bill, $courseId);
-                sort($name_bill);
-                $unpaidBill->name_bill = json_encode($name_bill);
-                $unpaidBill->tuitionFee += $course->tuitionFee;
-                $unpaidBill->save();
-            } else {
-                // Create new bill
-                $bill = new Bill;
-                $bill->user_id = $userId;
-                $bill->name_bill = json_encode([$courseId]);
-                $bill->tuitionFee = $course->tuitionFee;
-                $bill->save();
-            }
+            $bill = new Bill;
+            $bill->user_id = $userId;
+            $bill->name_bill = json_encode([$courseId]);
+            $bill->tuitionFee = $course->tuitionFee;
+            $bill->save();
 
             return redirect()->back()->with('success', 'Register successfully!');
         } else {

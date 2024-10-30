@@ -57,7 +57,7 @@
     </div>
 
     <form action="" method="" class="flex items-center space-x-4 mx-4 lg:mx-0 lg:float-right lg:px-40 mt-4">
-        <input type="search" name="search" id="" value="{{ $search }}" placeholder="Search by name or email" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+        <input autofocus type="search" name="search" id="" value="{{ $search }}" placeholder="Search by name or email" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
         <button type="" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Search</button>
         <a href="{{ route('showFeedbacks') }}">
             <button type="button" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded-full">Reset</button>

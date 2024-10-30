@@ -80,7 +80,7 @@ class FeedbackController extends Controller
     public function showCurrentcourses(): View
     {
         $currentCoursesforTeacher = Secondcourse::all();
-        $currentCoursesforStudent = Thirdcourse::all();
+        $currentCoursesforStudent = Thirdcourse::whereRaw('JSON_LENGTH(students_list) < maxStudents')->get();
 
         return  view('showCurrencourse', [
             'currentCoursesforTeacher'=>$currentCoursesforTeacher,

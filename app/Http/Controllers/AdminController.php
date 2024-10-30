@@ -90,10 +90,10 @@ class AdminController extends Controller
                             ->orWhere('birthday', 'LIKE', "%$search%")
                             ->orWhere('address', 'LIKE', "%$search%")
                             ->orWhere('phone', 'LIKE', "%$search%")
-                            ->sortable()->paginate(4);
+                            ->sortable()->paginate(5);
         }
         else {
-            $search_user = User::sortable()->paginate(4);
+            $search_user = User::sortable()->paginate(5);
         }
 
         return view('pages.ql_admin.users_management', [
@@ -341,7 +341,7 @@ class AdminController extends Controller
 
         // Lấy danh sách bài viết, phân trang và mỗi trang chứa 3 bài viết
         $posts = Post::all();
-        $banners = Banner::all();
+        $banners = Banner::where('showhide', 1)->get();
 
         return view('welcome', [
             'banners' => $banners,

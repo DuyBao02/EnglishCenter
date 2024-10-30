@@ -39,7 +39,7 @@
                                 @csrf
                                 <div class="mt-4 flex items-center justify-center w-full">
                                     <label for="id_lesson" class="block text-sm font-medium text-gray-700 mr-2">ID Lesson</label>
-                                    <input value="{{ old('id_lesson') }}" required type="text" id="id_lesson" name="id_lesson" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input autofocus value="{{ old('id_lesson') }}" required type="text" id="id_lesson" name="id_lesson" class="mt-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                                 <div class="mt-4 flex items-center justify-center w-full">

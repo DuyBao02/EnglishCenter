@@ -46,10 +46,6 @@ class RegisteredUserController extends Controller
             return redirect()->back()->withInput($request->input())->with('error', 'Confirmation passwords are not the same!');
         }
 
-        if (strlen($request->phone) < 10) {
-            return redirect()->back()->withInput($request->input())->with('error', 'The phone number must have at least 10 digits!');
-        }
-
         if ($request->role == 'Teacher' && ($request->experience < 1)) {
             return redirect()->back()->withInput($request->input())->with('error', 'Experience must be greater than 1 year!');
         }
@@ -164,12 +160,12 @@ class RegisteredUserController extends Controller
      */
     public function storeAdmin(Request $request): RedirectResponse
     {
-
+        // dd($request->all());
         if (User::where('email', $request->email)->exists()) {
             return redirect()->back()->withInput($request->input())->with('error', 'Email already exists!');
         }
 
-        if ($request->email != $request->password_confirmation) {
+        if ($request->password != $request->password_confirmation) {
             return redirect()->back()->withInput($request->input())->with('error', 'Confirmation passwords are not the same!');
         }
 
@@ -202,7 +198,7 @@ class RegisteredUserController extends Controller
             'gender' => ['required'],
             'birthday' => ['required'],
             'address' => ['required'],
-            'phone' => ['required', 'max:10'],
+            'phone' => ['required'],
             'avatar' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ]);
 

@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/phpinfo', function () {
+    phpinfo();
+});
 
 Route::get('/', 'App\Http\Controllers\AdminController@showPostTeacherWelcome')
     ->name('welcome');
@@ -257,6 +260,9 @@ Route::get('/currentcourses', 'App\Http\Controllers\FeedbackController@showCurre
     Route::post('/create-banner', 'App\Http\Controllers\BannerController@create')
         ->middleware(['auth', 'verified'])->name('create-banner');
 
+    Route::post('/banner/update-showhide/{id}', 'App\Http\Controllers\BannerController@updateShowHide')
+        ->middleware(['auth', 'verified'])->name('update-showhide-banner');
+
     Route::delete('/banner-delete/{id}', 'App\Http\Controllers\BannerController@delete')
         ->middleware(['auth', 'verified'])->name('banner-delete');
 
@@ -304,9 +310,5 @@ Route::middleware('auth')->group(function () {
         return back()->with('message', 'Verification link sent!');
     })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-
-//Chatbot Route
-    Route::get('/getAllUser', 'App\Http\Controllers\Chatbot\getAlluserController@allUser')
-    ->name('getAllUser');
 
 require __DIR__.'/auth.php';

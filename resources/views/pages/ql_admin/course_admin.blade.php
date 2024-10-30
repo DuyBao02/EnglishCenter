@@ -88,7 +88,7 @@
     </div>
 
     <form action="" method="" class="flex items-center space-x-4 mx-4 lg:mx-0 lg:float-right lg:px-40 mt-4">
-        <input type="search" name="search" id="" value="{{ $search }}" placeholder="Id, name, tuitionfee, day, room, teacher" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+        <input autofocus type="search" name="search" id="" value="{{ $search }}" placeholder="Id, name, tuitionfee, day, room, teacher" class="border p-2 px-4 rounded-full w-96 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
         <button type="" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Search</button>
         <a href="{{ route('course-admin') }}">
             <button type="button" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded-full">Reset</button>
@@ -190,6 +190,7 @@
                                                                             class="mt-1 block w-3/4"
                                                                             placeholder="{{ __('Password') }}"
                                                                         />
+                                                                        <p id="capslock-warning" class="text-red-500" hidden >Caps Lock is on.</p>
 
                                                                         <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
                                                                     </div>
@@ -489,5 +490,17 @@
         $(".response").html("<div class='success'>"+message+"</div>");
         setInterval(function() { $(".success").fadeOut(); }, 1000);
     }
+
+    const passwordInput  = document.getElementById('password')
+    const warning = document.getElementById('capslock-warning')
+
+    passwordInput.addEventListener('keyup', (event) => {
+        if (event.getModifierState('CapsLock')){
+            warning.hidden = false
+        }
+        else {
+            warning.hidden = true
+        }
+    })
 
 </script>

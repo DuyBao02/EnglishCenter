@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('picture');
             $table->unsignedBigInteger('user_id');
+            $table->boolean('showhide')->default(false);
             $table->timestamps();
         });
     }

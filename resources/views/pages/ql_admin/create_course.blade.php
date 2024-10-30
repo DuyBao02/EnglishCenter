@@ -35,7 +35,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="id_course" class="block text-sm font-medium text-gray-700" :value="__('id_course')">ID Course</label>
-                                <input required type="text" id="id_course" name="id_course" value="{{ old('id_course') }}" class="{{ $errors->any('id_course') ? 'border-red-500' : '' }} mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input autofocus type="text" id="id_course" name="id_course" value="{{ old('id_course') }}" class="{{ $errors->any('id_course') ? 'border-red-500' : '' }} mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
 
                             <div class="col-span-2 sm:col-span-1">
@@ -47,7 +47,7 @@
 
                             <div class="col-span-3 sm:col-span-1">
                                 <label for="time_start" class="block text-sm font-medium text-gray-700">Time start</label>
-                                <input required type="date" id="time_start" name="time_start" value="{{ old('time_start') }}" min="{{ date('Y-m-d', strtotime('+3 day')) }}" class="{{ $errors->any('time_start') ? 'border-red-500' : '' }} mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input required type="date" id="time_start" name="time_start" value="{{ old('time_start') }}" min="{{ date('Y-m-d', strtotime('+7 day')) }}" class="{{ $errors->any('time_start') ? 'border-red-500' : '' }} mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
 
                             <div class="col-span-3 sm:col-span-1">

@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="col-span-2 sm:col-span-1">
                                     <label for="name_course" class="block text-sm font-medium text-gray-700">Name Course</label>
-                                    <input required oninput="formatCurrency(this)" type="text" id="name_course" name="name_course" value="{{ $course->name_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input required autofocus oninput="formatCurrency(this)" type="text" id="name_course" name="name_course" value="{{ $course->name_course ?? '' }}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
                                 <div class="col-span-2 sm:col-span-1">
                                     <label for="tuitionFee" class="block text-sm font-medium text-gray-700">Tuition Fee</label>
